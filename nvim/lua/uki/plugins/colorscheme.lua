@@ -1,8 +1,8 @@
 return {
-	"navarasu/onedark.nvim",
+	"lunarvim/Onedarker.nvim",
 	priority = 1000,
 	config = function()
-		vim.cmd([[colorscheme onedark ]])
+		vim.cmd([[colorscheme onedarker ]])
 		vim.cmd([[highlight LineNr guifg=#87CEEB ]])
 	end,
 }
