@@ -1,0 +1,288 @@
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+	"active_pane_modifiers": {
+		"magnification": 1.0,
+		"border_size": 0.0,
+		"inactive_opacity": 1.0
+	},
+	"vim_mode": true,
+	"ui_font_size": 16,
+	"theme": {
+		"mode": "system",
+		"light": "One Light",
+		"dark": "One Dark"
+	},
+	"auto_install_extensions": {
+		"dockerfile": true,
+		"docker-compose": true
+	},
+	// When to automatically save edited buffers.
+	"autosave": "off",
+	"autoscroll_on_clicks": false,
+	"base_keymap": null,
+	"restore_on_startup": "none",
+	"buffer_font_family": "Zed Plex Mono",
+	"buffer_font_features": null,
+	"buffer_font_fallbacks": null,
+	"buffer_font_size": 16,
+	"buffer_font_weight": 400,
+	"buffer_line_height": "comfortable",
+	"confirm_quit": false,
+	"centered_layout": {
+		"left_padding": 0.2,
+		"right_padding": 0.2
+	},
+	"load_direnv": "direct",
+	"inline_completions": {
+		"disabled_globs": [] // ".env"
+	},
+	"inline_completions_disabled_in": [], // https://zed.dev/docs/configuring-zed#inline-completions-disabled-in
+	"current_line_highlight": "all",
+	"lsp_highlight_debounce": 0,
+	"cursor_blink": true,
+	"cursor_shape": "bar",
+	"scrollbar": {
+		"show": "always",
+		"cursors": true,
+		"git_diff": true,
+		"search_results": true,
+		"selected_symbol": true,
+		"diagnostics": "all",
+		"axes": {
+			"horizontal": true,
+			"vertical": true
+		}
+	},
+	"tab_bar": {
+		"show": true,
+		"show_nav_history_buttons": true,
+		"show_tab_bar_buttons": true
+	},
+	"tabs": {
+		"close_position": "right",
+		"file_icons": true,
+		"git_status": true,
+		"activate_on_close": "history",
+		"always_show_close_button": true
+	},
+	"toolbar": {
+		"breadcrumbs": true,
+		"quick_actions": true
+	},
+	"enable_language_server": true,
+	"ensure_final_newline_on_save": true,
+	"format_on_save": "on",
+	"formatter": "auto", // https://zed.dev/docs/configuring-zed#inline-completions-disabled-in
+	"use_autoclose": true,
+	"always_treat_brackets_as_autoclosed": true,
+	"file_scan_exclusions": ["**/.git", "**/.svn", "**/.hg", "**/.jj", "**/CVS", "**/.DS_Store", "**/Thumbs.db", "**/.classpath", "**/.settings"],
+	"file_types": {}, // https://zed.dev/docs/configuring-zed#file-types
+	"git": {
+		"git_gutter": "tracked_files",
+		"inline_blame": {
+			"enabled": true,
+			"show_commit_summary": true,
+			"min_column": 80,
+			"delay_ms": 0
+		}
+	},
+	// https://zed.dev/docs/configuring-zed#indent-guides
+	"indent_guides": {
+		"enabled": true,
+		"line_width": 1,
+		"active_line_width": 1,
+		"coloring": "indent_aware", // fixed
+		"background_coloring": "indent_aware" // disabled,
+	},
+	"hard_tabs": true,
+	"hover_popover_enabled": false,
+	// https://zed.dev/docs/configuring-zed#inlay-hints
+	"inlay_hints": {
+		"enabled": true,
+		"show_type_hints": true,
+		"show_parameter_hints": true,
+		"show_other_hints": true,
+		"show_background": true,
+		"edit_debounce_ms": 0,
+		"scroll_debounce_ms": 0
+	},
+	"collaboration_panel": {
+		"button": false
+	},
+	"journal": {
+		"path": "~",
+		"hour_format": "hour12"
+	},
+	// https://zed.dev/docs/configuring-zed#network-proxy
+	"proxy": null,
+	// https://zed.dev/docs/configuring-zed#preview-tabs
+	// ////
+	"file_finder": {
+		"modal_max_width": "xlarge"
+	},
+	"projects_online_by_default": true,
+	"remove_trailing_whitespace_on_save": true,
+	"preferred_line_length": 200,
+	"search": {
+		"whole_word": false,
+		"case_sensitive": false,
+		"include_ignored": false,
+		"regex": false
+	},
+	"show_call_status_icon": true,
+	"show_completions_on_input": true,
+	"show_completion_documentation": true,
+	"show_inline_completions": true,
+	"show_whitespaces": "selection",
+	// https://zed.dev/docs/configuring-zed#soft-wrap
+	"soft_wrap": "editor_width",
+	"show_wrap_guides": true,
+	"tab_size": 4,
+	"telemetry": {
+		"diagnostics": true,
+		"metrics": true
+	},
+	"preview_tabs": {
+		"enabled": true,
+		"enable_preview_from_file_finder": true,
+		"enable_preview_from_code_navigation": true
+	},
+	"terminal": {
+		"dock": "bottom",
+		"alternate_scroll": "off",
+		"blinking": "off",
+		"copy_on_select": false,
+		"detect_venv": {
+			"on": {
+				"directories": [".env", "env", ".venv", "venv"],
+				"activate_script": "default"
+			}
+		},
+		"env": {},
+		"font_family": null,
+		"font_features": null,
+		"font_size": null,
+		"line_height": "comfortable",
+		"option_as_meta": false,
+		"shell": "system",
+		"toolbar": {
+			"breadcrumbs": true
+		},
+		"working_directory": "current_project_directory",
+		"button": true,
+		"scrollbar": {
+			"show": null
+		}
+	},
+	"project_panel": {
+		"button": true,
+		"default_width": 240,
+		"dock": "right",
+		"entry_spacing": "comfortable",
+		"file_icons": true,
+		"folder_icons": true,
+		"git_status": true,
+		"indent_size": 20,
+		"auto_reveal_entries": true,
+		"auto_fold_dirs": false,
+		"scrollbar": {
+			"show": "always"
+		},
+		"indent_guides": {
+			"show": "always"
+		},
+		"assistant": {
+			"enabled": true,
+			"button": true,
+			"dock": "right",
+			"default_width": 640,
+			"default_height": 320,
+			"provider": "openai",
+			"version": "1"
+		},
+		"outline_panel": {
+			"button": true,
+			"default_width": 240,
+			"dock": "left",
+			"file_icons": true,
+			"folder_icons": true,
+			"git_status": true,
+			"indent_size": 20,
+			"auto_reveal_entries": true,
+			"auto_fold_dirs": true,
+			"indent_guides": {
+				"show": "always"
+			},
+			"scrollbar": {
+				"show": null
+			}
+		},
+		"calls": {
+			// Join calls with the microphone live by default
+			"mute_on_join": false,
+			// Share your project when you are the first to join a channel
+			"share_on_join": false
+		}
+	},
+	"unnecessary_code_fade": 0.9,
+	// https://zed.dev/docs/configuring-zed#code-actions-on-format
+	// https://zed.dev/docs/configuring-zed#languages
+	"languages": {
+		"Python": {
+			"tab_size": 4,
+			"formatter": "language_server",
+			"format_on_save": "on",
+			"enable_language_server": true,
+			"hard_tabs": true,
+			"preferred_line_length": 100,
+			"soft_wrap": "preferred_line_length",
+			"show_completions_on_input": true,
+			"show_completion_documentation": true
+		},
+		"TypeScript": {
+			"code_actions_on_format": {
+				"source.organizeImports": true
+			}
+		},
+		"TSX": {
+			"code_actions_on_format": {
+				"source.organizeImports": true
+			}
+		},
+		"JavaScript": {
+			"code_actions_on_format": {
+				"source.fixAll.eslint": true
+			}
+		}
+	},
+	// https://zed.dev/docs/configuring-zed#lsp
+	"lsp": {
+		"typescript-language-server": {
+			"initialization_options": {
+				"preferences": {
+					"strictNullChecks": true,
+					"target": "ES2020"
+				}
+			}
+		},
+		"eslint": {
+			"settings": {
+				"codeActionOnSave": {
+					"rules": ["import/order"]
+				}
+			}
+		}
+	},
+	"experimental.theme_overrides": {
+		"syntax": {
+			"comment": {
+				"font_style": "italic"
+			},
+			"string": {
+				"color": "#00AA00"
+			}
+		}
+	}
+}

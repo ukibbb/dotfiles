@@ -1,0 +1,22 @@
+// To see the default key bindings run `zed: open default keymap`
+// https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-macos.json
+[
+	{
+		"bindings": {
+			"f f": "file_finder::Toggle",
+			"space o": "workspace::ToggleRightDock"
+		}
+	},
+	{
+		"context": "Workspace",
+		"bindings": {
+			// "shift shift": "file_finder::Toggle"
+		}
+	},
+	{
+		"context": "Editor",
+		"bindings": {
+			// "j k": ["workspace::SendKeystrokes", "escape"]
+		}
+	}
+]
