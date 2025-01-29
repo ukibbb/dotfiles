@@ -284,5 +284,8 @@
 				"color": "#00AA00"
 			}
 		}
+	},
+	"features": {
+		"inline_completion_provider": "zed"
 	}
 }
