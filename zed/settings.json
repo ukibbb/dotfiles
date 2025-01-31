@@ -2,6 +2,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+	"auto_signature_help": true,
+	"show_inline_completions_in_menu": true,
 	"active_pane_modifiers": {
 		"magnification": 1.0,
 		"border_size": 0.0,
@@ -73,7 +75,7 @@
 	},
 	"enable_language_server": true,
 	"ensure_final_newline_on_save": true,
-	"format_on_save": "on",
+	"format_on_save": "off",
 	"formatter": "auto", // https://zed.dev/docs/configuring-zed#inline-completions-disabled-in
 	"use_autoclose": true,
 	"always_treat_brackets_as_autoclosed": true,
@@ -278,7 +280,8 @@
 	"experimental.theme_overrides": {
 		"syntax": {
 			"comment": {
-				"font_style": "italic"
+				"font_style": "italic",
+				"color": "#D3D3D3"
 			},
 			"string": {
 				"color": "#00AA00"
