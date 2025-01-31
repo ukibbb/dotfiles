@@ -2,7 +2,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"auto_signature_help": true,
+ 	"theme": "One Dark Pro",
+  	"auto_signature_help": true,
 	"show_inline_completions_in_menu": true,
 	"active_pane_modifiers": {
 		"magnification": 1.0,
@@ -11,11 +12,6 @@
 	},
 	"vim_mode": true,
 	"ui_font_size": 16,
-	"theme": {
-		"mode": "system",
-		"light": "One Light",
-		"dark": "One Dark"
-	},
 	"auto_install_extensions": {
 		"dockerfile": true,
 		"docker-compose": true
@@ -28,8 +24,8 @@
 	"buffer_font_family": "Zed Plex Mono",
 	"buffer_font_features": null,
 	"buffer_font_fallbacks": null,
-	"buffer_font_size": null,
-	"buffer_font_weight": 400,
+	"buffer_font_size": 14.0,
+	"buffer_font_weight": 500,
 	"buffer_line_height": "comfortable",
 	"confirm_quit": false,
 	"centered_layout": {
@@ -163,7 +159,6 @@
 			}
 		},
 		"env": {},
-		"font_family": null,
 		"font_features": null,
 		"font_size": null,
 		"line_height": "comfortable",
@@ -180,7 +175,7 @@
 	},
 	"project_panel": {
 		"button": true,
-		"default_width": 240,
+		"default_width": 320,
 		"dock": "right",
 		"entry_spacing": "comfortable",
 		"file_icons": true,
@@ -232,6 +227,9 @@
 	// https://zed.dev/docs/configuring-zed#code-actions-on-format
 	// https://zed.dev/docs/configuring-zed#languages
 	"languages": {
+		"Go": {
+			"inlay_hints": {"edit_debounce_ms": 0, "enabled": true }
+		},
 		"Python": {
 			"tab_size": 4,
 			"formatter": "language_server",
@@ -287,8 +285,8 @@
 				"color": "#00AA00"
 			}
 		}
-	},
-	"features": {
-		"inline_completion_provider": "zed"
 	}
+	//"features": {
+	//	"inline_completion_provider": "zed"
+	//}
 }
