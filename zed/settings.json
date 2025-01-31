@@ -2,8 +2,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
- 	"theme": "One Dark Pro",
-  	"auto_signature_help": true,
+	"theme": "One Dark Pro",
+	"auto_signature_help": true,
 	"show_inline_completions_in_menu": true,
 	"active_pane_modifiers": {
 		"magnification": 1.0,
@@ -37,7 +37,7 @@
 		"disabled_globs": [] // ".env"
 	},
 	"inline_completions_disabled_in": [], // https://zed.dev/docs/configuring-zed#inline-completions-disabled-in
-	"current_line_highlight": "all",
+	"current_line_highlight": "gutter",
 	"lsp_highlight_debounce": 0,
 	"cursor_blink": true,
 	"cursor_shape": "bar",
@@ -102,7 +102,7 @@
 		"show_type_hints": true,
 		"show_parameter_hints": true,
 		"show_other_hints": true,
-		"show_background": true,
+		"show_background": false,
 		"edit_debounce_ms": 0,
 		"scroll_debounce_ms": 0
 	},
@@ -118,7 +118,7 @@
 	// https://zed.dev/docs/configuring-zed#preview-tabs
 	// ////
 	"file_finder": {
-		"modal_max_width": "xlarge"
+		"modal_max_width": "small"
 	},
 	"projects_online_by_default": true,
 	"remove_trailing_whitespace_on_save": true,
@@ -223,12 +223,12 @@
 			"share_on_join": false
 		}
 	},
-	"unnecessary_code_fade": 0.9,
+	"unnecessary_code_fade": 0.55,
 	// https://zed.dev/docs/configuring-zed#code-actions-on-format
 	// https://zed.dev/docs/configuring-zed#languages
 	"languages": {
 		"Go": {
-			"inlay_hints": {"edit_debounce_ms": 0, "enabled": true }
+			"inlay_hints": { "edit_debounce_ms": 0, "enabled": true }
 		},
 		"Python": {
 			"tab_size": 4,

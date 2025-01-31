@@ -267,8 +267,8 @@
 			// !!!
 			"escape": "buffer_search::Dismiss",
 			"tab": "buffer_search::FocusEditor",
-			"enter": "search::SelectNextMatch",
-			"shift-enter": "search::SelectPrevMatch",
+			// "enter": "search::SelectNextMatch",
+			// "shift-enter": "search::SelectPrevMatch",
 			"alt-enter": "search::SelectAllMatches",
 			// "cmd-f": "search::FocusSearch",
 			"cmd-alt-f": "search::ToggleReplace",
@@ -1177,6 +1177,7 @@
 			"ctrl-c": "vim::NormalBefore",
 			"ctrl-[": "vim::NormalBefore",
 			"escape": "vim::NormalBefore",
+			"g": null,
 			"ctrl-x": null,
 			// "ctrl-x ctrl-o": "editor::ShowCompletions",
 			"ctrl-x ctrl-a": "assistant::InlineAssist", // zed specific
