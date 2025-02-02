@@ -1441,7 +1441,6 @@
 			// window related commands (ctrl-w X)
 			// !!!
 			"ctrl-w": null,
-			"ctrl-w left": ["workspace::ActivatePaneInDirection", "Left"],
 			"space l": ["workspace::ActivatePaneInDirection", "Right"],
 			"space k": ["workspace::ActivatePaneInDirection", "Up"],
 			"space j": ["workspace::ActivatePaneInDirection", "Down"],

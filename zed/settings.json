@@ -24,7 +24,7 @@
 	"buffer_font_family": "Zed Plex Mono",
 	"buffer_font_features": null,
 	"buffer_font_fallbacks": null,
-	"buffer_font_size": 14.0,
+	"buffer_font_size": 13.0,
 	"buffer_font_weight": 500,
 	"buffer_line_height": "comfortable",
 	"confirm_quit": false,
@@ -228,7 +228,8 @@
 	// https://zed.dev/docs/configuring-zed#languages
 	"languages": {
 		"Go": {
-			"inlay_hints": { "edit_debounce_ms": 0, "enabled": true }
+			"inlay_hints": { "edit_debounce_ms": 0, "enabled": true },
+			"format_on_save": "on"
 		},
 		"Python": {
 			"tab_size": 4,
