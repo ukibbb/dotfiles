@@ -14,7 +14,7 @@
     // Features that can be globally enabled or disabled
     "features": {
         // Which inline completion provider to use.
-        "inline_completion_provider": "copilot"
+        "inline_completion_provider": "zed"
     },
     // The name of a font to use for rendering text in the editor
     "buffer_font_family": "Zed Plex Mono",
