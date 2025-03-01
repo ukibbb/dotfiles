@@ -14,7 +14,7 @@
     // Features that can be globally enabled or disabled
     "features": {
         // Which inline completion provider to use.
-        "edit_prediction_provider": "zed"
+        "inline_completion_provider": "copilot"
     },
     // The name of a font to use for rendering text in the editor
     "buffer_font_family": "Zed Plex Mono",
@@ -27,7 +27,7 @@
         // "calt": false
     },
     // The default font size for text in the editor
-    "buffer_font_size": 14.0,
+    "buffer_font_size": 16.0,
     // The weight of the editor font in standard CSS units from 100 to 900.
     "buffer_font_weight": 400,
     // Set the buffer's line height.
@@ -152,7 +152,7 @@
     "show_signature_help_after_edits": false,
     /// Whether to show the inline completions next to the completions provided by a language server.
     /// Only has an effect if inline completion provider supports it.
-    "show_edit_predictions_in_menu": true,
+    "show_inline_completions_in_menu": true,
     // Whether to show wrap guides (vertical rulers) in the editor.
     // Setting this to true will show a guide at the 'preferred_line_length' value
     // if 'soft_wrap' is set to 'preferred_line_length', and will show any
@@ -194,10 +194,10 @@
     "always_treat_brackets_as_autoclosed": false,
     // Controls whether inline completions are shown immediately (true)
     // or manually by triggering `editor::ShowInlineCompletion` (false).
-    "show_edit_predictions": true,
+    "show_inline_completions": true,
     // Controls whether inline completions are shown in a given language scope.
     // Example: ["string", "comment"]
-    "edit_predictions_disabled_in": [],
+    "inline_completions_disabled_in": [],
     // Whether to show tabs and spaces in the editor.
     // This setting can take three values:
     //
@@ -541,9 +541,9 @@
         // The default model to use when creating new chats.
         "default_model": {
             // The provider to use.
-            "provider": "zed.dev",
+            "provider": "openai",
             // The model to use.
-            "model": "claude-3-5-sonnet"
+            "model": "gpt-4"
         }
     },
     // The settings for slash commands.
@@ -768,7 +768,7 @@
     // 2. Load direnv configuration through the shell hook, works for POSIX shells and fish.
     //      "load_direnv": "shell_hook"
     "load_direnv": "direct",
-    "edit_predictions": {
+    "inline_completions": {
         // A list of globs representing files that inline completions should be disabled for.
         "disabled_globs": [".env"]
     },
