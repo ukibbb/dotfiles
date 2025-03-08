@@ -723,7 +723,7 @@
                 "project_panel::Delete",
                 { "skip_prompt": false }
             ],
-            "cmd-shift-f": "project_panel::NewSearchInDirectory",
+            // "cmd-shift-f": "project_panel::NewSearchInDirectory",
             "shift-down": "menu::SelectNext",
             "shift-up": "menu::SelectPrev",
             "escape": "menu::Cancel"

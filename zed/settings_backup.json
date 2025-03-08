@@ -14,7 +14,7 @@
     // Features that can be globally enabled or disabled
     "features": {
         // Which inline completion provider to use.
-        "inline_completion_provider": "copilot"
+        "inline_completion_provider": "zed"
     },
     // The name of a font to use for rendering text in the editor
     "buffer_font_family": "Zed Plex Mono",
@@ -27,7 +27,7 @@
         // "calt": false
     },
     // The default font size for text in the editor
-    "buffer_font_size": 16.0,
+    "buffer_font_size": 14.0,
     // The weight of the editor font in standard CSS units from 100 to 900.
     "buffer_font_weight": 400,
     // Set the buffer's line height.
@@ -541,9 +541,9 @@
         // The default model to use when creating new chats.
         "default_model": {
             // The provider to use.
-            "provider": "openai",
+            "provider": "zed.dev",
             // The model to use.
-            "model": "gpt-4"
+            "model": "claude-3-5-sonnet"
         }
     },
     // The settings for slash commands.
