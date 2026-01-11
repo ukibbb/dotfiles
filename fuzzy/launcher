@@ -1,0 +1,368 @@
+#!/usr/bin/env bash
+# =============================================================================
+# launcher - Główny punkt wejścia dla Project Launcher
+# =============================================================================
+# Ten skrypt orchestruje cały proces uruchamiania projektu:
+#   1. Skanuje system plików w poszukiwaniu projektów
+#   2. Wyświetla fzf do wyboru projektu
+#   3. Wyświetla GUI do wyboru trybu uruchomienia
+#   4. Uruchamia projekt w wybranym trybie
+#
+# Użycie:
+#   ./launcher                  - Interaktywny tryb (fzf + GUI)
+#   ./launcher <project_path>   - Pomiń wybór projektu, tylko wybierz tryb
+#
+# Zależności:
+#   - fzf (fuzzy finder)
+#   - Swift (do kompilacji mode-selector)
+#   - Ghostty (terminal)
+#   - tmux (opcjonalnie, dla trybów z tmux)
+# =============================================================================
+
+# Włącz strict mode dla bezpieczeństwa
+# -e = zakończ przy pierwszym błędzie
+# -u = traktuj niezdefiniowane zmienne jako błąd
+# -o pipefail = propaguj błędy w pipeline
+set -euo pipefail
+
+# =============================================================================
+# KONFIGURACJA - Ścieżki i zmienne globalne
+# =============================================================================
+
+# Pobierz ścieżkę do katalogu gdzie znajduje się ten skrypt
+# ${BASH_SOURCE[0]} = pełna ścieżka do tego skryptu
+# dirname = wyciąga katalog z pełnej ścieżki
+# cd + pwd = konwertuje na pełną ścieżkę absolutną
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Ścieżka do katalogu lib/ z pomocniczymi skryptami
+LIB_DIR="$SCRIPT_DIR/lib"
+
+# Ścieżki do poszczególnych komponentów
+FIND_PROJECTS_SCRIPT="$LIB_DIR/find-projects.sh"              # Skrypt skanujący system
+MODE_SELECTOR_BIN="$LIB_DIR/mode-selector"                    # Skompilowany binary Swift
+MODE_SELECTOR_SRC="$LIB_DIR/mode-selector.swift"              # Źródło Swift
+MODE_SELECTOR_APPLESCRIPT="$LIB_DIR/mode-selector-applescript.sh"  # AppleScript fallback
+LAUNCH_PROJECT_SCRIPT="$LIB_DIR/launch-project.sh"            # Skrypt uruchamiający projekt
+
+# Plik konfiguracyjny (z wykluczeniami itp.)
+CONFIG_FILE="$SCRIPT_DIR/config.yaml"
+
+# =============================================================================
+# FUNKCJA: check_dependencies
+# =============================================================================
+# Sprawdza czy wszystkie wymagane narzędzia są zainstalowane.
+# Jeśli brakuje krytycznego narzędzia, wypisuje błąd i kończy skrypt.
+# =============================================================================
+check_dependencies() {
+    # Tablica z wymaganymi komendami
+    # Każdy element to: "nazwa_komendy|opis|czy_opcjonalna"
+    local deps=(
+        "fzf|Fuzzy finder - do wyboru projektu|false"
+        "swiftc|Swift compiler - do kompilacji GUI|false"
+    )
+
+    # Flaga czy znaleziono jakiś brakujący dependency
+    local missing=false
+
+    # Iteruj po każdym dependency
+    for dep in "${deps[@]}"; do
+        # Rozdziel string po | na 3 części
+        # IFS='|' = separator to |
+        # read -r = czytaj bez escape'owania
+        IFS='|' read -r cmd desc optional <<< "$dep"
+
+        # Sprawdź czy komenda jest dostępna w PATH
+        # command -v = zwraca ścieżkę do komendy jeśli istnieje
+        # &>/dev/null = ignoruj output
+        if ! command -v "$cmd" &>/dev/null; then
+            # Komenda NIE jest dostępna
+            if [[ "$optional" == "false" ]]; then
+                # To jest wymagany dependency - wypisz błąd
+                echo "BŁĄD: Brakuje wymaganego narzędzia: $cmd" >&2
+                echo "       $desc" >&2
+                missing=true
+            else
+                # To jest opcjonalny dependency - tylko ostrzeżenie
+                echo "OSTRZEŻENIE: Brakuje opcjonalnego narzędzia: $cmd" >&2
+                echo "             $desc" >&2
+            fi
+        fi
+    done
+
+    # Jeśli brakowało jakiegoś wymaganego dependency, zakończ
+    if [[ "$missing" == true ]]; then
+        echo "" >&2
+        echo "Zainstaluj brakujące narzędzia i spróbuj ponownie." >&2
+        echo "Możesz użyć: brew install fzf" >&2
+        exit 1
+    fi
+}
+
+# =============================================================================
+# FUNKCJA: compile_mode_selector
+# =============================================================================
+# Kompiluje mode-selector.swift do binarnego pliku wykonywalnego.
+# Kompilacja następuje tylko jeśli:
+#   - Binary nie istnieje, LUB
+#   - Plik źródłowy (.swift) jest nowszy niż binary
+# =============================================================================
+compile_mode_selector() {
+    # Sprawdź czy trzeba kompilować
+    local need_compile=false
+
+    # Jeśli binary nie istnieje, trzeba skompilować
+    if [[ ! -f "$MODE_SELECTOR_BIN" ]]; then
+        need_compile=true
+    # Jeśli źródło jest nowsze niż binary, trzeba przekompilować
+    elif [[ "$MODE_SELECTOR_SRC" -nt "$MODE_SELECTOR_BIN" ]]; then
+        # -nt = newer than (porównanie czasu modyfikacji plików)
+        need_compile=true
+    fi
+
+    # Jeśli trzeba kompilować...
+    if [[ "$need_compile" == true ]]; then
+        echo "Kompilowanie mode-selector..." >&2
+
+        # Wywołaj kompilator Swift
+        # swiftc = Swift compiler
+        # -o = output file (ścieżka do pliku wynikowego)
+        # Ostatni argument = plik źródłowy
+        swiftc -o "$MODE_SELECTOR_BIN" "$MODE_SELECTOR_SRC"
+
+        # Sprawdź czy kompilacja się powiodła
+        if [[ $? -ne 0 ]]; then
+            # $? = exit code ostatniej komendy
+            # -ne 0 = not equal 0 (błąd)
+            echo "BŁĄD: Kompilacja mode-selector nie powiodła się" >&2
+            exit 1
+        fi
+
+        echo "Kompilacja zakończona pomyślnie" >&2
+    fi
+}
+
+# =============================================================================
+# FUNKCJA: select_project
+# =============================================================================
+# Pozwala użytkownikowi wybrać projekt używając fzf.
+# Wywołuje find-projects.sh aby uzyskać listę katalogów, a następnie
+# przekazuje ją do fzf.
+#
+# Zwraca (stdout): Pełną ścieżkę do wybranego projektu
+# Exit code: 0 = sukces, 1 = anulowano
+# =============================================================================
+select_project() {
+    # Sprawdź czy skrypt find-projects.sh istnieje
+    if [[ ! -f "$FIND_PROJECTS_SCRIPT" ]]; then
+        echo "BŁĄD: Nie znaleziono skryptu: $FIND_PROJECTS_SCRIPT" >&2
+        exit 1
+    fi
+
+    # Nadaj uprawnienia wykonywania skryptowi (na wszelki wypadek)
+    chmod +x "$FIND_PROJECTS_SCRIPT"
+
+    echo "Skanowanie katalogów..." >&2
+
+    # Wywołaj skrypt skanujący i zapisz wynik do zmiennej
+    # $(...) = command substitution (wykonaj komendę i wstaw jej output)
+    local projects_list
+    projects_list=$("$FIND_PROJECTS_SCRIPT")
+
+    # Sprawdź czy lista nie jest pusta
+    if [[ -z "$projects_list" ]]; then
+        echo "BŁĄD: Nie znaleziono żadnych katalogów" >&2
+        echo "Sprawdź konfigurację wykluczeń w: $CONFIG_FILE" >&2
+        exit 1
+    fi
+
+    echo "Wybierz projekt:" >&2
+
+    # Przekaż listę do fzf i pozwól użytkownikowi wybrać
+    # echo "$projects_list" = wypisz listę (każda ścieżka w osobnej linii)
+    # | fzf = przekaż do fzf
+    # --height 40% = okno fzf zajmuje 40% wysokości terminala
+    # --reverse = wyniki od góry do dołu (odwrotnie niż domyślnie)
+    # --border = pokaż ramkę wokół fzf
+    # --preview = pokaż podgląd dla wybranego elementu
+    #   'ls -la {}' = pokaż zawartość katalogu (ls -la)
+    #   {} = placeholder na wybrany element
+    # --preview-window = konfiguracja okna podglądu
+    #   right:50% = po prawej stronie, 50% szerokości
+    local selected_project
+    selected_project=$(echo "$projects_list" | fzf \
+        --height 40% \
+        --reverse \
+        --border \
+        --prompt "Projekt > " \
+        --preview 'ls -la {}' \
+        --preview-window right:50%)
+
+    # Sprawdź czy użytkownik coś wybrał (czy nie anulował Escape/Ctrl+C)
+    if [[ -z "$selected_project" ]]; then
+        # Pusty wybór = użytkownik anulował
+        echo "Anulowano wybór projektu" >&2
+        exit 1
+    fi
+
+    # Zwróć wybrany projekt (stdout)
+    echo "$selected_project"
+}
+
+# =============================================================================
+# FUNKCJA: select_mode
+# =============================================================================
+# Wyświetla natywne macOS GUI do wyboru trybu uruchomienia.
+# Wywołuje skompilowany binary mode-selector.
+#
+# Argumenty:
+#   $1 - Ścieżka do projektu (opcjonalna, do wyświetlenia w GUI)
+#
+# Zwraca (stdout): Identyfikator wybranego trybu (np. "tmux-nvim")
+# Exit code: 0 = sukces, 1 = anulowano
+# =============================================================================
+select_mode() {
+    local project_path="${1:-}"  # Pierwszy argument lub pusty string
+
+    local selected_mode
+    local exit_code
+
+    # Sprawdź czy binary mode-selector istnieje (Swift wersja)
+    if [[ -f "$MODE_SELECTOR_BIN" ]]; then
+        # Swift binary istnieje - użyj go
+        echo "Używam Swift GUI..." >&2
+
+        # Wywołaj mode-selector z opcjonalną ścieżką projektu
+        selected_mode=$("$MODE_SELECTOR_BIN" "$project_path")
+        exit_code=$?
+
+    elif [[ -f "$MODE_SELECTOR_APPLESCRIPT" ]]; then
+        # Swift binary nie istnieje - użyj AppleScript fallback
+        echo "Używam AppleScript GUI (fallback)..." >&2
+
+        # Nadaj uprawnienia wykonywania
+        chmod +x "$MODE_SELECTOR_APPLESCRIPT"
+
+        # Wywołaj AppleScript wersję
+        selected_mode=$("$MODE_SELECTOR_APPLESCRIPT" "$project_path")
+        exit_code=$?
+
+    else
+        # Żaden GUI nie istnieje - błąd
+        echo "BŁĄD: Nie znaleziono żadnego mode-selector" >&2
+        echo "Sprawdź czy pliki istnieją:" >&2
+        echo "  - $MODE_SELECTOR_BIN" >&2
+        echo "  - $MODE_SELECTOR_APPLESCRIPT" >&2
+        exit 1
+    fi
+
+    # Sprawdź exit code mode-selector
+    if [[ $exit_code -ne 0 ]]; then
+        # Exit code != 0 = użytkownik anulował lub błąd
+        echo "Anulowano wybór trybu" >&2
+        exit 1
+    fi
+
+    # Sprawdź czy zwrócono jakiś tryb
+    if [[ -z "$selected_mode" ]]; then
+        echo "BŁĄD: mode-selector nie zwrócił trybu" >&2
+        exit 1
+    fi
+
+    # Zwróć wybrany tryb (stdout)
+    echo "$selected_mode"
+}
+
+# =============================================================================
+# FUNKCJA: launch_project
+# =============================================================================
+# Uruchamia projekt w wybranym trybie.
+# Wywołuje skrypt launch-project.sh z odpowiednimi parametrami.
+#
+# Argumenty:
+#   $1 - Ścieżka do projektu
+#   $2 - Tryb uruchomienia
+# =============================================================================
+launch_project() {
+    local project_path="$1"  # Pierwsz argument = ścieżka
+    local mode="$2"          # Drugi argument = tryb
+
+    # Sprawdź czy skrypt launch-project.sh istnieje
+    if [[ ! -f "$LAUNCH_PROJECT_SCRIPT" ]]; then
+        echo "BŁĄD: Nie znaleziono skryptu: $LAUNCH_PROJECT_SCRIPT" >&2
+        exit 1
+    fi
+
+    # Nadaj uprawnienia wykonywania
+    chmod +x "$LAUNCH_PROJECT_SCRIPT"
+
+    # Wywołaj skrypt uruchamiający projekt
+    # "$LAUNCH_PROJECT_SCRIPT" = ścieżka do skryptu
+    # "$project_path" = argument 1 (ścieżka)
+    # "$mode" = argument 2 (tryb)
+    "$LAUNCH_PROJECT_SCRIPT" "$project_path" "$mode"
+}
+
+# =============================================================================
+# MAIN - Główna logika programu
+# =============================================================================
+
+main() {
+    # Wypisz nagłówek
+    echo "==================================" >&2
+    echo "   Project Launcher" >&2
+    echo "==================================" >&2
+    echo "" >&2
+
+    # 1. Sprawdź czy wszystkie wymagane narzędzia są zainstalowane
+    check_dependencies
+
+    # 2. Skompiluj mode-selector jeśli potrzeba
+    compile_mode_selector
+
+    # 3. Wybierz projekt
+    # Jeśli użytkownik podał projekt jako argument, użyj go
+    # W przeciwnym razie pokaż fzf do wyboru
+    local project_path
+
+    if [[ $# -gt 0 ]]; then
+        # Użytkownik podał argument - użyj go jako ścieżki projektu
+        project_path="$1"
+
+        # Sprawdź czy podana ścieżka istnieje
+        if [[ ! -d "$project_path" ]]; then
+            echo "BŁĄD: Katalog '$project_path' nie istnieje" >&2
+            exit 1
+        fi
+
+        echo "Użyto projektu z argumentu: $project_path" >&2
+    else
+        # Brak argumentu - pokaż fzf
+        project_path=$(select_project)
+    fi
+
+    echo "" >&2
+    echo "Wybrany projekt: $project_path" >&2
+    echo "" >&2
+
+    # 4. Wybierz tryb uruchomienia (GUI)
+    local mode
+    mode=$(select_mode "$project_path")
+
+    echo "" >&2
+    echo "Wybrany tryb: $mode" >&2
+    echo "" >&2
+
+    # 5. Uruchom projekt w wybranym trybie
+    launch_project "$project_path" "$mode"
+
+    # Sukces!
+    echo "" >&2
+    echo "==================================" >&2
+    echo "   Gotowe! ✓" >&2
+    echo "==================================" >&2
+}
+
+# Wywołaj funkcję main z wszystkimi argumentami przekazanymi do skryptu
+# "$@" = wszystkie argumenty jako osobne stringi
+main "$@"
