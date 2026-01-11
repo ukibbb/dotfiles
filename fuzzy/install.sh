@@ -56,14 +56,10 @@ HAMMERSPOON_CONFIG="$SCRIPT_DIR/hammerspoon-init.lua"
 # =============================================================================
 print_header() {
     # -e = interpretuj escape sequences (\n, kolory ANSI)
-    echo -e "\n${BLUE}===================================${NC}"
     echo -e "${BLUE}$1${NC}"
-    echo -e "${BLUE}===================================${NC}\n"
 }
 
-# =============================================================================
 # FUNKCJA: print_success
-# =============================================================================
 # Wypisuje wiadomość sukcesu (zielony kolor).
 #
 # Argumenty:

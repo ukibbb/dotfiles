@@ -29,11 +29,26 @@ set -euo pipefail
 # KONFIGURACJA - Ścieżki i zmienne globalne
 # =============================================================================
 
-# Pobierz ścieżkę do katalogu gdzie znajduje się ten skrypt
-# ${BASH_SOURCE[0]} = pełna ścieżka do tego skryptu
-# dirname = wyciąga katalog z pełnej ścieżki
-# cd + pwd = konwertuje na pełną ścieżkę absolutną
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Co robi ten kod?
+# Kod ten służy do ustalenia lokalizacji (ścieżki) katalogu, w którym znajduje się uruchamiany skrypt (launcher).
+# Jeśli skrypt został uruchomiony poprzez symlink (link symboliczny), kod znajduje "prawdziwy" docelowy plik i ustawia zmienną SCRIPT_DIR na jego katalog.
+#
+# Co to jest symlink (link symboliczny)?
+# Symlink (symbolic link) to specjalny rodzaj pliku w systemach Unix/Linux, który działa jak skrót - wskazuje na inny plik lub katalog w systemie plików.
+# Dzięki symlinkom można np. umieścić skrypt w jednym miejscu, a stworzyć do niego odwołanie w innym (np. w katalogu na PATH), bez kopiowania pliku.
+
+# Pobierz ścieżkę do katalogu, obsługując możliwość, że skrypt jest symlinkiem
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  TARGET="$(readlink "$SOURCE")"
+  if [[ $TARGET == /* ]]; then
+    SOURCE="$TARGET"
+  else
+    DIR="$(dirname "$SOURCE")"
+    SOURCE="$DIR/$TARGET"
+  fi
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 
 # Ścieżka do katalogu lib/ z pomocniczymi skryptami
 LIB_DIR="$SCRIPT_DIR/lib"
@@ -48,9 +63,7 @@ LAUNCH_PROJECT_SCRIPT="$LIB_DIR/launch-project.sh"            # Skrypt uruchamia
 # Plik konfiguracyjny (z wykluczeniami itp.)
 CONFIG_FILE="$SCRIPT_DIR/config.yaml"
 
-# =============================================================================
 # FUNKCJA: check_dependencies
-# =============================================================================
 # Sprawdza czy wszystkie wymagane narzędzia są zainstalowane.
 # Jeśli brakuje krytycznego narzędzia, wypisuje błąd i kończy skrypt.
 # =============================================================================
