@@ -5,6 +5,10 @@ return {
   -- We don't configure it - just need it available for other plugins
   "nvim-lua/plenary.nvim",
 
+  -- nvim-web-devicons: Provides file type icons
+  -- Required by many plugins (NvChad UI, telescope, file managers, etc.)
+  "nvim-tree/nvim-web-devicons",
+
 
   -- NVCHAD UI
   -- Base46: NvChad's theming engine
@@ -41,6 +45,54 @@ return {
   -- Minty: Color picker utilities (Huefy = color picker, Shades = shade generator)
   -- cmd = {...} means lazy-load only when these commands are used
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
+
+
+  -- INDENT GUIDES
+  -- indent-blankline: Shows vertical lines at indentation levels
+  -- Makes it easier to see code structure and nested blocks
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    -- Load after a real file is opened (not on empty buffer)
+    event = "User FilePost",
+    opts = {
+      -- Character to use for indent lines (│ is a clean vertical bar)
+      indent = { char = "│", highlight = "IblChar" },
+      -- Scope shows the current block you're in with a different highlight
+      scope = { char = "│", highlight = "IblScopeChar" },
+    },
+    config = function(_, opts)
+      -- Load base46 theme colors for the indent lines
+      dofile(vim.g.base46_cache .. "blankline")
+
+      -- Register hooks to hide indentation on first space level
+      -- This prevents an indent line at column 0 which looks weird
+      local hooks = require "ibl.hooks"
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+      
+      -- Setup the plugin with our options
+      require("ibl").setup(opts)
+
+      -- Reload theme (ensures colors are applied correctly)
+      dofile(vim.g.base46_cache .. "blankline")
+    end,
+  },
+
+  -- WHICH-KEY
+  -- which-key.nvim: Shows a popup with available keybindings when you start a command
+  -- For example: press <leader> and wait, it shows all <leader>+? mappings
+  -- This is incredibly helpful for discovering and remembering keybindings
+  {
+    "folke/which-key.nvim",
+    -- Lazy-load when these keys are pressed (common prefixes)
+    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    -- Also load when :WhichKey command is used
+    cmd = "WhichKey",
+    opts = function()
+      -- Load base46 theme colors for which-key
+      dofile(vim.g.base46_cache .. "whichkey")
+      return {}
+    end,
+  },
 
 
   -- CODE FORMATTING
@@ -91,9 +143,6 @@ return {
   },
 
   -- AUTOCOMPLETION
-
-  -- Blink.cmp: NvChad's new completion engine integration (testing phase)
-  { import = "nvchad.blink.lazyspec" },
 
   -- nvim-cmp: Autocompletion engine - the popup that suggests completions as you type
   -- This is the core plugin; it needs "sources" to provide completion candidates
@@ -193,6 +242,46 @@ return {
     config = function(_, opts)
       -- Setup treesitter with our configuration
       require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
+
+  -- FILE MANAGER
+  -- Yazi: Terminal file manager integration
+  -- Fast, modern file manager with image previews and async operations
+  {
+    "mikavilpas/yazi.nvim",
+    version = "*", -- use the latest stable version
+    event = "VeryLazy",
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+    },
+    keys = {
+      {
+        "<leader>-",
+        mode = { "n", "v" },
+        "<cmd>Yazi<cr>",
+        desc = "Open yazi at the current file",
+      },
+      {
+        -- Open in the current working directory
+        "<leader>cw",
+        "<cmd>Yazi cwd<cr>",
+        desc = "Open the file manager in nvim's working directory",
+      },
+      {
+        "<c-up>",
+        "<cmd>Yazi toggle<cr>",
+        desc = "Resume the last yazi session",
+      },
+    },
+    opts = function()
+      return require "configs.yazi"
+    end,
+    init = function()
+      -- mark netrw as loaded so it's not loaded at all.
+      --
+      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+      vim.g.loaded_netrwPlugin = 1
     end,
   },
 

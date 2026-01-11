@@ -1,8 +1,4 @@
--- NvChad Key Mappings Configuration
--- This file defines all keyboard shortcuts for efficient navigation and editing
-
 -- Create an alias for vim.keymap.set to reduce typing
--- map(mode, key, action, options) - the standard way to create keymaps in Lua
 local map = vim.keymap.set
 
 -- INSERT MODE NAVIGATION
@@ -10,8 +6,6 @@ local map = vim.keymap.set
 -- Using Ctrl as a modifier keeps your fingers on the home row
 
 -- jk: Quick escape from insert mode to normal mode
--- Classic Vim trick - your fingers never leave home row!
--- Typing "jk" quickly acts as Escape. If you need literal "jk", type slowly.
 map("i", "jk", "<ESC>", { desc = "exit insert mode" })
 
 -- Ctrl+b: Jump to beginning of line (like ^ in normal mode)
@@ -354,6 +348,7 @@ end, { desc = "terminal toggle floating term" })
 -- Leader+wK: Show ALL available keymaps
 -- Opens which-key without any prefix, showing everything
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
+
 -- Leader+wk: Query a specific keymap prefix
 -- Prompts for input, then shows keymaps starting with that prefix
 -- Useful for exploring: type "g" to see all g-prefixed commands

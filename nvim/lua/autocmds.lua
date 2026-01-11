@@ -1,27 +1,18 @@
--- ╔══════════════════════════════════════════════════════════════════════════╗
--- ║                          AUTOCMDS.LUA                                     ║
--- ║                 Automatic Commands (Event Handlers)                       ║
--- ║                                                                           ║
--- ║  Autocommands run code automatically when events occur:                   ║
--- ║  - Opening a file, saving, entering/leaving a buffer, etc.                ║
--- ║  - Like event listeners in JavaScript                                     ║
--- ╚══════════════════════════════════════════════════════════════════════════╝
+-- Automatic Commands (Event Handlers)
+-- Autocommands run code automatically when events occur  
+-- Opening a file, saving, entering/leaving a buffer, etc.                 
+-- Like event listeners in JavaScript                                     
 
--- Create shortcuts for cleaner code
 local autocmd = vim.api.nvim_create_autocmd  -- Function to create autocommands
 local augroup = vim.api.nvim_create_augroup  -- Function to create autocommand groups
 
--- ============================================================================
 -- ABOUT AUTOCOMMAND GROUPS (augroups)
--- ============================================================================
 -- Groups organize related autocommands together
 -- { clear = true } removes old autocmds in this group when re-sourcing
 -- Without this, reloading your config would CREATE DUPLICATE autocommands!
 
--- ============================================================================
 -- SECTION 1: HIGHLIGHT YANK (Visual Feedback)
--- ============================================================================
--- Flash/highlight text briefly when you yank (copy) it
+-- Flash/highlight text briefly when you yank (copy) it 
 -- This provides visual feedback so you know what was copied
 
 augroup("YankHighlight", { clear = true })  -- Create group named "YankHighlight"
@@ -37,12 +28,9 @@ autocmd("TextYankPost", {  -- Event: after yanking text
   end,
 })
 
--- ============================================================================
 -- SECTION 2: RESTORE CURSOR POSITION
--- ============================================================================
 -- When reopening a file, jump to where cursor was last time
 -- Extremely useful - you don't lose your place!
-
 augroup("RestoreCursor", { clear = true })
 
 autocmd("BufReadPost", {  -- Event: after reading a buffer (opening a file)
@@ -64,9 +52,7 @@ autocmd("BufReadPost", {  -- Event: after reading a buffer (opening a file)
   end,
 })
 
--- ============================================================================
 -- SECTION 3: AUTO-RESIZE SPLITS
--- ============================================================================
 -- When you resize Neovim window, make all splits equal size
 -- Useful when using Neovim in a terminal and resizing the terminal
 
@@ -82,9 +68,7 @@ autocmd("VimResized", {  -- Event: Neovim window was resized
   end,
 })
 
--- ============================================================================
 -- SECTION 4: CLOSE SPECIAL BUFFERS WITH 'q'
--- ============================================================================
 -- Some buffer types (help, quickfix, etc.) should be closeable with just 'q'
 -- This makes navigation faster - no need to type :q or :close
 
@@ -118,9 +102,7 @@ autocmd("FileType", {  -- Event: filetype was detected for a buffer
   end,
 })
 
--- ============================================================================
 -- SECTION 5: CHECK IF FILE CHANGED OUTSIDE NEOVIM
--- ============================================================================
 -- If you edit a file in another program while it's open in Neovim,
 -- this will prompt you to reload it
 
@@ -141,12 +123,9 @@ autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   end,
 })
 
--- ============================================================================
 -- SECTION 6: AUTO-CREATE DIRECTORIES
--- ============================================================================
 -- When saving a file in a directory that doesn't exist, create it automatically
 -- Example: :w ~/new/deep/path/file.lua creates ~/new/deep/path/ if needed
-
 augroup("AutoMkdir", { clear = true })
 
 autocmd("BufWritePre", {  -- Event: before writing a buffer (saving)
@@ -169,9 +148,7 @@ autocmd("BufWritePre", {  -- Event: before writing a buffer (saving)
   end,
 })
 
--- ============================================================================
 -- SECTION 7: REMOVE TRAILING WHITESPACE
--- ============================================================================
 -- Automatically remove trailing whitespace when saving
 -- Trailing whitespace is ugly and can cause issues in some contexts
 
@@ -195,9 +172,7 @@ autocmd("BufWritePre", {  -- Event: before writing/saving
   end,
 })
 
--- ============================================================================
 -- SECTION 8: FILETYPE-SPECIFIC SETTINGS
--- ============================================================================
 -- Some filetypes need different settings
 -- Example: Markdown needs wrap, Go uses tabs, Python uses 4-space indent
 
@@ -238,9 +213,7 @@ autocmd("FileType", {
   end,
 })
 
--- ============================================================================
 -- SECTION 9: TERMINAL BEHAVIOR
--- ============================================================================
 -- When opening a terminal, automatically enter insert mode
 -- This makes terminal feel more natural
 
@@ -256,9 +229,7 @@ autocmd("TermOpen", {  -- Event: a terminal buffer was opened
   end,
 })
 
--- ============================================================================
 -- CUSTOM USER EVENT (ADVANCED - LIKE NVCHAD USES)
--- ============================================================================
 -- This creates a custom "FilePost" event that fires after UI is ready AND
 -- a real file is open. Useful for lazy-loading plugins that need the UI.
 
