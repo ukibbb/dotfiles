@@ -1,0 +1,322 @@
+---
+title: Configuration Overview
+description: |-
+  A comprehensive overview of Ghostty's configuration capabilities,
+  organized by category to help you discover and understand what's possible.
+---
+
+Ghostty offers extensive configuration options to customize every aspect of your terminal experience. This overview organizes the hundreds of available options into logical categories to help you discover what's possible.
+
+## Font & Typography
+
+Ghostty provides fine-grained control over fonts and text rendering:
+
+### Font Selection
+- **Font families**: Primary, bold, italic, and bold-italic variants with fallback support
+- **Font styles**: Named styles (e.g., "Heavy", "Light") or disable styles entirely
+- **Synthetic styles**: Control whether to synthesize bold/italic when not available
+- **Codepoint mapping**: Map specific Unicode ranges to specific fonts
+
+### Font Rendering
+- **Font size**: Adjustable font size with runtime reload support
+- **Font features**: Enable/disable OpenGL font features like ligatures, stylistic sets
+- **Font variations**: Control variable font axes (weight, slant, width, etc.)
+- **Thickening**: Adjust font thickness for better readability on certain displays
+- **FreeType options**: Low-level control over font rendering flags
+
+### Text Layout
+- **Cell dimensions**: Adjust cell width/height independently
+- **Baseline adjustment**: Fine-tune vertical font positioning
+- **Underline/strikethrough/overline**: Adjust position and thickness of text decorations
+- **Grapheme clustering**: Control how multi-codepoint characters are measured
+- **Line breaking**: Configure where font shaping can break for performance
+
+## Colors & Themes
+
+Create the perfect visual aesthetic with extensive color customization:
+
+### Theme System
+- **Built-in themes**: Hundreds of pre-configured color schemes
+- **Automatic switching**: Different themes for light/dark mode
+- **Custom themes**: Create your own color schemes
+
+### Color Configuration
+- **Basic colors**: Background, foreground, cursor color
+- **Palette colors**: Full 256-color palette customization
+- **Selection colors**: Custom selection background/foreground
+- **UI colors**: Split dividers, window padding, titlebar colors
+- **Minimum contrast**: Ensure readability by enforcing contrast ratios
+
+### Background Effects
+- **Opacity**: Adjustable background transparency (window and per-cell)
+- **Blur**: Background blur effect (macOS: full blur, Linux: fake blur)
+- **Images**: Background images with positioning, sizing, repeat, and opacity
+- **Unfocused splits**: Dim or desaturate inactive split panes
+
+### Advanced Color Features
+- **Alpha blending**: Control opacity blending modes
+- **Bold colors**: Use brighter colors for bold text
+- **Faint opacity**: Adjust opacity for faint text
+- **Color reports**: Configure OSC color report format
+
+## Window Management & UI
+
+Control window behavior and appearance:
+
+### Window Appearance
+- **Decorations**: Native, client-side, or none
+- **Padding**: Horizontal and vertical padding with balance control
+- **Padding color**: Custom colors for window padding areas
+- **Titlebar**: Customize style, colors, font, subtitle
+- **Theme**: Force light/dark window theme or use system setting
+
+### Window Behavior
+- **Sizing**: Set initial width/height, save/restore window state
+- **Positioning**: Control initial window position
+- **Step resize**: Resize by character cells instead of pixels
+- **Focus follows mouse**: X11-style focus behavior
+- **Maximize/fullscreen**: Control initial window state
+
+### Tabs & Splits
+- **Tab bar**: Show/hide tab bar, control when it appears
+- **New tab position**: Where new tabs appear (end, current, after current)
+- **Split appearance**: Divider colors, unfocused split opacity
+- **Resize overlay**: Show terminal dimensions when resizing
+
+### Multi-Window
+- **Initial windows**: Launch with multiple windows
+- **Inheritance**: New windows inherit font size and working directory
+- **Close behavior**: Confirm on close, quit after last window
+- **Window save state**: Remember window positions and sizes
+
+## Cursor Customization
+
+Fine-tune cursor appearance and behavior:
+
+- **Style**: Block, bar, underline, or block with hollow unfocused variant
+- **Blinking**: Enable/disable cursor blinking
+- **Color**: Custom cursor color with automatic inversion
+- **Opacity**: Adjust cursor transparency
+- **Text color**: Control color of text under cursor
+- **Thickness**: Adjust cursor line thickness (bar/underline)
+- **Height**: Control cursor height (bar/underline)
+- **Click to move**: Click to reposition cursor in vim, emacs, etc.
+
+## Mouse & Input
+
+Configure mouse behavior and clipboard integration:
+
+### Mouse Behavior
+- **Hide while typing**: Automatically hide cursor during keyboard input
+- **Scroll multiplier**: Adjust scroll speed
+- **Shift capture**: Control whether shift bypasses mouse capture
+- **Click repeat interval**: Double/triple-click timing
+- **Right-click action**: Select word, select line, or open inspector
+
+### Selection
+- **Auto-copy**: Copy on selection without explicit copy action
+- **Clear behavior**: Clear selection on typing or copy
+- **Selection colors**: Custom foreground/background for selected text
+
+### Clipboard
+- **Read/write permissions**: Control clipboard access (allow, deny, ask)
+- **Trim trailing spaces**: Remove trailing whitespace on copy
+- **Paste protection**: Warn on multi-line or large pastes
+- **Bracketed paste**: Safety controls for bracketed paste mode
+
+## Keybindings
+
+Ghostty's keybinding system is extremely flexible:
+
+- **Custom bindings**: Map any key combination to any action
+- **Complex sequences**: Multi-key sequences and leader keys
+- **Conditional bindings**: Different bindings per mode or state
+- **Action reference**: Extensive set of built-in actions
+- **Global shortcuts**: System-wide shortcuts (platform-dependent)
+
+See the [Keybindings documentation](/ghosty_docs/config/keybind) for complete details.
+
+## Shell Integration
+
+Enhance your shell with deeper terminal integration:
+
+### Integration Features
+- **Working directory**: OSC 7 working directory tracking
+- **Prompt marking**: Enhanced prompt detection and navigation
+- **Command tracking**: Know when commands start/finish
+- **Sudo password**: Secure input for password prompts
+- **Title reporting**: Control whether shell can read window title
+
+### Shell Configuration
+- **Shell integration**: Auto-inject integration scripts (fish, zsh, bash, elvish)
+- **Feature selection**: Enable/disable specific integration features
+- **Custom commands**: Set default shell, initial commands, environment variables
+
+## Commands & Process Management
+
+Control how Ghostty launches and manages processes:
+
+### Command Execution
+- **Default command**: Custom shell or command to run
+- **Initial command**: One-time command on first launch
+- **Environment variables**: Set custom environment variables
+- **Working directory**: Initial working directory
+- **Input**: Pre-load input text on startup
+
+### Process Behavior
+- **Wait after command**: Keep window open after command exits
+- **Abnormal exit handling**: Configure behavior on command crash
+- **Linux cgroups**: Resource limiting with cgroups (memory, processes)
+
+## Terminal Features (VT)
+
+Control terminal protocol and behavior:
+
+- **Terminal type**: Set $TERM value
+- **Enquiry response**: Custom response to ENQ character
+- **KAM mode**: Allow/disallow keyboard action mode
+- **OSC sequences**: Control allowed OSC sequences
+- **VT features**: Support for modern terminal protocols (Kitty graphics, keyboard protocol, etc.)
+
+## Performance & Rendering
+
+Optimize rendering and performance:
+
+- **GPU acceleration**: Metal (macOS) or OpenGL (Linux)
+- **VSync**: Control vertical synchronization
+- **Async backend**: Choose event loop implementation
+- **Custom shaders**: Write custom fragment shaders for effects
+- **Image storage**: Limit memory for Kitty graphics protocol
+
+## Notifications & Alerts
+
+Configure how Ghostty notifies you:
+
+### Bell Configuration
+- **Bell features**: Visual, audio, and/or command execution
+- **Custom audio**: Use custom sound files for bell
+- **Volume**: Adjust bell volume
+
+### System Notifications
+- **Desktop notifications**: Enable/disable system notifications
+- **App notifications**: Control application-triggered notifications (macOS)
+
+## Platform-Specific Features
+
+### macOS
+- **Quick Terminal**: Dropdown terminal from menu bar (position, size, animation)
+- **Titlebar styles**: Native, transparent, hidden, tabs-only
+- **Proxy icon**: Show/hide draggable file icon
+- **Option key**: Use Option as Alt or keep macOS behavior
+- **Window buttons**: Show/hide/reorder traffic light buttons
+- **Non-native fullscreen**: Use traditional fullscreen without Spaces
+- **Window shadow**: Enable/disable window shadow
+- **Dock behavior**: Control drop-to-dock-icon behavior
+- **Auto secure input**: Automatically enable for password prompts
+- **Custom icon**: Use custom dock/app icon with color customization
+
+### Linux/GTK
+- **Single instance**: Multiple windows in one process
+- **Titlebar**: Control GTK titlebar appearance
+- **Tabs location**: Top or bottom tab placement
+- **Toolbar style**: Configure GTK toolbar appearance
+- **Custom CSS**: Inject custom CSS for GTK theming
+- **OpenGL debugging**: Enable OpenGL debug context
+- **Wayland quick terminal**: Layer and keyboard interactivity settings
+
+## Advanced Features
+
+### Custom Shaders
+Write GLSL fragment shaders to create custom visual effects:
+- Animated effects (rainbow, CRT, etc.)
+- Post-processing filters
+- Dynamic effects synchronized to frame time
+
+### Configuration Organization
+- **Multiple files**: Split configuration across multiple files
+- **Optional includes**: Conditionally load platform/machine-specific configs
+- **Relative paths**: Use paths relative to config file location
+- **CLI overrides**: Any config option can be set via command-line flag
+
+### Dynamic Configuration
+- **Runtime reload**: Reload configuration without restarting (Cmd/Ctrl+Shift+,)
+- **Per-window settings**: Some settings can differ per window
+- **Configuration inspection**: View current configuration with `ghostty +show-config`
+
+## Documentation Locations
+
+Here's where to find detailed documentation in your local ghosty_docs:
+
+### Available Local Documentation
+
+**Configuration Reference**:
+- Main config overview: `ghosty_docs/config/index.mdx`
+- Complete option reference: `ghosty_docs/config/reference.mdx` (3300+ lines, 130+ options)
+- Your config file: `~/.config/ghostty/config` or `~/Library/Application Support/com.mitchellh.ghostty/config` (macOS)
+
+**Keybindings**:
+- Overview: `ghosty_docs/config/keybind/index.mdx`
+- Trigger sequences: `ghosty_docs/config/keybind/sequence.mdx`
+- Action reference: `ghosty_docs/config/keybind/reference.mdx`
+
+**Colors & Themes**:
+- Theme system: `ghosty_docs/features/theme.mdx`
+- Color options: `ghosty_docs/config/reference.mdx` (search for `theme`, `background`, `foreground`, `palette`)
+
+**Shell Integration**:
+- Features and setup: `ghosty_docs/features/shell-integration.mdx`
+- Config options: `ghosty_docs/config/reference.mdx` (search for `shell-integration`)
+
+**Platform-Specific Options**:
+- macOS features: `ghosty_docs/config/reference.mdx` (search for `macos-`)
+- Linux/GTK features: `ghosty_docs/config/reference.mdx` (search for `gtk-`)
+- Quick Terminal: `ghosty_docs/config/reference.mdx` (search for `quick-terminal-`)
+
+### Additional Documentation Sources
+
+**Command-Line Tools**:
+```bash
+# View all config options with descriptions
+ghostty +show-config --default --ghosty_docs
+
+# List available fonts
+ghostty +list-fonts
+
+# Check current configuration
+ghostty +show-config
+```
+
+**Online Resources**:
+- Official documentation: https://ghostty.org/ghosty_docs
+- Browse public configs: [GitHub search](https://github.com/search?q=path%3Aghostty%2Fconfig&type=code)
+- Community discussions: https://github.com/ghostty-org/ghostty/discussions
+
+## Configuration Philosophy
+
+Ghostty follows a "zero configuration" philosophy. You can start using Ghostty immediately without any configuration. Every configuration option has a sensible default.
+
+Configuration should be for:
+- **Subjective preferences**: Themes, fonts, keybindings
+- **Workflow customization**: Layouts, shell integration, commands
+- **Platform adaptation**: Platform-specific features and behaviors
+
+If you find yourself configuring something that feels like it should be a default, please [open a discussion](https://github.com/ghostty-org/ghostty/discussions).
+
+## Getting Started
+
+1. **Start simple**: Use Ghostty with no configuration first
+2. **Identify needs**: Notice what you want to change
+3. **Reference ghosty_docs**: Check the [configuration reference](/ghosty_docs/config/reference) for specific options
+4. **Iterate**: Add configuration gradually as you discover preferences
+5. **Share**: Consider sharing your configuration for others to learn from
+
+## Learning Resources
+
+- [Configuration syntax and file location](/ghosty_docs/config)
+- [Complete configuration reference](/ghosty_docs/config/reference)
+- [Keybinding documentation](/ghosty_docs/config/keybind)
+- [Color themes documentation](/ghosty_docs/features/theme)
+- [Shell integration features](/ghosty_docs/features/shell-integration)
+- [Browse public configurations](https://github.com/search?q=path%3Aghostty%2Fconfig&type=code)
+- Generate local ghosty_docs: `ghostty +show-config --default --ghosty_docs`
+

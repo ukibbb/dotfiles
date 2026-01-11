@@ -1,0 +1,83 @@
+# Ghostty Configuration
+# Custom Theme: "Deep Space" - A dark theme with vibrant accents
+
+# BASIC COLORS
+# Background: Deep blue-teal to match iTerm2 aesthetic
+background = #000000      
+
+# Foreground: Soft white for text, easy on the eyes
+foreground = #e0e0e0
+
+# Cursor: Bright cyan to stand out clearly
+cursor-color = #00d9ff
+
+# Cursor text: Black text under the cursor for contrast
+cursor-text = #000000
+
+# SELECTION COLORS
+# Selection background: Deep blue with slight transparency
+selection-background = #2a4a7a
+
+# Selection text: Keep foreground color visible
+selection-foreground = #ffffff
+
+# ANSI COLOR PALETTE
+# These are the 16 basic terminal colors (0-15)
+
+# Black colors (0 = black, 8 = bright black/gray)
+palette = 0=#1a1a1a
+palette = 8=#4d4d4d
+
+# Red colors (1 = red, 9 = bright red)
+palette = 1=#ff5555
+palette = 9=#ff6e6e
+
+# Green colors (2 = green, 10 = bright green)
+palette = 2=#50fa7b
+palette = 10=#69ff94
+
+# Yellow colors (3 = yellow, 11 = bright yellow)
+palette = 3=#f1fa8c
+palette = 11=#ffffa5
+
+# Blue colors (4 = blue, 12 = bright blue)
+palette = 4=#569cd6
+palette = 12=#6fa8dc
+
+# Magenta/Purple colors (5 = magenta, 13 = bright magenta)
+palette = 5=#bd93f9
+palette = 13=#d6acff
+
+# Cyan colors (6 = cyan, 14 = bright cyan)
+palette = 6=#00d9ff
+palette = 14=#4dffff
+
+# White colors (7 = white, 15 = bright white)
+palette = 7=#e0e0e0
+palette = 15=#ffffff
+
+# Font configuration
+font-size = 14
+
+# Window padding - completely remove borders/padding
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = true
+window-padding-color = extend
+window-step-resize = true
+
+# Fine-tune cell dimensions to help eliminate borders
+adjust-cell-width = 0
+adjust-cell-height = 0
+
+# Cursor - solid block, no blinking
+cursor-style = block
+cursor-style-blink = false
+
+# Shell integration (disable cursor feature to prevent shell from overriding cursor style)
+shell-integration = zsh
+shell-integration-features = no-cursor
+
+# macOS specific - remove shadows and decorations
+macos-titlebar-style = tabs
+macos-window-shadow = false
