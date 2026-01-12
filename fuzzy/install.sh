@@ -39,11 +39,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Ścieżki do poszczególnych komponentów
 LIB_DIR="$SCRIPT_DIR/lib"
-MODE_SELECTOR_SRC="$LIB_DIR/mode-selector.swift"
-MODE_SELECTOR_BIN="$LIB_DIR/mode-selector"
 LAUNCHER_SCRIPT="$SCRIPT_DIR/launcher"
-CONFIG_FILE="$SCRIPT_DIR/config.yaml"
-CONFIG_EXAMPLE="$SCRIPT_DIR/config.example.yaml"
 HAMMERSPOON_CONFIG="$SCRIPT_DIR/hammerspoon-init.lua"
 
 # =============================================================================
@@ -137,20 +133,6 @@ check_dependencies() {
     # Flaga czy wszystkie zależności są dostępne
     local all_ok=true
 
-    # --- Swift compiler (WYMAGANY) ---
-    if check_command "swiftc"; then
-        # swiftc znaleziony - sprawdź wersję
-        local swift_version
-        swift_version=$(swiftc --version | head -n1)  # Pierwsza linia z --version
-        print_success "Swift compiler: $swift_version"
-    else
-        # swiftc NIE znaleziony
-        print_error "Swift compiler nie jest zainstalowany"
-        print_info "Swift jest wymagany do kompilacji GUI"
-        print_info "Zainstaluj Xcode Command Line Tools: xcode-select --install"
-        all_ok=false
-    fi
-
     # --- fzf (WYMAGANY) ---
     if check_command "fzf"; then
         # fzf znaleziony - sprawdź wersję
@@ -176,19 +158,6 @@ check_dependencies() {
         print_warning "fd nie jest zainstalowany (opcjonalny)"
         print_info "fd jest szybszą alternatywą dla find"
         print_info "Zainstaluj (opcjonalnie): brew install fd"
-    fi
-
-    # --- yq (OPCJONALNY) ---
-    if check_command "yq"; then
-        # yq znaleziony (parser YAML)
-        local yq_version
-        yq_version=$(yq --version 2>&1 | head -n1 | cut -d' ' -f3 || echo "unknown")
-        print_success "yq: $yq_version (opcjonalny)"
-    else
-        # yq NIE znaleziony - to OK, użyjemy prostego parsera
-        print_warning "yq nie jest zainstalowany (opcjonalny)"
-        print_info "yq ułatwia parsowanie YAML, ale nie jest wymagany"
-        print_info "Zainstaluj (opcjonalnie): brew install yq"
     fi
 
     # --- Ghostty (WYMAGANY do uruchomienia) ---
@@ -229,41 +198,7 @@ check_dependencies() {
 }
 
 # =============================================================================
-# KROK 2: Kompiluj mode-selector
-# =============================================================================
-compile_mode_selector() {
-    print_header "Kompilacja mode-selector"
-
-    # Sprawdź czy plik źródłowy istnieje
-    if [[ ! -f "$MODE_SELECTOR_SRC" ]]; then
-        print_error "Nie znaleziono pliku źródłowego: $MODE_SELECTOR_SRC"
-        exit 1
-    fi
-
-    # Kompiluj Swift binary
-    print_info "Kompilowanie $MODE_SELECTOR_SRC..."
-
-    # swiftc -o <output> <source>
-    # -o = ścieżka do pliku wynikowego
-    if swiftc -o "$MODE_SELECTOR_BIN" "$MODE_SELECTOR_SRC"; then
-        # Kompilacja się powiodła
-        print_success "mode-selector skompilowany pomyślnie"
-
-        # Sprawdź rozmiar skompilowanego binary
-        local size
-        # ls -lh = lista z rozmiarami w formacie human-readable
-        # awk '{print $5}' = wyciągnij 5. kolumnę (rozmiar pliku)
-        size=$(ls -lh "$MODE_SELECTOR_BIN" | awk '{print $5}')
-        print_info "Rozmiar binary: $size"
-    else
-        # Kompilacja się nie powiodła
-        print_error "Kompilacja mode-selector nie powiodła się"
-        exit 1
-    fi
-}
-
-# =============================================================================
-# KROK 3: Ustaw uprawnienia wykonywania
+# KROK 2: Ustaw uprawnienia wykonywania
 # =============================================================================
 set_permissions() {
     print_header "Ustawianie uprawnień"
@@ -273,7 +208,6 @@ set_permissions() {
         "$LAUNCHER_SCRIPT"
         "$LIB_DIR/find-projects.sh"
         "$LIB_DIR/launch-project.sh"
-        "$MODE_SELECTOR_BIN"
     )
 
     # Dla każdego pliku...
@@ -295,33 +229,7 @@ set_permissions() {
 }
 
 # =============================================================================
-# KROK 4: Utwórz config.yaml
-# =============================================================================
-create_config() {
-    print_header "Konfiguracja"
-
-    # Sprawdź czy config.yaml już istnieje
-    if [[ -f "$CONFIG_FILE" ]]; then
-        # Config już istnieje - nie nadpisuj
-        print_warning "config.yaml już istnieje - pomijam"
-        print_info "Jeśli chcesz zresetować konfigurację, usuń $CONFIG_FILE"
-    else
-        # Config nie istnieje - skopiuj z example
-        if [[ -f "$CONFIG_EXAMPLE" ]]; then
-            # Skopiuj config.example.yaml -> config.yaml
-            cp "$CONFIG_EXAMPLE" "$CONFIG_FILE"
-            print_success "Utworzono config.yaml z config.example.yaml"
-            print_info "Możesz edytować $CONFIG_FILE aby dostosować wykluczenia"
-        else
-            # Brak config.example.yaml
-            print_error "Nie znaleziono $CONFIG_EXAMPLE"
-            exit 1
-        fi
-    fi
-}
-
-# =============================================================================
-# KROK 5: Opcjonalnie dodaj launcher do PATH
+# KROK 3: Opcjonalnie dodaj launcher do PATH
 # =============================================================================
 setup_path() {
     print_header "Dodawanie do PATH (opcjonalne)"
@@ -398,7 +306,7 @@ setup_path() {
 }
 
 # =============================================================================
-# KROK 6: Instrukcje Hammerspoon
+# KROK 4: Instrukcje Hammerspoon
 # =============================================================================
 setup_hammerspoon() {
     print_header "Konfiguracja Hammerspoon (opcjonalne)"
@@ -470,11 +378,9 @@ main() {
 
     # Wykonaj wszystkie kroki instalacji
     check_dependencies    # Krok 1: Sprawdź zależności
-    compile_mode_selector # Krok 2: Kompiluj Swift GUI
-    set_permissions       # Krok 3: Ustaw chmod +x
-    create_config         # Krok 4: Utwórz config.yaml
-    setup_path            # Krok 5: Dodaj do PATH (opcjonalne)
-    setup_hammerspoon     # Krok 6: Konfiguracja Hammerspoon (opcjonalne)
+    set_permissions       # Krok 2: Ustaw chmod +x
+    setup_path            # Krok 3: Dodaj do PATH (opcjonalne)
+    setup_hammerspoon     # Krok 4: Konfiguracja Hammerspoon (opcjonalne)
 
     # Podsumowanie
     print_header "Instalacja zakończona!"
@@ -484,9 +390,6 @@ main() {
     print_info "Użycie:"
     echo "  - Z linii komend: ./launcher (lub project-launcher jeśli w PATH)"
     echo "  - Z Hammerspoon: Cmd+Shift+P (jeśli skonfigurowane)"
-    echo ""
-    print_info "Konfiguracja:"
-    echo "  - Edytuj $CONFIG_FILE aby dostosować wykluczenia"
     echo ""
     print_info "Dokumentacja:"
     echo "  - Zobacz README.md dla więcej informacji"

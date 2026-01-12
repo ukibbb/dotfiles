@@ -1,4 +1,4 @@
-# Command 1: Search for files named "cmp.lua" in the NvChad plugin directory
+# Command 1: Search for files named "cmp.lua" 
 # find: utility to search for files and directories
 # ~/.local/share/nvim/lazy/ui/lua/nvchad: starting directory (NvChad's 
 # UI plugin location managed by lazy.nvim)

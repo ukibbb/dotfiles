@@ -1,22 +1,26 @@
 # Project Launcher
 
-Narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z możliwością wyboru projektu (fuzzy finder) i trybu uruchomienia (terminal, tmux, neovim, claude code).
+Minimalistyczne narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z fuzzy finderem do wyboru projektu.
 
 ## Funkcjonalności
 
-- **Wybór projektu**: Fuzzy search (fzf) po wszystkich folderach w systemie z konfigurowalnymi wykluczeniami
-- **Wybór trybu**: Natywne macOS GUI z 5 trybami uruchomienia
+- **Wybór projektu**: Fuzzy search (fzf) po wszystkich folderach w systemie
+- **Automatyczne uruchomienie**: Domyślny tryb: Tmux + Neovim + Claude Code
 - **Nazwane sesje tmux**: Automatyczne reattach do istniejących sesji
 - **Dual trigger**: Uruchamianie z CLI lub globalnym skrótem klawiszowym (Hammerspoon)
-- **Konfigurowalne wykluczenia**: YAML config z listą folderów do pominięcia
+- **Wbudowane wykluczenia**: Automatycznie pomija foldery systemowe i cache
 
 ## Tryby uruchomienia
 
-1. **Terminal (Ghostty)** - Tylko terminal w wybranym katalogu
-2. **Terminal + Tmux** - Terminal z uruchomionym tmux (bez nazwanej sesji)
-3. **Tmux Session** - Nazwana sesja tmux z możliwością reattach
-4. **Tmux + Neovim** - Sesja tmux z automatycznie uruchomionym Neovim
-5. **Tmux + Neovim + Claude Code** - Sesja z dwoma oknami: Neovim + Claude Code
+Domyślny tryb: **Tmux + Neovim + Claude Code** - Sesja z dwoma oknami tmux
+
+Możesz użyć innych trybów przekazując parametr:
+
+1. **terminal-only** - Tylko terminal w wybranym katalogu
+2. **terminal-tmux** - Terminal z uruchomionym tmux (bez nazwanej sesji)
+3. **tmux-session** - Nazwana sesja tmux z możliwością reattach
+4. **tmux-nvim** - Sesja tmux z automatycznie uruchomionym Neovim
+5. **tmux-nvim-claude** - Sesja z dwoma oknami: Neovim + Claude Code (domyślny)
 
 ## Wymagania
 
@@ -26,10 +30,6 @@ Narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z mo�
 - **fzf** - Fuzzy finder do wyboru projektów
   ```bash
   brew install fzf
-  ```
-- **Swift compiler** - Do kompilacji GUI (Xcode Command Line Tools)
-  ```bash
-  xcode-select --install
   ```
 - **Ghostty** - Terminal
   ```
@@ -45,10 +45,6 @@ Narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z mo�
 - **fd** - Szybsza alternatywa dla find
   ```bash
   brew install fd
-  ```
-- **yq** - Parser YAML (ułatwia parsowanie config.yaml)
-  ```bash
-  brew install yq
   ```
 - **Hammerspoon** - Dla globalnego skrótu klawiszowego
   ```bash
@@ -70,9 +66,7 @@ Narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z mo�
 
    Instalator:
    - Sprawdzi zależności
-   - Skompiluje Swift GUI (mode-selector)
    - Ustawi uprawnienia wykonywania
-   - Utworzy config.yaml z przykładowej konfiguracji
    - Opcjonalnie doda launcher do PATH
    - Pomoże skonfigurować Hammerspoon
 
@@ -85,25 +79,25 @@ Narzędzie do szybkiego uruchamiania środowisk programistycznych na macOS z mo�
 
 ## Konfiguracja
 
-### config.yaml
+### Wykluczenia folderów
 
-Edytuj `config.yaml` aby dostosować wykluczenia i ustawienia:
+Domyślne wykluczenia (hardcoded w `lib/find-projects.sh`):
+- System: `Library`, `Applications`, `.Trash`
+- Cache: `.cache`, `.npm`, `.yarn`
+- Dev: `node_modules`, `.git`, `.svn`, `dist`, `build`, `target`
 
-```yaml
-excluded_dirs:
-  - Library
-  - Applications
-  - .Trash
-  - "*/node_modules"
-  - "*/.git"
-  # Dodaj własne wykluczenia...
+Możesz edytować `lib/find-projects.sh` i zmienić tablicę `DEFAULT_EXCLUSIONS` aby dostosować wykluczenia.
 
-search:
-  max_depth: null          # null = bez limitu głębokości
-  follow_symlinks: false   # Czy podążać za symlinkami
+### Domyślny tryb
 
-tmux:
-  session_prefix: "proj"   # Prefix dla nazw sesji (opcjonalny)
+Domyślnie launcher używa trybu `tmux-nvim-claude`. Możesz zmienić to w `launcher`:
+
+```bash
+# Znajdź linię:
+DEFAULT_MODE="tmux-nvim-claude"
+
+# Zmień na np.:
+DEFAULT_MODE="tmux-nvim"
 ```
 
 ### Hammerspoon (globalny skrót klawiszowy)
@@ -133,7 +127,7 @@ Aby używać **Cmd+Shift+P** do uruchamiania launcher:
 ### Z linii komend
 
 ```bash
-# Interaktywny tryb - wybierz projekt i tryb
+# Interaktywny tryb - wybierz projekt (domyślny tryb)
 ./launcher
 
 # lub (jeśli w PATH)
@@ -141,6 +135,9 @@ project-launcher
 
 # Bezpośrednio dla konkretnego projektu
 ./launcher /path/to/project
+
+# Konkretny projekt z konkretnym trybem
+./launcher /path/to/project tmux-nvim
 ```
 
 ### Z Hammerspoon
@@ -154,14 +151,9 @@ Naciśnij **Cmd+Shift+P** w dowolnym miejscu w systemie.
    - Podgląd zawartości folderu (prawy panel)
    - Enter = wybierz, Escape = anuluj
 
-2. **Wybór trybu** (macOS GUI):
-   - Natywne okno z 5 opcjami
-   - Kliknij wybrany tryb
-   - "Anuluj" = wyjdź bez uruchamiania
-
-3. **Uruchomienie**:
+2. **Uruchomienie**:
    - Ghostty otwiera się z wybranym projektem
-   - W zależności od trybu: tylko terminal, tmux, neovim, lub claude code
+   - Domyślnie uruchamia się tryb: Tmux + Neovim + Claude Code
 
 ## Struktura projektu
 
@@ -170,11 +162,7 @@ Naciśnij **Cmd+Shift+P** w dowolnym miejscu w systemie.
 ├── launcher                    # Główny skrypt (punkt wejścia)
 ├── lib/
 │   ├── find-projects.sh       # Skanowanie systemu plików
-│   ├── mode-selector.swift    # Źródło Swift GUI
-│   ├── mode-selector          # Skompilowany binary (po install.sh)
 │   └── launch-project.sh      # Logika uruchamiania w różnych trybach
-├── config.yaml                 # Konfiguracja użytkownika
-├── config.example.yaml         # Przykładowa konfiguracja
 ├── hammerspoon-init.lua        # Config dla Hammerspoon
 ├── install.sh                  # Skrypt instalacyjny
 └── README.md                   # Ten plik
@@ -182,37 +170,34 @@ Naciśnij **Cmd+Shift+P** w dowolnym miejscu w systemie.
 
 ## Przykłady użycia
 
-### Szybkie uruchomienie z neovim
+### Szybkie uruchomienie
 
 1. Naciśnij **Cmd+Shift+P**
 2. Wpisz nazwę projektu w fzf (np. "dotfiles")
-3. Wybierz "Tmux + Neovim"
-4. Ghostty otwiera się z neovim w projekcie
+3. Ghostty otwiera się z tmux, neovim i claude code
 
 ### Reattach do istniejącej sesji
 
-Jeśli uruchomisz ten sam projekt ponownie w trybie "Tmux Session", launcher automatycznie podłączy się do istniejącej sesji zamiast tworzyć nową.
+Jeśli uruchomisz ten sam projekt ponownie, launcher automatycznie podłączy się do istniejącej sesji zamiast tworzyć nową.
 
 ### Praca z wieloma oknami tmux
 
-Tryb "Tmux + Neovim + Claude Code":
+Domyślny tryb tworzy dwa okna:
 - Okno 1 (editor): Neovim
 - Okno 2 (claude): Claude Code
 - Przełączanie: **Ctrl+B, 1** lub **Ctrl+B, 2**
 
+### Użycie z konkretnym trybem
+
+```bash
+# Tylko terminal bez tmux
+./launcher ~/projects/myapp terminal-only
+
+# Tylko tmux z neovim (bez claude)
+./launcher ~/projects/myapp tmux-nvim
+```
+
 ## Rozwiązywanie problemów
-
-### "mode-selector: command not found"
-
-Uruchom ponownie instalator:
-```bash
-./install.sh
-```
-
-Lub skompiluj ręcznie:
-```bash
-swiftc -o lib/mode-selector lib/mode-selector.swift
-```
 
 ### Ghostty nie otwiera się
 
@@ -232,11 +217,15 @@ Jeśli nie, pobierz z: https://ghostty.org/
 
 ### fzf nie znajduje projektów
 
-1. Sprawdź config.yaml - czy wykluczenia nie są zbyt restrykcyjne
-2. Sprawdź czy `excluded_dirs` nie wykluczają wszystkich folderów
-3. Uruchom ręcznie:
+1. Sprawdź wykluczenia w `lib/find-projects.sh` (tablica `DEFAULT_EXCLUSIONS`)
+2. Uruchom ręcznie:
    ```bash
    ./lib/find-projects.sh
+   ```
+3. Sprawdź czy `fd` lub `find` jest dostępne:
+   ```bash
+   command -v fd
+   command -v find
    ```
 
 ### Sesje tmux się nie tworzą
@@ -253,12 +242,29 @@ brew install tmux
 
 ## Zaawansowane
 
-### Dodanie własnego trybu
+### Zmiana domyślnego trybu
 
-Edytuj:
-1. `lib/mode-selector.swift` - dodaj nowy case do enum `LaunchMode`
-2. `lib/launch-project.sh` - dodaj case do switcha z logiką uruchomienia
-3. Przekompiluj: `./install.sh`
+Edytuj `launcher` i zmień wartość `DEFAULT_MODE`:
+```bash
+# Linia ~60
+DEFAULT_MODE="tmux-nvim"  # Zmień z tmux-nvim-claude na cokolwiek innego
+```
+
+### Dodanie/usunięcie wykluczeń
+
+Edytuj `lib/find-projects.sh` i zmodyfikuj tablicę `DEFAULT_EXCLUSIONS`:
+```bash
+DEFAULT_EXCLUSIONS=(
+    "Library"
+    "Applications"
+    ".Trash"
+    "node_modules"
+    ".git"
+    "dist"
+    "build"
+    # Dodaj więcej...
+)
+```
 
 ### Zmiana skrótu klawiszowego
 
@@ -292,9 +298,16 @@ Utworzone dla efektywnego zarządzania środowiskami programistycznymi na macOS.
 
 ## Changelog
 
+### v2.0.0 (2026-01-11)
+- Usunięto GUI dla wyboru trybu
+- Usunięto config.yaml (hardcoded exclusions)
+- Usunięto Swift/AppleScript zależności
+- Domyślny tryb: tmux-nvim-claude
+- Znacznie uproszczona instalacja
+
 ### v1.0.0 (2026-01-11)
 - Pierwsza wersja
-- 5 trybów uruchomienia
+- 5 trybów uruchomienia z GUI
 - Integracja z Hammerspoon
 - Konfigurowalne wykluczenia
 - Automatyczne reattach do sesji tmux

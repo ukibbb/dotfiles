@@ -57,7 +57,7 @@ local function launchProjectLauncher()
     -- Parametry:
     --   1. launcherPath = ścieżka do programu do uruchomienia
     --   2. function(exitCode, stdout, stderr) = callback wywoływany gdy task się zakończy
-    --   3. nil = tablica z argumentami (brak argumentów w tym przypadku)
+    --   3. {} = pusta tablica z argumentami
     local task = hs.task.new(
         launcherPath,  -- Komenda do uruchomienia
 
@@ -82,8 +82,19 @@ local function launchProjectLauncher()
             end
         end,
 
-        nil  -- Brak dodatkowych argumentów dla launcher
+        {}  -- Pusta tablica argumentów
     )
+
+    -- Ustaw zmienne środowiskowe, w tym PATH z lokalizacjami Homebrew
+    -- Hammerspoon domyślnie nie dziedziczy pełnego PATH z shella użytkownika
+    local homeDir = os.getenv("HOME")
+    local currentPath = os.getenv("PATH") or ""
+    local newPath = "/opt/homebrew/bin:/usr/local/bin:" .. currentPath
+
+    task:setEnvironment({
+        PATH = newPath,
+        HOME = homeDir
+    })
 
     -- Uruchom task
     -- :start() = metoda uruchamiająca task w tle
@@ -204,3 +215,8 @@ print("✓ Claude Error Helper hotkey zarejestrowany: Cmd+Shift+E")
 -- Wyświetl alert że konfiguracja została załadowana
 -- Przydatne przy debugowaniu
 hs.alert.show("✓ Project Launcher config loaded", 1.5)
+
+
+hs.hotkey.bind({"cmd", "alt"}, "g", function()
+    hs.execute("open -na /Applications/Ghostty.app")
+end)

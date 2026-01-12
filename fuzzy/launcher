@@ -5,16 +5,15 @@
 # Ten skrypt orchestruje cały proces uruchamiania projektu:
 #   1. Skanuje system plików w poszukiwaniu projektów
 #   2. Wyświetla fzf do wyboru projektu
-#   3. Wyświetla GUI do wyboru trybu uruchomienia
-#   4. Uruchamia projekt w wybranym trybie
+#   3. Uruchamia projekt w domyślnym trybie
 #
 # Użycie:
-#   ./launcher                  - Interaktywny tryb (fzf + GUI)
-#   ./launcher <project_path>   - Pomiń wybór projektu, tylko wybierz tryb
+#   ./launcher                           - Interaktywny tryb (fzf)
+#   ./launcher <project_path>            - Pomiń wybór projektu
+#   ./launcher <project_path> <mode>     - Pomiń wybór projektu i użyj określonego trybu
 #
 # Zależności:
 #   - fzf (fuzzy finder)
-#   - Swift (do kompilacji mode-selector)
 #   - Ghostty (terminal)
 #   - tmux (opcjonalnie, dla trybów z tmux)
 # =============================================================================
@@ -55,13 +54,10 @@ LIB_DIR="$SCRIPT_DIR/lib"
 
 # Ścieżki do poszczególnych komponentów
 FIND_PROJECTS_SCRIPT="$LIB_DIR/find-projects.sh"              # Skrypt skanujący system
-MODE_SELECTOR_BIN="$LIB_DIR/mode-selector"                    # Skompilowany binary Swift
-MODE_SELECTOR_SRC="$LIB_DIR/mode-selector.swift"              # Źródło Swift
-MODE_SELECTOR_APPLESCRIPT="$LIB_DIR/mode-selector-applescript.sh"  # AppleScript fallback
 LAUNCH_PROJECT_SCRIPT="$LIB_DIR/launch-project.sh"            # Skrypt uruchamiający projekt
 
-# Plik konfiguracyjny (z wykluczeniami itp.)
-CONFIG_FILE="$SCRIPT_DIR/config.yaml"
+# Domyślny tryb uruchomienia
+DEFAULT_MODE="tmux-nvim-claude"
 
 # FUNKCJA: check_dependencies
 # Sprawdza czy wszystkie wymagane narzędzia są zainstalowane.
@@ -72,7 +68,6 @@ check_dependencies() {
     # Każdy element to: "nazwa_komendy|opis|czy_opcjonalna"
     local deps=(
         "fzf|Fuzzy finder - do wyboru projektu|false"
-        "swiftc|Swift compiler - do kompilacji GUI|false"
     )
 
     # Flaga czy znaleziono jakiś brakujący dependency
@@ -113,49 +108,6 @@ check_dependencies() {
 }
 
 # =============================================================================
-# FUNKCJA: compile_mode_selector
-# =============================================================================
-# Kompiluje mode-selector.swift do binarnego pliku wykonywalnego.
-# Kompilacja następuje tylko jeśli:
-#   - Binary nie istnieje, LUB
-#   - Plik źródłowy (.swift) jest nowszy niż binary
-# =============================================================================
-compile_mode_selector() {
-    # Sprawdź czy trzeba kompilować
-    local need_compile=false
-
-    # Jeśli binary nie istnieje, trzeba skompilować
-    if [[ ! -f "$MODE_SELECTOR_BIN" ]]; then
-        need_compile=true
-    # Jeśli źródło jest nowsze niż binary, trzeba przekompilować
-    elif [[ "$MODE_SELECTOR_SRC" -nt "$MODE_SELECTOR_BIN" ]]; then
-        # -nt = newer than (porównanie czasu modyfikacji plików)
-        need_compile=true
-    fi
-
-    # Jeśli trzeba kompilować...
-    if [[ "$need_compile" == true ]]; then
-        echo "Kompilowanie mode-selector..." >&2
-
-        # Wywołaj kompilator Swift
-        # swiftc = Swift compiler
-        # -o = output file (ścieżka do pliku wynikowego)
-        # Ostatni argument = plik źródłowy
-        swiftc -o "$MODE_SELECTOR_BIN" "$MODE_SELECTOR_SRC"
-
-        # Sprawdź czy kompilacja się powiodła
-        if [[ $? -ne 0 ]]; then
-            # $? = exit code ostatniej komendy
-            # -ne 0 = not equal 0 (błąd)
-            echo "BŁĄD: Kompilacja mode-selector nie powiodła się" >&2
-            exit 1
-        fi
-
-        echo "Kompilacja zakończona pomyślnie" >&2
-    fi
-}
-
-# =============================================================================
 # FUNKCJA: select_project
 # =============================================================================
 # Pozwala użytkownikowi wybrać projekt używając fzf.
@@ -185,7 +137,6 @@ select_project() {
     # Sprawdź czy lista nie jest pusta
     if [[ -z "$projects_list" ]]; then
         echo "BŁĄD: Nie znaleziono żadnych katalogów" >&2
-        echo "Sprawdź konfigurację wykluczeń w: $CONFIG_FILE" >&2
         exit 1
     fi
 
@@ -220,70 +171,6 @@ select_project() {
 
     # Zwróć wybrany projekt (stdout)
     echo "$selected_project"
-}
-
-# =============================================================================
-# FUNKCJA: select_mode
-# =============================================================================
-# Wyświetla natywne macOS GUI do wyboru trybu uruchomienia.
-# Wywołuje skompilowany binary mode-selector.
-#
-# Argumenty:
-#   $1 - Ścieżka do projektu (opcjonalna, do wyświetlenia w GUI)
-#
-# Zwraca (stdout): Identyfikator wybranego trybu (np. "tmux-nvim")
-# Exit code: 0 = sukces, 1 = anulowano
-# =============================================================================
-select_mode() {
-    local project_path="${1:-}"  # Pierwszy argument lub pusty string
-
-    local selected_mode
-    local exit_code
-
-    # Sprawdź czy binary mode-selector istnieje (Swift wersja)
-    if [[ -f "$MODE_SELECTOR_BIN" ]]; then
-        # Swift binary istnieje - użyj go
-        echo "Używam Swift GUI..." >&2
-
-        # Wywołaj mode-selector z opcjonalną ścieżką projektu
-        selected_mode=$("$MODE_SELECTOR_BIN" "$project_path")
-        exit_code=$?
-
-    elif [[ -f "$MODE_SELECTOR_APPLESCRIPT" ]]; then
-        # Swift binary nie istnieje - użyj AppleScript fallback
-        echo "Używam AppleScript GUI (fallback)..." >&2
-
-        # Nadaj uprawnienia wykonywania
-        chmod +x "$MODE_SELECTOR_APPLESCRIPT"
-
-        # Wywołaj AppleScript wersję
-        selected_mode=$("$MODE_SELECTOR_APPLESCRIPT" "$project_path")
-        exit_code=$?
-
-    else
-        # Żaden GUI nie istnieje - błąd
-        echo "BŁĄD: Nie znaleziono żadnego mode-selector" >&2
-        echo "Sprawdź czy pliki istnieją:" >&2
-        echo "  - $MODE_SELECTOR_BIN" >&2
-        echo "  - $MODE_SELECTOR_APPLESCRIPT" >&2
-        exit 1
-    fi
-
-    # Sprawdź exit code mode-selector
-    if [[ $exit_code -ne 0 ]]; then
-        # Exit code != 0 = użytkownik anulował lub błąd
-        echo "Anulowano wybór trybu" >&2
-        exit 1
-    fi
-
-    # Sprawdź czy zwrócono jakiś tryb
-    if [[ -z "$selected_mode" ]]; then
-        echo "BŁĄD: mode-selector nie zwrócił trybu" >&2
-        exit 1
-    fi
-
-    # Zwróć wybrany tryb (stdout)
-    echo "$selected_mode"
 }
 
 # =============================================================================
@@ -330,13 +217,11 @@ main() {
     # 1. Sprawdź czy wszystkie wymagane narzędzia są zainstalowane
     check_dependencies
 
-    # 2. Skompiluj mode-selector jeśli potrzeba
-    compile_mode_selector
-
-    # 3. Wybierz projekt
+    # 2. Wybierz projekt i tryb
     # Jeśli użytkownik podał projekt jako argument, użyj go
     # W przeciwnym razie pokaż fzf do wyboru
     local project_path
+    local mode
 
     if [[ $# -gt 0 ]]; then
         # Użytkownik podał argument - użyj go jako ścieżki projektu
@@ -349,24 +234,28 @@ main() {
         fi
 
         echo "Użyto projektu z argumentu: $project_path" >&2
+
+        # Sprawdź czy podano także tryb jako drugi argument
+        if [[ $# -gt 1 ]]; then
+            mode="$2"
+            echo "Użyto trybu z argumentu: $mode" >&2
+        else
+            mode="$DEFAULT_MODE"
+            echo "Użyto domyślnego trybu: $mode" >&2
+        fi
     else
         # Brak argumentu - pokaż fzf
         project_path=$(select_project)
+        mode="$DEFAULT_MODE"
+        echo "Użyto domyślnego trybu: $mode" >&2
     fi
 
     echo "" >&2
     echo "Wybrany projekt: $project_path" >&2
-    echo "" >&2
-
-    # 4. Wybierz tryb uruchomienia (GUI)
-    local mode
-    mode=$(select_mode "$project_path")
-
-    echo "" >&2
     echo "Wybrany tryb: $mode" >&2
     echo "" >&2
 
-    # 5. Uruchom projekt w wybranym trybie
+    # 3. Uruchom projekt w wybranym trybie
     launch_project "$project_path" "$mode"
 
     # Sukces!
