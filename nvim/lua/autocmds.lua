@@ -108,10 +108,8 @@ autocmd("FileType", {  -- Event: filetype was detected for a buffer
 
 augroup("CheckTime", { clear = true })
 
-autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+autocmd("FocusGained", {
   -- FocusGained = Neovim window got focus (you switched back to it)
-  -- TermClose = terminal buffer was closed
-  -- TermLeave = you left terminal mode
   desc = "Check if file changed outside Neovim",
   group = "CheckTime",
   callback = function()
@@ -210,22 +208,6 @@ autocmd("FileType", {
     vim.opt_local.tabstop = 4
     vim.opt_local.shiftwidth = 4
     vim.opt_local.softtabstop = 4
-  end,
-})
-
--- SECTION 9: TERMINAL BEHAVIOR
--- When opening a terminal, automatically enter insert mode
--- This makes terminal feel more natural
-
-augroup("TerminalBehavior", { clear = true })
-
-autocmd("TermOpen", {  -- Event: a terminal buffer was opened
-  desc = "Auto-enter insert mode in terminal",
-  group = "TerminalBehavior",
-  callback = function()
-    vim.opt_local.number = false          -- No line numbers in terminal
-    vim.opt_local.relativenumber = false  -- No relative numbers either
-    vim.cmd("startinsert")                -- Enter insert mode automatically
   end,
 })
 

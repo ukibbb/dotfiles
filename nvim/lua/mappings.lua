@@ -41,6 +41,19 @@ map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 -- Ctrl+k: Move to the window above
 map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
+-- WINDOW SPLITS
+-- Create new split windows with intuitive keybindings
+
+-- Cmd+\: Create vertical split (right side)
+-- <D-Bslash> = Command+\ on macOS (backslash looks like vertical line |)
+-- The backslash visually represents a vertical split
+map("n", "<D-Bslash>", "<cmd>vsplit<CR>", { desc = "vertical split" })
+
+-- Cmd+-: Create horizontal split (below)
+-- <D--> = Command+- on macOS (minus looks like horizontal line -)
+-- The minus visually represents a horizontal split
+map("n", "<D-->", "<cmd>split<CR>", { desc = "horizontal split" })
+
 -- GENERAL UTILITIES
 -- Common operations made accessible with simple key combinations
 
@@ -137,9 +150,6 @@ map("n", "<leader>w", "<cmd>set wrap!<CR>", { desc = "toggle word wrap" })
 -- yG = yank to last line
 map("n", "<leader>y", 'gg"+yG', { desc = "copy entire file to clipboard" })
 
--- Leader+ch: Open NvChad's built-in cheatsheet
--- Shows all keybindings in a searchable popup
-map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
 
 -- FORMATTING
 -- Code formatting using conform.nvim plugin
@@ -198,20 +208,20 @@ if require("nvconfig").ui.tabufline.enabled then
   -- :enew = edit new (creates empty unnamed buffer)
   map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
 
-  -- Tab: Go to next buffer
-  -- Calls NvChad's tabufline module to cycle through open buffers
-  map("n", "<tab>", function()
+  -- Cmd+H: Go to next buffer (to the right)
+  -- <D-h> = Command+H on macOS (requires Ghostty config: keybind = cmd+h=ignore)
+  map("n", "<D-h>", function()
     require("nvchad.tabufline").next()
   end, { desc = "buffer goto next" })
 
-  -- Shift+Tab: Go to previous buffer
-  map("n", "<S-tab>", function()
+  -- Cmd+L: Go to previous buffer (to the left) - for symmetry
+  map("n", "<D-l>", function()
     require("nvchad.tabufline").prev()
   end, { desc = "buffer goto prev" })
 
-  -- Leader+x: Close the current buffer
-  -- Uses NvChad's smart close that handles edge cases (last buffer, etc.)
-  map("n", "<leader>x", function()
+  -- Cmd+Q: Close the current buffer
+  -- <D-q> = Command+Q on macOS (requires Ghostty config: keybind = cmd+q=ignore)
+  map("n", "<D-q>", function()
     require("nvchad.tabufline").close_buffer()
   end, { desc = "buffer close" })
 end
@@ -228,15 +238,6 @@ map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
 -- gc is the Comment.nvim mapping for toggling comment on selection
 map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 
--- FILE EXPLORER (NVIM-TREE)
--- nvim-tree.lua is a file explorer sidebar plugin
-
--- Ctrl+n: Toggle the file tree window open/closed
-map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
-
--- Leader+e: Focus the file tree (open it if closed, focus if open)
--- Unlike toggle, this always ends with the tree focused
-map("n", "<leader>e", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window" })
 
 -- TELESCOPE (FUZZY FINDER)
 -- Telescope is a powerful fuzzy finder for files, text, git, and more
@@ -266,9 +267,6 @@ map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git
 -- Leader+gt: Show git status (modified/staged files)
 map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
 
--- Leader+pt: Pick from hidden terminal sessions
-map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
-
 -- Leader+th: Open NvChad's theme picker to change colorschemes
 map("n", "<leader>th", function()
   require("nvchad.themes").open()
@@ -288,70 +286,4 @@ map(
   { desc = "telescope find all files" }
 )
 
--- TERMINAL
--- NvChad's terminal module provides integrated terminal emulator
 
--- Ctrl+x: Escape from terminal mode back to normal mode
--- <C-\><C-N> is the native Neovim key sequence to exit terminal mode
--- Without this, you'd be stuck in terminal mode
-map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
-
--- Ctrl+h/j/k/l: Navigate from terminal to other splits
--- wincmd h = same as <C-w>h but works in terminal mode
--- Allows you to move between terminal and other windows without exiting terminal mode
-map("t", "<C-h>", "<cmd>wincmd h<CR>", { desc = "terminal move to left split" })
-map("t", "<C-j>", "<cmd>wincmd j<CR>", { desc = "terminal move to split below" })
-map("t", "<C-k>", "<cmd>wincmd k<CR>", { desc = "terminal move to split above" })
-map("t", "<C-l>", "<cmd>wincmd l<CR>", { desc = "terminal move to right split" })
-
-
--- NEW TERMINAL WINDOWS
--- Create new terminal instances in different split positions
-
--- Leader+h: Open a new horizontal split terminal (below current window)
--- pos = "sp" means horizontal split (sp = split)
-map("n", "<leader>h", function()
-  require("nvchad.term").new { pos = "sp" }
-end, { desc = "terminal new horizontal term" })
-
--- Leader+v: Open a new vertical split terminal (to the right)
--- pos = "vsp" means vertical split
-map("n", "<leader>v", function()
-  require("nvchad.term").new { pos = "vsp" }
-end, { desc = "terminal new vertical term" })
-
--- TOGGLEABLE TERMINALS
--- These terminals can be shown/hidden and maintain their state
--- The "id" parameter creates named terminals that persist when hidden
-
--- Alt+v: Toggle a persistent vertical split terminal
--- Works in both normal (n) and terminal (t) modes
--- id = "vtoggleTerm" gives this terminal a unique identifier
-map({ "n", "t" }, "<A-v>", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
-end, { desc = "terminal toggleable vertical term" })
-
--- Alt+h: Toggle a persistent horizontal split terminal
-map({ "n", "t" }, "<A-h>", function()
-  require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
-end, { desc = "terminal toggleable horizontal term" })
-
--- Alt+i: Toggle a floating terminal window
--- pos = "float" creates a centered floating window
-map({ "n", "t" }, "<A-i>", function()
-  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-end, { desc = "terminal toggle floating term" })
-
--- WHICH-KEY INTEGRATION
--- which-key.nvim shows available keybindings in a popup
-
--- Leader+wK: Show ALL available keymaps
--- Opens which-key without any prefix, showing everything
-map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
-
--- Leader+wk: Query a specific keymap prefix
--- Prompts for input, then shows keymaps starting with that prefix
--- Useful for exploring: type "g" to see all g-prefixed commands
-map("n", "<leader>wk", function()
-  vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")
-end, { desc = "whichkey query lookup" })

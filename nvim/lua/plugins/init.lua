@@ -38,10 +38,10 @@ return {
   -- Volt: NvChad's UI framework for building floating windows and popups
   -- Used by NvChad's theme picker, cheatsheet, and other UI elements
   "nvzone/volt",
-  
+
   -- Menu: Right-click context menu support for NvChad
   "nvzone/menu",
-  
+
   -- Minty: Color picker utilities (Huefy = color picker, Shades = shade generator)
   -- cmd = {...} means lazy-load only when these commands are used
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
@@ -68,7 +68,7 @@ return {
       -- This prevents an indent line at column 0 which looks weird
       local hooks = require "ibl.hooks"
       hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
-      
+
       -- Setup the plugin with our options
       require("ibl").setup(opts)
 
@@ -77,22 +77,6 @@ return {
     end,
   },
 
-  -- WHICH-KEY
-  -- which-key.nvim: Shows a popup with available keybindings when you start a command
-  -- For example: press <leader> and wait, it shows all <leader>+? mappings
-  -- This is incredibly helpful for discovering and remembering keybindings
-  {
-    "folke/which-key.nvim",
-    -- Lazy-load when these keys are pressed (common prefixes)
-    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
-    -- Also load when :WhichKey command is used
-    cmd = "WhichKey",
-    opts = function()
-      -- Load base46 theme colors for which-key
-      dofile(vim.g.base46_cache .. "whichkey")
-      return {}
-    end,
-  },
 
 
   -- CODE FORMATTING
@@ -104,7 +88,7 @@ return {
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
   },
- 
+
 
   -- nvim-lspconfig: Configurations for LSP servers
   -- Your configs/lspconfig.lua uses vim.lsp.config() and vim.lsp.enable()
@@ -158,11 +142,11 @@ return {
         "L3MON4D3/LuaSnip",
         -- friendly-snippets provides a large collection of pre-made snippets
         dependencies = "rafamadriz/friendly-snippets",
-        opts = { 
+        opts = {
           -- history = true allows jumping back to previous snippet positions
-          history = true, 
+          history = true,
           -- Update snippet placeholders as you type (real-time updates)
-          updateevents = "TextChanged,TextChangedI" 
+          updateevents = "TextChanged,TextChangedI"
         },
         config = function(_, opts)
           -- Apply LuaSnip configuration
@@ -257,19 +241,19 @@ return {
     },
     keys = {
       {
-        "<leader>-",
+        "<leader>i",
         mode = { "n", "v" },
         "<cmd>Yazi<cr>",
         desc = "Open yazi at the current file",
       },
       {
         -- Open in the current working directory
-        "<leader>cw",
+        "<leader>iw",
         "<cmd>Yazi cwd<cr>",
         desc = "Open the file manager in nvim's working directory",
       },
       {
-        "<c-up>",
+        "<leader>is",
         "<cmd>Yazi toggle<cr>",
         desc = "Resume the last yazi session",
       },
@@ -285,6 +269,19 @@ return {
     end,
   },
 
-  
-  
+  -- MARKDOWN RENDERING
+  -- render-markdown.nvim: Enhanced markdown rendering with treesitter
+  -- Renders markdown with proper formatting, heading highlights, code blocks, etc.
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    -- Only load for markdown files
+    ft = "markdown",
+    -- Requires treesitter for markdown parsing
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = function()
+      return require "configs.render-markdown"
+    end,
+  },
+
+
 }

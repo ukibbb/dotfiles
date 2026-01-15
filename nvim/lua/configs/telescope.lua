@@ -73,8 +73,7 @@ return {
   
   -- List of extension names to load
   -- "themes" = NvChad's theme picker extension
-  -- "terms" = NvChad's terminal picker extension
-  extensions_list = { "themes", "terms" },
+  extensions_list = { "themes" },
   
   -- Extension-specific configuration (empty = use defaults)
   extensions = {},

@@ -5,7 +5,7 @@
 -- leader key - before plugins, plugins read this value
 vim.g.mapleader = " "
 
--- vim.fn.stdpath("data") returns ~/.local/share/nvim - where neovim stores data 
+-- vim.fn.stdpath("data") returns ~/.local/share/nvim - where neovim stores data
 -- Construct the path where lazy.nvim will be installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 

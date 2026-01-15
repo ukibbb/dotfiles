@@ -1,390 +1,299 @@
-# Keybindings & Configuration Reference
+# Keybindings Reference
 
-Complete reference for all keybindings, mappings, and shortcuts in Neovim and tmux configurations.
+Quick reference for Neovim keybindings.
 
-**Leader Key:** `Space`
-
----
-
-## Table of Contents
-
-- [Neovim Keybindings](#neovim-keybindings)
-  - [Insert Mode](#insert-mode)
-  - [Normal Mode](#normal-mode)
-  - [Visual Mode](#visual-mode)
-  - [Terminal Mode](#terminal-mode)
-  - [LSP (Language Server Protocol)](#lsp-language-server-protocol)
-  - [Completion (nvim-cmp)](#completion-nvim-cmp)
-  - [Telescope (Fuzzy Finder)](#telescope-fuzzy-finder)
-  - [File Management](#file-management)
-  - [Git Integration](#git-integration)
-- [Tmux Keybindings](#tmux-keybindings)
-- [Automatic Behaviors](#automatic-behaviors)
+For tmux keybindings and concepts, see [tmux.md](tmux.md).
 
 ---
 
-## Neovim Keybindings
+# Neovim Keybindings
 
-### Insert Mode
+## Quick Start
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `jk` | Exit insert mode | Quick escape to normal mode (alternative to ESC) |
-| `Ctrl+b` | Move to beginning of line | Jump to first non-blank character |
-| `Ctrl+e` | Move to end of line | Jump to line end |
-| `Ctrl+h` | Move left | Arrow key equivalent |
-| `Ctrl+l` | Move right | Arrow key equivalent |
-| `Ctrl+j` | Move down | Arrow key equivalent |
-| `Ctrl+k` | Move up | Arrow key equivalent |
-| `Ctrl+s` | Save file | Save current file (works in both normal and insert) |
+**Key Prefixes:**
+- `<leader>` = Space
+- `<C-...>` = Ctrl + key
+- `<S-...>` = Shift + key
+- `<D-...>` = Cmd + key (macOS)
+- `<M-...>` = Alt/Option + key
 
-### Normal Mode
+---
 
-#### Window Navigation
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+h` | Move to left window | Navigate to window on the left |
-| `Ctrl+l` | Move to right window | Navigate to window on the right |
-| `Ctrl+j` | Move to window below | Navigate to window below |
-| `Ctrl+k` | Move to window above | Navigate to window above |
+## Core Keybindings
 
-#### General Utilities
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Esc` | Clear search highlights | Remove search highlighting |
-| `;` | Enter command mode | Faster than `Shift+:` |
-| `Ctrl+s` | Save file | Save current file |
-| `Ctrl+c` | Copy entire file | Copy whole file to system clipboard |
-| `Ctrl+a` | Select all | Select all text in file |
+### General Utilities
+| Key | Mode | Action |
+|-----|------|--------|
+| `jk` | Insert | Exit insert mode |
+| `;` | Normal | Enter command mode (instead of Shift+:) |
+| `<Esc>` | Normal | Clear search highlights |
+| `<C-s>` | Normal/Insert | Save file |
+| `<C-c>` | Normal | Copy entire file to clipboard |
+| `<C-a>` | Normal | Select all text |
 
-#### Line Manipulation
-| Key | Action | Description |
-|-----|--------|-------------|
-| `J` | Join lines (keep cursor) | Join lines without moving cursor |
+### Insert Mode Navigation
+| Key | Action |
+|-----|--------|
+| `jk` | Exit insert mode |
+| `<C-b>` | Move to beginning of line |
+| `<C-e>` | Move to end of line |
+| `<C-h>` | Move left |
+| `<C-l>` | Move right |
+| `<C-j>` | Move down |
+| `<C-k>` | Move up |
 
-#### Scrolling (Centered)
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+d` | Page down (centered) | Scroll half page down, center cursor |
-| `Ctrl+u` | Page up (centered) | Scroll half page up, center cursor |
-| `n` | Next search result (centered) | Go to next search match, centered |
-| `N` | Previous search result (centered) | Go to previous search match, centered |
+### Window Navigation
+| Key | Action |
+|-----|--------|
+| `<C-h>` | Switch to left window |
+| `<C-l>` | Switch to right window |
+| `<C-j>` | Switch to down window |
+| `<C-k>` | Switch to up window |
 
-#### Leader Key Mappings
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>n` | Toggle line numbers | Toggle line numbers on/off |
-| `<leader>rn` | Toggle relative numbers | Toggle relative line numbers |
-| `<leader>w` | Toggle word wrap | Toggle line wrapping |
-| `<leader>y` | Copy file to clipboard | Copy entire file to system clipboard |
-| `<leader>ch` | Show cheatsheet | Open NvChad's keybinding cheatsheet |
-| `<leader>fm` | Format file | Format current file or selection |
+### Window Splits
+| Key | Action |
+|-----|--------|
+| `<Cmd-\>` | Create vertical split (right) |
+| `<Cmd-->` | Create horizontal split (below) |
 
-#### Diagnostics & Lists
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>ds` | Show diagnostics in location list | List all diagnostics for buffer |
-| `[d` | Previous diagnostic | Jump to previous error/warning |
-| `]d` | Next diagnostic | Jump to next error/warning |
-| `<leader>d` | Show diagnostic | Show diagnostic in floating window |
-| `<leader>q` | Diagnostics list | Open diagnostics in location list |
-| `[q` | Previous quickfix item | Navigate to previous quickfix entry |
-| `]q` | Next quickfix item | Navigate to next quickfix entry |
+### Buffer Management
+| Key | Action |
+|-----|--------|
+| `<leader>b` | Create new empty buffer |
+| `<Cmd-h>` | Go to next buffer |
+| `<Cmd-l>` | Go to previous buffer |
+| `<Cmd-q>` | Close current buffer |
 
-#### Buffer Management
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>b` | New buffer | Create new empty buffer |
-| `Tab` | Next buffer | Go to next buffer |
-| `Shift+Tab` | Previous buffer | Go to previous buffer |
-| `<leader>x` | Close buffer | Close current buffer |
+### Line Manipulation
+| Key | Mode | Action |
+|-----|------|--------|
+| `J` | Visual | Move selection down |
+| `K` | Visual | Move selection up |
+| `J` | Normal | Join lines (keep cursor) |
+| `p` | Visual | Paste without yanking replaced text |
 
-#### Commenting
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>/` | Toggle comment | Toggle comment on current line |
+### Scrolling (Centered)
+| Key | Action |
+|-----|--------|
+| `<C-d>` | Page down + center cursor |
+| `<C-u>` | Page up + center cursor |
+| `n` | Next search result (centered) |
+| `N` | Previous search result (centered) |
 
-#### Terminal
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>h` | New horizontal terminal | Open terminal in horizontal split |
-| `<leader>v` | New vertical terminal | Open terminal in vertical split |
-| `Alt+h` | Toggle horizontal terminal | Toggle persistent horizontal terminal |
-| `Alt+v` | Toggle vertical terminal | Toggle persistent vertical terminal |
-| `Alt+i` | Toggle floating terminal | Toggle floating terminal window |
+---
 
-#### WhichKey
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>wK` | Show all keymaps | Display all available keybindings |
-| `<leader>wk` | Query keymap | Search for specific keymap prefix |
+## Leader Key Mappings (`<leader>` = Space)
 
-### Visual Mode
+### Toggle/UI Settings
+| Key | Action |
+|-----|--------|
+| `<leader>n` | Toggle line numbers |
+| `<leader>rn` | Toggle relative line numbers |
+| `<leader>w` | Toggle word wrap |
+| `<leader>y` | Copy entire file to clipboard |
+| `<leader>ch` | Open NvChad cheatsheet |
+| `<leader>th` | Open theme picker |
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `J` | Move selection down | Move selected lines down |
-| `K` | Move selection up | Move selected lines up |
-| `p` | Paste without yank | Paste over selection without losing yank |
-| `<leader>/` | Toggle comment | Toggle comment on selection |
+### Formatting & Comments
+| Key | Mode | Action |
+|-----|------|--------|
+| `<leader>fm` | Normal/Visual | Format file |
+| `<leader>/` | Normal | Toggle comment on line |
+| `<leader>/` | Visual | Toggle comment on selection |
 
-### Terminal Mode
-
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+x` | Exit terminal mode | Return to normal mode |
-| `Ctrl+h` | Move to left split | Navigate to window on the left |
-| `Ctrl+j` | Move to split below | Navigate to window below |
-| `Ctrl+k` | Move to split above | Navigate to window above |
-| `Ctrl+l` | Move to right split | Navigate to window on the right |
-
-### LSP (Language Server Protocol)
-
-#### Navigation
-| Key | Action | Description |
-|-----|--------|-------------|
-| `gD` | Go to declaration | Jump to where symbol is declared |
-| `gd` | Go to definition | Jump to where symbol is defined |
-| `<leader>D` | Go to type definition | Jump to type definition |
-
-#### Workspace Management
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>wa` | Add workspace folder | Add folder to LSP workspace |
-| `<leader>wr` | Remove workspace folder | Remove folder from LSP workspace |
-| `<leader>wl` | List workspace folders | Show all workspace folders |
-
-#### Code Actions
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>ra` | Rename symbol | Rename symbol across project |
-
-### Completion (nvim-cmp)
-
-#### In Completion Menu
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+p` | Previous item | Select previous completion |
-| `Ctrl+n` | Next item | Select next completion |
-| `Ctrl+d` | Scroll docs down | Scroll documentation down |
-| `Ctrl+f` | Scroll docs up | Scroll documentation up |
-| `Ctrl+Space` | Trigger completion | Manually show completion menu |
-| `Ctrl+e` | Close menu | Close completion menu |
-| `Enter` | Confirm | Accept selected completion |
-| `Tab` | Smart tab | Next item / expand snippet / regular tab |
-| `Shift+Tab` | Smart shift-tab | Previous item / previous snippet position |
+### File Manager (Yazi)
+| Key | Action |
+|-----|--------|
+| `<leader>i` | Open yazi at current file |
+| `<leader>iw` | Open yazi in working directory |
+| `<leader>is` | Resume last yazi session |
 
 ### Telescope (Fuzzy Finder)
-
-#### File & Text Search
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>ff` | Find files | Search files (respects .gitignore) |
-| `<leader>fa` | Find all files | Search all files (including hidden) |
-| `<leader>fw` | Live grep | Search text across all files |
-| `<leader>fz` | Current buffer search | Fuzzy search in current buffer |
-| `<leader>fb` | Find buffers | Search through open buffers |
-| `<leader>fo` | Old files | Search recently opened files |
-| `<leader>fh` | Help tags | Search Neovim help documentation |
-| `<leader>ma` | Marks | List and jump to marks |
-| `<leader>pt` | Pick terminal | Pick from hidden terminal sessions |
-
-#### Git
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>cm` | Git commits | Browse git commits |
-| `<leader>gt` | Git status | Show git status (modified files) |
-
-#### Theme
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>th` | Theme picker | Open NvChad theme picker |
-
-#### Within Telescope Window
-| Key | Action | Description |
-|-----|--------|-------------|
-| `q` (normal mode) | Close telescope | Quit telescope |
-| `Ctrl+n` / `Down` | Next result | Navigate to next result |
-| `Ctrl+p` / `Up` | Previous result | Navigate to previous result |
-| `Enter` | Open file | Open selected file |
-| `Ctrl+x` | Horizontal split | Open in horizontal split |
-| `Ctrl+v` | Vertical split | Open in vertical split |
-| `Ctrl+t` | New tab | Open in new tab |
-| `Ctrl+u` / `Ctrl+d` | Scroll preview | Scroll preview window |
-
-### File Management
-
-#### Nvim-Tree
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+n` | Toggle file tree | Open/close file explorer |
-| `<leader>e` | Focus file tree | Focus file explorer (opens if closed) |
-
-#### Yazi
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>-` | Open yazi | Open yazi file manager at current file |
-| `<leader>cw` | Open yazi in cwd | Open yazi in working directory |
-| `Ctrl+Up` | Toggle yazi | Resume last yazi session |
-| `F1` (in yazi) | Show help | Display yazi help |
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Find files in project (respects .gitignore) |
+| `<leader>fa` | Find all files (including hidden/ignored) |
+| `<leader>fw` | Live grep (search text across project) |
+| `<leader>fb` | Find in open buffers |
+| `<leader>fh` | Search help documentation |
+| `<leader>fo` | Find recently opened files |
+| `<leader>fz` | Fuzzy find in current buffer |
+| `<leader>ma` | List and jump to marks |
 
 ### Git Integration
+| Key | Action |
+|-----|--------|
+| `<leader>cm` | Browse git commits |
+| `<leader>gt` | Show git status |
 
-Git signs and hunks are managed by gitsigns.nvim (no custom keybindings in config, uses defaults).
+### LSP - Diagnostics
+| Key | Action |
+|-----|--------|
+| `[d` | Jump to previous diagnostic |
+| `]d` | Jump to next diagnostic |
+| `<leader>d` | Show diagnostic in floating window |
+| `<leader>ds` | Show all diagnostics (location list) |
+| `<leader>q` | Open diagnostics list |
 
----
+### LSP - Navigation & Code Intelligence
+*These keybindings are available when an LSP server is attached to the buffer*
 
-## Tmux Keybindings
+| Key | Action |
+|-----|--------|
+| `gD` | Go to declaration |
+| `gd` | Go to definition |
+| `<leader>D` | Go to type definition |
+| `<leader>ra` | Rename symbol (NvChad renamer) |
 
-**Prefix Key:** `Ctrl+a` (changed from default `Ctrl+b`)
+### LSP - Workspace Management
+| Key | Action |
+|-----|--------|
+| `<leader>wa` | Add workspace folder |
+| `<leader>wr` | Remove workspace folder |
+| `<leader>wl` | List workspace folders |
 
-### Basic Operations
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+a Ctrl+a` | Send prefix | Send Ctrl+a to application inside tmux |
-| `Ctrl+a r` | Reload config | Reload tmux.conf without restarting |
-
-### Pane Management
-
-#### Creating Panes
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+a \|` | Vertical split | Create new pane side-by-side (pipe symbol) |
-| `Ctrl+a -` | Horizontal split | Create new pane stacked (minus symbol) |
-
-#### Resizing Panes
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+a h` | Resize left | Resize pane left by 5 cells (repeatable) |
-| `Ctrl+a j` | Resize down | Resize pane down by 5 cells (repeatable) |
-| `Ctrl+a k` | Resize up | Resize pane up by 5 cells (repeatable) |
-| `Ctrl+a l` | Resize right | Resize pane right by 5 cells (repeatable) |
-| `Ctrl+a m` | Toggle zoom | Maximize/restore current pane (repeatable) |
-
-#### Navigation
-**Note:** Navigation between tmux panes and vim splits is seamless via `vim-tmux-navigator` plugin.
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+h` | Navigate left | Move to pane/vim split on left |
-| `Ctrl+j` | Navigate down | Move to pane/vim split below |
-| `Ctrl+k` | Navigate up | Move to pane/vim split above |
-| `Ctrl+l` | Navigate right | Move to pane/vim split on right |
-
-### Copy Mode (Vi Mode)
-
-| Key | Action | Description |
-|-----|--------|-------------|
-| `[` (after prefix) | Enter copy mode | Enter scrollback/copy mode |
-| `v` (in copy mode) | Begin selection | Start visual selection |
-| `y` (in copy mode) | Yank/copy | Copy selected text |
-| `h/j/k/l` (in copy mode) | Navigate | Vi-style navigation |
-
-### Session Management
-| Key | Action | Description |
-|-----|--------|-------------|
-| `Ctrl+a Ctrl+j` | Session switcher | Fuzzy find and switch sessions |
-
-### Plugins
-- **TPM (Tmux Plugin Manager):** Manages all tmux plugins
-- **tmux-fzf:** Fuzzy finding for sessions, windows, and commands
-- **vim-tmux-navigator:** Seamless navigation between vim and tmux
+### Quickfix Navigation
+| Key | Action |
+|-----|--------|
+| `[q` | Go to previous quickfix item |
+| `]q` | Go to next quickfix item |
 
 ---
 
-## Automatic Behaviors
+## Keybindings by Plugin
 
-These are automatic actions that occur on specific events (not triggered by keybindings):
+### Yazi (File Manager)
+Fast terminal file manager integration. See [File Manager (Yazi)](#file-manager-yazi) section above for keybindings to open Yazi.
 
-### Visual Feedback
-- **Yank Highlight:** Text flashes briefly (200ms) when yanked/copied
-- **Spell Check:** Automatically enabled for markdown, text, and git commit files
-
-### File Management
-- **Auto-create Directories:** When saving a file, parent directories are created automatically
-- **Restore Cursor Position:** When reopening a file, cursor returns to last position
-- **Check External Changes:** Prompts to reload if file changed outside Neovim
-
-### Code Quality
-- **Remove Trailing Whitespace:** Automatically trimmed on save
-- **Auto-resize Splits:** Splits become equal size when window is resized
-
-### Terminal Behavior
-- **Auto Insert Mode:** Terminal buffers automatically enter insert mode
-- **No Line Numbers:** Line numbers hidden in terminal buffers
-
-### Special Buffers
-- **Close with 'q':** Help, quickfix, lspinfo, man pages, and other special buffers can be closed with just `q`
-- **Not in Buffer List:** Special buffers don't appear in buffer list
-
-### Filetype-Specific Settings
-- **Markdown/Text:** Word wrap and spell check enabled
-- **Go:** Uses tabs (4-width) instead of spaces
-- **Python:** 4-space indentation (PEP 8 style)
-
----
-
-## Plugin Commands
-
-### LSP & Mason
-- `:Mason` - Open Mason package manager UI
-- `:MasonInstall <package>` - Install LSP server, formatter, or linter
-- `:MasonUpdate` - Update all installed packages
+**Inside Yazi:**
+- `F1` - Show help
+- `hjkl` or arrows - Navigate
+- `Enter` - Open file in Neovim
+- `Space` - Select file
+- `y` - Yank/copy
+- `p` - Paste
+- `d` - Delete
+- `a` - Create file
+- `A` - Create directory
+- `/` - Search
+- `q` - Quit
 
 ### Telescope
-- `:Telescope` - Open Telescope picker menu
+Used for fuzzy finding files, text, and more.
+- **Group:** `<leader>f` (find)
+- See "Telescope" section above for all keymaps
 
-### Formatting
-- `:ConformInfo` - Show formatting configuration for current buffer
+**Inside Telescope (Insert mode):**
+| Key | Action |
+|-----|--------|
+| `<C-n>` or `<Down>` | Navigate to next result |
+| `<C-p>` or `<Up>` | Navigate to previous result |
+| `<CR>` (Enter) | Open selected file |
+| `<C-x>` | Open in horizontal split |
+| `<C-v>` | Open in vertical split |
+| `<C-t>` | Open in new tab |
+| `<C-u>` | Scroll preview up |
+| `<C-d>` | Scroll preview down |
+| `<Esc>` | Enter normal mode |
 
-### Treesitter
-- `:TSInstall <language>` - Install treesitter parser
-- `:TSUpdate` - Update all parsers
-- `:TSModuleInfo` - Show treesitter module information
+**Inside Telescope (Normal mode):**
+| Key | Action |
+|-----|--------|
+| `q` | Close telescope |
+| `j`/`k` | Navigate results |
 
-### Git
-- `:Gitsigns` - Git signs commands (hunks, blame, etc.)
+### LSP (Language Server)
+Code intelligence, diagnostics, and completion.
+- Navigation: `gd`, `gD`, `<leader>D`
+- Diagnostics: `[d`, `]d`, `<leader>d`, `<leader>ds`, `<leader>q`
+- Code actions: `<leader>ra`
+- Workspace: `<leader>wa`, `<leader>wr`, `<leader>wl`
 
-### Theme
-- `:Telescope themes` - NvChad theme picker
+### NvChad UI
+Theming and UI components.
+- `<leader>ch` - Cheatsheet
+- `<leader>th` - Theme picker
 
-### File Explorer
-- `:NvimTreeToggle` - Toggle nvim-tree
-- `:NvimTreeFocus` - Focus nvim-tree
-- `:Yazi` - Open yazi file manager
+### Conform
+Code formatting with external formatters.
+- `<leader>fm` - Format file
+
+### nvim-cmp (Autocompletion)
+Keybindings for the completion menu (appears when typing code).
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `<C-p>` | Insert | Select previous completion item |
+| `<C-n>` | Insert | Select next completion item |
+| `<Tab>` | Insert | Select next item / Expand or jump in snippet |
+| `<S-Tab>` | Insert | Select previous item / Jump back in snippet |
+| `<CR>` (Enter) | Insert | Confirm selected completion |
+| `<C-Space>` | Insert | Manually trigger completion menu |
+| `<C-e>` | Insert | Close completion menu |
+| `<C-d>` | Insert | Scroll docs down |
+| `<C-f>` | Insert | Scroll docs up |
+
+### nvim-autopairs
+Automatically inserts closing brackets, quotes, and parentheses.
+- Automatically pairs: `()`, `[]`, `{}`, `""`, `''`, etc.
+- `<M-e>` (Alt+e) - Fast wrap: wrap selected text with pairs
+
+### render-markdown.nvim
+Enhanced markdown rendering with treesitter-powered formatting.
+- Available commands: `:RenderMarkdown enable/disable/toggle`
+- See full details in dedicated section below
+
+### Git Signs
+Git integration for modified lines and hunks.
+- Line indicators show git changes
+- Configured in `lua/configs/gitsigns.lua`
+
+### render-markdown.nvim (Full Details)
+Enhanced markdown rendering with treesitter-powered formatting.
+- Automatically renders markdown files with proper formatting
+- Shows heading icons, styled code blocks, and formatted lists
+- Renders in all modes (normal, insert, visual, command)
+
+**Available Commands:**
+| Command | Action |
+|---------|--------|
+| `:RenderMarkdown enable` | Enable markdown rendering |
+| `:RenderMarkdown disable` | Disable markdown rendering |
+| `:RenderMarkdown toggle` | Toggle markdown rendering |
+
+**Features:**
+- Heading icons: 󰲡 (H1), 󰲣 (H2), 󰲥 (H3), 󰲧 (H4), 󰲩 (H5), 󰲫 (H6)
+- Styled code blocks with language indicators
+- Bullet list icons: ●, ○, ◆, ◇ (nested levels)
+- Maximum file size: 10MB (prevents lag on huge files)
+
+**Configuration:** `nvim/lua/configs/render-markdown.lua`
+
+**Note:** No custom keybindings are configured. To add a toggle keybinding, you could add to `nvim/lua/mappings.lua`:
+```lua
+map("n", "<leader>md", "<cmd>RenderMarkdown toggle<CR>", { desc = "toggle markdown rendering" })
+```
 
 ---
 
-## Configuration Files
+## Most Frequent Commands
 
-- **Neovim Entry:** `nvim/init.lua`
-- **Keybindings:** `nvim/lua/mappings.lua`
-- **LSP Config:** `nvim/lua/configs/lspconfig.lua`
-- **Completion:** `nvim/lua/configs/cmp.lua`
-- **Telescope:** `nvim/lua/configs/telescope.lua`
-- **Plugins:** `nvim/lua/plugins/init.lua`
-- **Autocommands:** `nvim/lua/autocmds.lua`
-- **Options:** `nvim/lua/options.lua`
-- **Tmux:** `tmux.conf`
-
----
-
-## Notes
-
-### Neovim
-- **Leader Key** is `Space` (set in `init.lua`)
-- Most plugins are **lazy-loaded** for faster startup
-- **Base46** provides theming (NvChad's theme engine)
-- **LSP** provides code intelligence (completions, diagnostics, go-to-definition)
-- **Treesitter** provides accurate syntax highlighting
-
-### Tmux
-- **Prefix Key** is `Ctrl+a` (changed from default `Ctrl+b`)
-- **Mouse support** is enabled
-- **Vi mode** is enabled in copy mode
-- **256 color support** for proper color rendering
-- **Seamless vim/tmux navigation** via vim-tmux-navigator plugin
+| Action | Keybinding |
+|--------|-----------|
+| Find file | `<leader>ff` |
+| Toggle comment | `<leader>/` |
+| Open file manager | `<leader>i` |
+| Next buffer | `<Cmd-h>` |
+| Close buffer | `<Cmd-q>` |
+| Vertical split | `<Cmd-\>` |
+| Horizontal split | `<Cmd-->` |
+| Save file | `<C-s>` |
+| Go to definition | `gd` |
+| Rename symbol | `<leader>ra` |
 
 ---
 
-**Generated:** Documentation for dotfiles configuration  
-**Last Updated:** January 11, 2026
+
+
+
+

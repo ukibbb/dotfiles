@@ -81,3 +81,11 @@ shell-integration-features = no-cursor
 # macOS specific - remove shadows and decorations
 macos-titlebar-style = tabs
 macos-window-shadow = false
+
+# CUSTOM KEYBINDINGS
+# Disable default macOS shortcuts to use them in Neovim
+keybind = cmd+q=ignore
+keybind = cmd+h=ignore
+keybind = cmd+backslash=ignore
+keybind = cmd+minus=ignore
+keybind = cmd+n=ignore
