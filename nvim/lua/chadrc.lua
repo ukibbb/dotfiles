@@ -10,8 +10,8 @@ M.base46 = {
 
   -- Highlight overrides - customize specific highlight groups
   hl_override = {
-    Comment = { fg = "#606060" }, -- Darker gray for comments
-    ["@comment"] = { fg = "#606060" }, -- Treesitter comment highlight
+    Comment = { fg = "#5fafff", italic = true },
+    ["@comment"] = { fg = "#5fafff", italic = true },
   },
 }
 

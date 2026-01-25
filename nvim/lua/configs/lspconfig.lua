@@ -201,9 +201,9 @@ M.capabilities.textDocument.completion.completionItem = {
     -- This tells Neovim to start lua_ls when editing Lua files
     vim.lsp.enable "lua_ls"
     
-    -- Enable HTML and CSS language servers
-    -- These provide completions and diagnostics for HTML/CSS files
-    local servers = { "html", "cssls" }
+    -- Enable language servers
+    -- These provide completions and diagnostics for their respective file types
+    local servers = { "html", "cssls", "pyright", "ts_ls", "dockerls", "docker_compose_language_service" }
     vim.lsp.enable(servers)
   end
   

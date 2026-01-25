@@ -108,18 +108,156 @@ autocmd("FileType", {  -- Event: filetype was detected for a buffer
 
 augroup("CheckTime", { clear = true })
 
-autocmd("FocusGained", {
-  -- FocusGained = Neovim window got focus (you switched back to it)
-  desc = "Check if file changed outside Neovim",
+-- EXTERNAL CHANGE DETECTION WITH LINE HIGHLIGHTING
+-- When Claude or other tools modify a file, we want to:
+-- 1. Detect the change
+-- 2. Reload the buffer
+-- 3. Highlight exactly which lines changed (green)
+-- 4. Keep highlights until user dismisses them
+
+-- Namespace for our highlights - namespaces let us group highlights
+-- so we can clear just ours without affecting other plugins
+-- nvim_create_namespace returns a unique integer ID
+local external_change_ns = vim.api.nvim_create_namespace("ExternalChangeHighlight")
+
+-- Table to store buffer contents BEFORE reload
+-- Key = buffer number, Value = array of lines
+-- We need this to compare old vs new content after reload
+local pre_reload_content = {}
+
+-- Define custom highlight groups for changed/deleted lines
+-- guibg = background color in GUI/truecolor terminals
+-- Changed/added lines = green background
+vim.api.nvim_set_hl(0, "ExternalChangeAdd", { bg = "#2d4f2d" })
+-- Deleted lines = red background (shown as virtual lines)
+vim.api.nvim_set_hl(0, "ExternalChangeDel", { bg = "#4f2d2d" })
+
+-- FileChangedShell fires BEFORE buffer is reloaded (when change is detected)
+-- We use this to save the current content for comparison
+-- The hook from Claude sends :checktime which triggers this event chain
+autocmd("FileChangedShell", {
+  desc = "Save buffer content before external reload",
   group = "CheckTime",
-  callback = function()
-    -- :checktime checks all buffers for external changes
-    -- If a file changed, Neovim will ask if you want to reload
-    if vim.o.buftype ~= "nofile" then
-      vim.cmd("checktime")
-    end
+  callback = function(args)
+    local bufnr = args.buf
+    -- Save current content BEFORE Neovim reloads the file
+    -- This will be compared in FileChangedShellPost
+    pre_reload_content[bufnr] = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    -- Return nil to let autoread handle the reload
   end,
 })
+
+autocmd("FileChangedShellPost", {
+  -- FileChangedShellPost fires AFTER buffer is reloaded from disk
+  -- At this point, buffer contains NEW content, but we saved OLD content above
+  desc = "Highlight changed lines after external file modification",
+  group = "CheckTime",
+  callback = function(args)
+    local bufnr = args.buf
+    local old_lines = pre_reload_content[bufnr]
+
+    -- If we don't have previous content, we can't diff properly
+    -- This happens on first load or if FileChangedShell didn't fire
+    if not old_lines or #old_lines == 0 then
+      pre_reload_content[bufnr] = nil
+      vim.notify("File reloaded (no previous content to diff)", vim.log.levels.INFO)
+      return
+    end
+
+    -- DEBUG: uncomment to see what's being compared
+    -- vim.notify(string.format("DEBUG: old=%d lines, new=%d lines", #old_lines, #new_lines), vim.log.levels.DEBUG)
+
+    -- Get the new content (what was just loaded from disk)
+    local new_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+    -- Clear any existing highlights from previous external changes
+    -- nvim_buf_clear_namespace(buffer, namespace, start_line, end_line)
+    -- -1 for end means "to the end of buffer"
+    vim.api.nvim_buf_clear_namespace(bufnr, external_change_ns, 0, -1)
+
+    -- Use vim.diff to get proper diff hunks between old and new content
+    -- This handles insertions, deletions, and changes properly
+    local old_text = table.concat(old_lines, "\n") .. "\n"
+    local new_text = table.concat(new_lines, "\n") .. "\n"
+
+    local diff = vim.diff(old_text, new_text, {
+      result_type = "indices", -- Returns line ranges instead of patch text
+      algorithm = "histogram", -- Better diff algorithm
+    })
+
+    local added_count = 0
+    local deleted_count = 0
+
+    -- diff returns list of hunks: {old_start, old_count, new_start, new_count}
+    for _, hunk in ipairs(diff) do
+      local old_start, old_count, new_start, new_count = unpack(hunk)
+
+      -- Highlight added/changed lines in green (full line block)
+      -- Using extmarks with line_hl_group + hl_eol for full window-width background
+      for i = new_start, new_start + new_count - 1 do
+        if i <= #new_lines then
+          local line_len = #new_lines[i]
+          vim.api.nvim_buf_set_extmark(bufnr, external_change_ns, i - 1, 0, {
+            end_col = line_len,
+            hl_group = "ExternalChangeAdd",
+            hl_eol = true, -- Extend highlight to end of window
+            line_hl_group = "ExternalChangeAdd", -- Full line green background
+            priority = 100,
+          })
+          added_count = added_count + 1
+        end
+      end
+
+      -- Show deleted lines as virtual lines with red background
+      -- These appear above the line where deletion occurred
+      if old_count > 0 then
+        local deleted_lines = {}
+        -- Get window width to pad virtual lines to full width
+        local win_width = vim.api.nvim_win_get_width(0)
+        for i = old_start, old_start + old_count - 1 do
+          if old_lines[i] then
+            -- Pad line with spaces to fill window width for block effect
+            local line_text = "- " .. old_lines[i]
+            local padding = string.rep(" ", math.max(0, win_width - #line_text))
+            -- Each virt_line is a list of {text, highlight} chunks
+            table.insert(deleted_lines, { { line_text .. padding, "ExternalChangeDel" } })
+            deleted_count = deleted_count + 1
+          end
+        end
+
+        if #deleted_lines > 0 then
+          -- Place virtual lines at the position where content was deleted
+          -- new_start is where in the new file the deletion "happened"
+          local insert_line = math.min(new_start, #new_lines)
+          if insert_line < 1 then insert_line = 1 end
+
+          vim.api.nvim_buf_set_extmark(bufnr, external_change_ns, insert_line - 1, 0, {
+            virt_lines = deleted_lines,
+            virt_lines_above = true, -- Show above the current line
+            priority = 100,
+          })
+        end
+      end
+    end
+
+    -- Clean up stored content (free memory)
+    pre_reload_content[bufnr] = nil
+
+    -- Notify user with count of changed lines
+    vim.notify(
+      string.format("File reloaded: +%d/-%d lines. <leader>ch to clear highlights.", added_count, deleted_count),
+      vim.log.levels.WARN
+    )
+  end,
+})
+
+-- Keymap to clear the external change highlights
+-- User presses this when they've reviewed the changes
+vim.keymap.set("n", "<leader>ch", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_clear_namespace(bufnr, external_change_ns, 0, -1)
+  vim.notify("Change highlights cleared", vim.log.levels.INFO)
+end, { desc = "Clear external change highlights" })
 
 -- SECTION 6: AUTO-CREATE DIRECTORIES
 -- When saving a file in a directory that doesn't exist, create it automatically

@@ -25,34 +25,22 @@ map("i", "<C-j>", "<Down>", { desc = "move down" })
 map("i", "<C-k>", "<Up>", { desc = "move up" })
 
 -- WINDOW NAVIGATION (NORMAL MODE)
--- Quick switching between split windows using Ctrl+h/j/k/l
--- Much faster than Ctrl+w followed by direction key
-
--- Ctrl+h: Move to the window on the left
--- <C-w>h is the native Vim command for "move to left window"
-map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
-
--- Ctrl+l: Move to the window on the right
-map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
-
--- Ctrl+j: Move to the window below
-map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
-
--- Ctrl+k: Move to the window above
-map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+-- Commented out: vim-tmux-navigator handles Ctrl+h/j/k/l for both
+-- Neovim splits AND tmux panes seamlessly
+--
+-- map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
+-- map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
+-- map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
+-- map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
 -- WINDOW SPLITS
 -- Create new split windows with intuitive keybindings
 
--- Cmd+\: Create vertical split (right side)
--- <D-Bslash> = Command+\ on macOS (backslash looks like vertical line |)
--- The backslash visually represents a vertical split
-map("n", "<D-Bslash>", "<cmd>vsplit<CR>", { desc = "vertical split" })
+-- Cmd+\: Create vertical split (Karabiner → ctrl+shift+alt+\)
+map("n", "<M-C-\\>", "<cmd>vsplit<CR>", { desc = "vertical split" })
 
--- Cmd+-: Create horizontal split (below)
--- <D--> = Command+- on macOS (minus looks like horizontal line -)
--- The minus visually represents a horizontal split
-map("n", "<D-->", "<cmd>split<CR>", { desc = "horizontal split" })
+-- Cmd+-: Create horizontal split (Karabiner → ctrl+shift+alt+-)
+map("n", "<M-C-_>", "<cmd>split<CR>", { desc = "horizontal split" })
 
 -- GENERAL UTILITIES
 -- Common operations made accessible with simple key combinations
@@ -67,10 +55,6 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 -- You lose the original ; (repeat last f/t motion), but ',' still works
 map("n", ";", ":", { desc = "enter command mode" })
 
--- Ctrl+s: Save the current file (works in both normal and insert mode)
--- Muscle memory from other editors (VS Code, etc.)
--- <cmd>...<CR> is faster than : because it doesn't change modes
-map({ "n", "i" }, "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 
 -- Ctrl+c: Copy entire file to clipboard
 -- %y+ = select all lines (%) and yank to system clipboard (+)
@@ -208,22 +192,14 @@ if require("nvconfig").ui.tabufline.enabled then
   -- :enew = edit new (creates empty unnamed buffer)
   map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
 
-  -- Cmd+H: Go to next buffer (to the right)
-  -- <D-h> = Command+H on macOS (requires Ghostty config: keybind = cmd+h=ignore)
-  map("n", "<D-h>", function()
-    require("nvchad.tabufline").next()
-  end, { desc = "buffer goto next" })
+  -- Cmd+H: Go to previous buffer (Karabiner → ctrl+shift+alt+h → <M-C-H>)
+  map("n", "<M-C-H>", function() require("nvchad.tabufline").prev() end, { desc = "buffer goto prev" })
 
-  -- Cmd+L: Go to previous buffer (to the left) - for symmetry
-  map("n", "<D-l>", function()
-    require("nvchad.tabufline").prev()
-  end, { desc = "buffer goto prev" })
+  -- Cmd+L: Go to next buffer (Karabiner → ctrl+shift+alt+l → <M-C-L>)
+  map("n", "<M-C-L>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
 
-  -- Cmd+Q: Close the current buffer
-  -- <D-q> = Command+Q on macOS (requires Ghostty config: keybind = cmd+q=ignore)
-  map("n", "<D-q>", function()
-    require("nvchad.tabufline").close_buffer()
-  end, { desc = "buffer close" })
+  -- Cmd+Q: Close the current buffer (Karabiner → ctrl+shift+alt+q → <M-C-Q>)
+  map("n", "<M-C-Q>", function() require("nvchad.tabufline").close_buffer() end, { desc = "buffer close" })
 end
 
 -- COMMENTING
@@ -286,4 +262,35 @@ map(
   { desc = "telescope find all files" }
 )
 
+
+-- DISTANT (REMOTE DEVELOPMENT)
+-- distant.nvim for editing files on Raspberry Pi or remote servers
+-- All mappings under <leader>r prefix (r = remote)
+
+-- Leader+rl: Launch and connect to remote server via SSH
+-- SSHs to remote, starts distant server there, then connects
+-- Use this to start a new session (DistantConnect only connects to running server)
+map("n", "<leader>rl", function()
+  vim.ui.input({ prompt = "SSH destination (e.g., ssh://user@host): " }, function(dest)
+    if dest and dest ~= "" then
+      vim.cmd("DistantLaunch " .. dest)
+    end
+  end)
+end, { desc = "distant launch remote server" })
+
+-- Leader+ro: Open remote file or directory browser
+-- After connecting, use this to browse/open files on the remote machine
+map("n", "<leader>ro", ":DistantOpen ", { desc = "distant open remote file/dir" })
+
+-- Leader+rs: Open interactive shell on remote machine
+-- Launches a shell session on the connected remote server
+map("n", "<leader>rs", "<cmd>DistantShell<CR>", { desc = "distant remote shell" })
+
+-- Leader+rx: Run/execute command on remote machine
+-- Spawns a command on the remote server (e.g., python script.py)
+map("n", "<leader>rx", ":DistantSpawn ", { desc = "distant spawn remote command" })
+
+-- Leader+rp: Quick connect to Raspberry Pi
+-- Shortcut for connecting to Pi at known IP
+map("n", "<leader>rp", "<cmd>DistantLaunch ssh://ukibbb@192.168.101.7<CR>", { desc = "distant connect to Raspberry Pi" })
 

@@ -11,6 +11,9 @@ return {
   -- These apply to all Telescope pickers unless overridden
   
   defaults = {
+    -- Hide .git internals but show .github, .gitignore, etc.
+    file_ignore_patterns = { "^.git/" },
+
     -- PROMPT APPEARANCE
     -- The text shown before where you type in the prompt
     -- "   " includes a search icon (Nerd Font) and padding
@@ -51,26 +54,36 @@ return {
     
     mappings = {
       -- Normal mode mappings (when you press Escape in telescope)
-      n = { 
+      n = {
         -- Press "q" to close telescope (vim-like quit)
         -- By default, you'd need to press <Esc> or <C-c>
-        ["q"] = require("telescope.actions").close 
+        ["q"] = require("telescope.actions").close
       },
-      
+
       -- Insert mode mappings (default mode when telescope opens)
-      -- Using defaults:
-      -- <C-n>/<C-p> or <Down>/<Up> = navigate results
-      -- <CR> = open file
-      -- <C-x> = open in horizontal split
-      -- <C-v> = open in vertical split
-      -- <C-t> = open in new tab
-      -- <C-u>/<C-d> = scroll preview up/down
+      i = {
+        ["<M-j>"] = require("telescope.actions").move_selection_next,
+        ["<M-k>"] = require("telescope.actions").move_selection_previous,
+      },
+    },
+  },
+
+  -- PICKERS
+  -- Configure individual pickers (find_files, live_grep, etc.)
+  pickers = {
+    find_files = {
+      hidden = true,  -- Show dotfiles
+    },
+    live_grep = {
+      additional_args = function()
+        return { "--hidden" }
+      end,
     },
   },
 
   -- EXTENSIONS
   -- Telescope extensions add extra functionality
-  
+
   -- List of extension names to load
   -- "themes" = NvChad's theme picker extension
   extensions_list = { "themes" },

@@ -36,6 +36,13 @@ o.cursorline = true
 -- Options: "line", "number", "both", "screenline"
 o.cursorlineopt = "number"
 
+-- guicursor sets cursor shape per mode
+-- Insert mode: block cursor with slow blink (like visual mode, but blinking)
+-- n-v-c = normal, visual, command: solid block
+-- i = insert: block with blink (700ms wait, 400ms on, 400ms off)
+-- r-cr = replace: horizontal bar
+opt.guicursor = "n-v-c:block,i:block-blinkwait700-blinkon400-blinkoff400,r-cr:hor20,o:hor50"
+
 -- signcolumn = "yes" always shows the sign column (left gutter)
 -- This prevents the editor from "shifting" when signs appear (git, diagnostics)
 o.signcolumn = "yes"
@@ -123,6 +130,11 @@ o.mouse = "a"
 -- Undo files are stored in ~/.local/share/nvim/undo/
 o.undofile = true
 
+-- autoread = true automatically re-reads file when changed externally
+-- Combined with checktime autocommands, this enables live updates
+-- when tools like Claude Code modify files
+o.autoread = true
+
 -- swapfile = false disables .swp swap files
 -- Swap files are used for crash recovery, but can be annoying
 -- Modern systems crash less often, and you probably use git anyway
@@ -153,10 +165,9 @@ o.splitright = true
 -- SECTION 7: TIMING
 -- ============================================================================
 
--- updatetime = 250 sets delay (ms) before CursorHold event fires
--- Also affects swap file writes and some plugins (gitsigns, etc.)
--- Lower = more responsive, but more CPU usage. 250ms is a good balance.
-o.updatetime = 250
+-- updatetime = 50 sets delay (ms) before CursorHold event fires
+-- Fast enough for live reload, stable for plugins
+o.updatetime = 50
 
 -- timeoutlen = 400 sets time (ms) to wait for a mapped sequence to complete
 -- If you press <leader>, Neovim waits 400ms for the next key

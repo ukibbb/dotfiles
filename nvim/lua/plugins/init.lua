@@ -93,9 +93,9 @@ return {
   -- nvim-lspconfig: Configurations for LSP servers
   -- Your configs/lspconfig.lua uses vim.lsp.config() and vim.lsp.enable()
   -- Pre-configured settings for language servers (lua_ls, html, cssls)
-  -- event = "User FilePost" means load when opening a file (lazy loading)
   {
     "neovim/nvim-lspconfig",
+    event = "User FilePost",
     config = function()
       -- Load your custom LSP configuration
       require("configs.lspconfig").defaults()
@@ -111,6 +111,35 @@ return {
       -- Load config from our separate gitsigns config file
       return require "configs.gitsigns"
     end,
+  },
+
+  -- Unified: Inline unified diffs in buffer
+  -- Shows git diff inline without a separate window, with file tree for changed files
+  {
+    "axkirillov/unified.nvim",
+    cmd = "Unified",
+    keys = {
+      { "<leader>gd", "<cmd>Unified<cr>", desc = "Toggle inline diff" },
+    },
+    opts = {},
+  },
+
+  -- Lazygit: Terminal UI for git inside Neovim
+  -- Full git interface with staging, committing, rebasing, and conflict resolution
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    keys = {
+      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Open Lazygit" },
+    },
   },
 
   -- LSP (LANGUAGE SERVER PROTOCOL)
@@ -230,42 +259,39 @@ return {
   },
 
   -- FILE MANAGER
-  -- Yazi: Terminal file manager integration
-  -- Fast, modern file manager with image previews and async operations
+  -- Oil: Edit your filesystem like a buffer
+  -- Navigate directories and rename/move/delete files using normal editing commands
   {
-    "mikavilpas/yazi.nvim",
-    version = "*", -- use the latest stable version
-    event = "VeryLazy",
-    dependencies = {
-      { "nvim-lua/plenary.nvim", lazy = true },
-    },
+    "stevearc/oil.nvim",
+    cmd = "Oil",
     keys = {
-      {
-        "<leader>i",
-        mode = { "n", "v" },
-        "<cmd>Yazi<cr>",
-        desc = "Open yazi at the current file",
+      { "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
+    },
+    opts = {
+      -- Automatically open preview when entering Oil buffer
+      view_options = {
+        show_hidden = true,
       },
-      {
-        -- Open in the current working directory
-        "<leader>iw",
-        "<cmd>Yazi cwd<cr>",
-        desc = "Open the file manager in nvim's working directory",
+      preview_win = {
+        update_on_cursor_moved = true,
       },
-      {
-        "<leader>is",
-        "<cmd>Yazi toggle<cr>",
-        desc = "Resume the last yazi session",
+      keymaps = {
+        ["<C-p>"] = "actions.preview",
+        ["q"] = "actions.close",
       },
     },
-    opts = function()
-      return require "configs.yazi"
-    end,
-    init = function()
-      -- mark netrw as loaded so it's not loaded at all.
-      --
-      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
-      vim.g.loaded_netrwPlugin = 1
+    config = function(_, opts)
+      require("oil").setup(opts)
+      -- Auto-open preview when Oil buffer is entered
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "OilEnter",
+        callback = vim.schedule_wrap(function(args)
+          local oil = require("oil")
+          if vim.api.nvim_get_current_buf() == args.data.buf and oil.get_cursor_entry() then
+            oil.open_preview()
+          end
+        end),
+      })
     end,
   },
 
@@ -283,5 +309,42 @@ return {
     end,
   },
 
+  -- REMOTE DEVELOPMENT
+  -- distant.nvim: Edit files, run programs, and use LSP on remote machines
+  -- Enables seamless development on Raspberry Pi or other remote servers
+  {
+    "chipsenkbeil/distant.nvim",
+    branch = "v0.3",
+    -- Load when distant commands are used
+    cmd = {
+      "DistantInstall",
+      "DistantClientVersion",
+      "DistantConnect",
+      "DistantLaunch",
+      "DistantOpen",
+      "DistantShell",
+      "DistantSpawn",
+    },
+    opts = function()
+      return require "configs.distant"
+    end,
+    config = function(_, opts)
+      require("distant"):setup(opts)
+    end,
+  },
 
+  -- TMUX INTEGRATION
+  -- vim-tmux-navigator: Seamless navigation between tmux panes and Neovim splits
+  -- Allows Ctrl+h/j/k/l to move between Neovim splits AND tmux panes
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+  },
+
+  -- CLAUDE.NVIM
+  {
+    dir = "~/Desktop/dotfiles/claude.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
 }

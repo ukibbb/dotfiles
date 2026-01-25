@@ -20,12 +20,16 @@ return {
   
   -- List of parsers to install automatically
   -- These are the minimum parsers needed for basic Neovim config editing
-  ensure_installed = { 
-    "lua",      -- Lua language (for Neovim config)
-    "luadoc",   -- Lua documentation comments
-    "printf",   -- Printf-style format strings (used in many languages)
-    "vim",      -- Vimscript language
-    "vimdoc",   -- Vim documentation (help files)
+  ensure_installed = {
+    "lua",        -- Lua language (for Neovim config)
+    "luadoc",     -- Lua documentation comments
+    "printf",     -- Printf-style format strings (used in many languages)
+    "vim",        -- Vimscript language
+    "vimdoc",     -- Vim documentation (help files)
+    "python",     -- Python language
+    "typescript", -- TypeScript language
+    "tsx",        -- TypeScript with JSX (React)
+    "javascript", -- JavaScript (needed for TypeScript projects)
   },
   
   -- You can add more parsers based on languages you use:
