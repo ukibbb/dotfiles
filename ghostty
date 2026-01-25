@@ -3,7 +3,7 @@
 
 # BASIC COLORS
 # Background: Deep blue-teal to match iTerm2 aesthetic
-background = #000000      
+background = #000000
 
 # Foreground: Soft white for text, easy on the eyes
 foreground = #e0e0e0
@@ -82,10 +82,25 @@ shell-integration-features = no-cursor
 macos-titlebar-style = tabs
 macos-window-shadow = false
 
+
 # CUSTOM KEYBINDINGS
-# Disable default macOS shortcuts to use them in Neovim
-keybind = cmd+q=ignore
-keybind = cmd+h=ignore
-keybind = cmd+backslash=ignore
-keybind = cmd+minus=ignore
-keybind = cmd+n=ignore
+# All cmd+key combos handled by Karabiner → ctrl+shift+alt → CSI u sequences
+keybind = cmd+n=text:\x1b[32~
+
+# Send escape sequences for cmd+j/k (for Telescope navigation)
+keybind = cmd+j=text:\x1b[106;9u
+keybind = cmd+k=text:\x1b[107;9u
+
+# Buffer navigation (Karabiner remaps cmd+h/l/q → ctrl+alt+h/l/q)
+keybind = ctrl+alt+h=text:\x1b[104;7u
+keybind = ctrl+alt+l=text:\x1b[108;7u
+keybind = ctrl+alt+q=text:\x1b[113;7u
+
+# Splits (Karabiner remaps cmd+\/- → ctrl+alt+\/-)
+keybind = ctrl+alt+backslash=text:\x1b[92;7u
+keybind = ctrl+alt+-=text:\x1b[45;7u
+
+
+# Window sizing
+maximize = true
+
