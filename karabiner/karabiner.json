@@ -1,0 +1,68 @@
+{
+    "profiles": [
+        {
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" },
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "cmd+h to ctrl+shift+alt+h in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "h", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "h", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+l to ctrl+shift+alt+l in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "l", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "l", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+q to ctrl+shift+alt+q in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "q", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "q", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+backslash to ctrl+shift+alt+backslash in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "backslash", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "backslash", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+minus to ctrl+shift+alt+minus in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "hyphen", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "hyphen", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
