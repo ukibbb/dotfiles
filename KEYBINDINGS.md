@@ -1,8 +1,51 @@
 # Keybindings Reference
 
-Quick reference for Neovim keybindings.
+Quick reference for keybindings across the terminal stack.
 
 For tmux keybindings and concepts, see [tmux.md](tmux.md).
+
+---
+
+## Keybinding Flow
+
+Keyboard input flows through four layers:
+
+```
+Keyboard → Karabiner (remaps Cmd keys) → Ghostty (terminal) → tmux (if running) → Neovim
+```
+
+| Layer | Purpose |
+|-------|---------|
+| Karabiner | Remaps `Cmd+...` to `Ctrl+Alt+...` in Ghostty |
+| Ghostty | Terminal emulator, sends escape sequences to apps |
+| tmux | Terminal multiplexer (prefix: `Ctrl+s`) |
+| Neovim | Editor (leader: `Space`) |
+
+### Karabiner Key Remapping
+
+In Ghostty, Karabiner intercepts these macOS shortcuts and remaps them:
+
+| You Press | Karabiner Sends | Neovim Sees | Action |
+|-----------|-----------------|-------------|--------|
+| `Cmd+h` | `Ctrl+Alt+h` | `<M-C-H>` | Previous buffer |
+| `Cmd+l` | `Ctrl+Alt+l` | `<M-C-L>` | Next buffer |
+| `Cmd+q` | `Ctrl+Alt+q` | `<M-C-Q>` | Close buffer |
+| `Cmd+\` | `Ctrl+Alt+\` | `<M-C-\>` | Vertical split |
+| `Cmd+-` | `Ctrl+Alt+-` | `<M-C-_>` | Horizontal split |
+
+### Ghostty Direct Keybindings
+
+These are sent directly by Ghostty (no Karabiner remapping):
+
+| You Press | Neovim Sees | Action |
+|-----------|-------------|--------|
+| `Cmd+n` | Escape sequence | (available for mapping) |
+| `Cmd+j` | Escape sequence | Telescope: next result |
+| `Cmd+k` | Escape sequence | Telescope: previous result |
+
+### Unified Navigation
+
+`Ctrl+h/j/k/l` works seamlessly across tmux panes and Neovim splits via vim-tmux-navigator.
 
 ---
 
@@ -14,8 +57,8 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 - `<leader>` = Space
 - `<C-...>` = Ctrl + key
 - `<S-...>` = Shift + key
-- `<D-...>` = Cmd + key (macOS)
 - `<M-...>` = Alt/Option + key
+- `<M-C-...>` = Alt/Option + Ctrl + key
 
 ---
 
@@ -27,7 +70,7 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 | `jk` | Insert | Exit insert mode |
 | `;` | Normal | Enter command mode (instead of Shift+:) |
 | `<Esc>` | Normal | Clear search highlights |
-| `<C-s>` | Normal/Insert | Save file |
+| `:w` | Normal | Save file (command mode) |
 | `<C-c>` | Normal | Copy entire file to clipboard |
 | `<C-a>` | Normal | Select all text |
 
@@ -51,18 +94,18 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 | `<C-k>` | Switch to up window |
 
 ### Window Splits
-| Key | Action |
-|-----|--------|
-| `<Cmd-\>` | Create vertical split (right) |
-| `<Cmd-->` | Create horizontal split (below) |
+| You Press | Neovim Key | Action |
+|-----------|------------|--------|
+| `Cmd+\` | `<M-C-\>` | Create vertical split (right) |
+| `Cmd+-` | `<M-C-_>` | Create horizontal split (below) |
 
 ### Buffer Management
-| Key | Action |
-|-----|--------|
-| `<leader>b` | Create new empty buffer |
-| `<Cmd-h>` | Go to next buffer |
-| `<Cmd-l>` | Go to previous buffer |
-| `<Cmd-q>` | Close current buffer |
+| You Press | Neovim Key | Action |
+|-----------|------------|--------|
+| — | `<leader>b` | Create new empty buffer |
+| `Cmd+h` | `<M-C-H>` | Go to previous buffer |
+| `Cmd+l` | `<M-C-L>` | Go to next buffer |
+| `Cmd+q` | `<M-C-Q>` | Close current buffer |
 
 ### Line Manipulation
 | Key | Mode | Action |
@@ -91,7 +134,7 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 | `<leader>rn` | Toggle relative line numbers |
 | `<leader>w` | Toggle word wrap |
 | `<leader>y` | Copy entire file to clipboard |
-| `<leader>ch` | Open NvChad cheatsheet |
+| `<leader>ch` | Open NvChad cheatsheet *(built-in NvChad mapping)* |
 | `<leader>th` | Open theme picker |
 
 ### Formatting & Comments
@@ -101,12 +144,10 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 | `<leader>/` | Normal | Toggle comment on line |
 | `<leader>/` | Visual | Toggle comment on selection |
 
-### File Manager (Yazi)
+### File Explorer (Oil.nvim)
 | Key | Action |
 |-----|--------|
-| `<leader>i` | Open yazi at current file |
-| `<leader>iw` | Open yazi in working directory |
-| `<leader>is` | Resume last yazi session |
+| `-` | Open parent directory (with auto-preview) |
 
 ### Telescope (Fuzzy Finder)
 | Key | Action |
@@ -125,6 +166,13 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 |-----|--------|
 | `<leader>cm` | Browse git commits |
 | `<leader>gt` | Show git status |
+| `<leader>gd` | Toggle inline diff (Unified.nvim) |
+| `<leader>gg` | Open Lazygit |
+
+### Claude Code Integration
+| Key | Mode | Action |
+|-----|------|--------|
+| `<leader>sc` | Visual | Add Claude-generated comments to selected code |
 
 ### LSP - Diagnostics
 | Key | Action |
@@ -162,21 +210,35 @@ For tmux keybindings and concepts, see [tmux.md](tmux.md).
 
 ## Keybindings by Plugin
 
-### Yazi (File Manager)
-Fast terminal file manager integration. See [File Manager (Yazi)](#file-manager-yazi) section above for keybindings to open Yazi.
+### Oil.nvim (File Explorer)
+Edit your filesystem like a buffer with automatic preview.
 
-**Inside Yazi:**
-- `F1` - Show help
-- `hjkl` or arrows - Navigate
-- `Enter` - Open file in Neovim
-- `Space` - Select file
-- `y` - Yank/copy
-- `p` - Paste
-- `d` - Delete
-- `a` - Create file
-- `A` - Create directory
-- `/` - Search
-- `q` - Quit
+**Opening Oil:**
+- `-` - Open parent directory (auto-opens preview)
+
+**Inside Oil:**
+| Key | Action |
+|-----|--------|
+| `j`/`k` | Navigate files (preview auto-updates) |
+| `Enter` | Open file/directory |
+| `-` | Go to parent directory |
+| `_` | Open current working directory |
+| `Ctrl-p` | Toggle preview |
+| `Ctrl-s` | Open in vertical split |
+| `Ctrl-h` | Open in horizontal split |
+| `Ctrl-t` | Open in new tab |
+| `Ctrl-l` | Refresh |
+| `g.` | Toggle hidden files |
+| `gs` | Change sort order |
+| `gx` | Open with external app |
+| `g?` | Show help |
+| `q` | Close Oil |
+
+**File operations:** Edit buffer like normal text, then `:w` to apply:
+- Rename: change the filename text
+- Delete: `dd` to delete line
+- Move: yank line, paste in another directory
+- Create: add new line with filename (end with `/` for directory)
 
 ### Telescope
 Used for fuzzy finding files, text, and more.
@@ -184,17 +246,17 @@ Used for fuzzy finding files, text, and more.
 - See "Telescope" section above for all keymaps
 
 **Inside Telescope (Insert mode):**
-| Key | Action |
-|-----|--------|
-| `<C-n>` or `<Down>` | Navigate to next result |
-| `<C-p>` or `<Up>` | Navigate to previous result |
-| `<CR>` (Enter) | Open selected file |
-| `<C-x>` | Open in horizontal split |
-| `<C-v>` | Open in vertical split |
-| `<C-t>` | Open in new tab |
-| `<C-u>` | Scroll preview up |
-| `<C-d>` | Scroll preview down |
-| `<Esc>` | Enter normal mode |
+| You Press | Neovim Key | Action |
+|-----------|------------|--------|
+| `Cmd+j` or `Alt+j` | `<M-j>` | Navigate to next result |
+| `Cmd+k` or `Alt+k` | `<M-k>` | Navigate to previous result |
+| `Enter` | `<CR>` | Open selected file |
+| `Ctrl+x` | `<C-x>` | Open in horizontal split |
+| `Ctrl+v` | `<C-v>` | Open in vertical split |
+| `Ctrl+t` | `<C-t>` | Open in new tab |
+| `Ctrl+u` | `<C-u>` | Scroll preview up |
+| `Ctrl+d` | `<C-d>` | Scroll preview down |
+| `Esc` | `<Esc>` | Enter normal mode |
 
 **Inside Telescope (Normal mode):**
 | Key | Action |
@@ -233,22 +295,14 @@ Keybindings for the completion menu (appears when typing code).
 | `<C-d>` | Insert | Scroll docs down |
 | `<C-f>` | Insert | Scroll docs up |
 
+**Note:** `<C-Space>` in insert mode triggers completion. There's no conflict with tmux since the tmux prefix (`Ctrl+s`) is different.
+
 ### nvim-autopairs
 Automatically inserts closing brackets, quotes, and parentheses.
 - Automatically pairs: `()`, `[]`, `{}`, `""`, `''`, etc.
 - `<M-e>` (Alt+e) - Fast wrap: wrap selected text with pairs
 
 ### render-markdown.nvim
-Enhanced markdown rendering with treesitter-powered formatting.
-- Available commands: `:RenderMarkdown enable/disable/toggle`
-- See full details in dedicated section below
-
-### Git Signs
-Git integration for modified lines and hunks.
-- Line indicators show git changes
-- Configured in `lua/configs/gitsigns.lua`
-
-### render-markdown.nvim (Full Details)
 Enhanced markdown rendering with treesitter-powered formatting.
 - Automatically renders markdown files with proper formatting
 - Shows heading icons, styled code blocks, and formatted lists
@@ -269,31 +323,88 @@ Enhanced markdown rendering with treesitter-powered formatting.
 
 **Configuration:** `nvim/lua/configs/render-markdown.lua`
 
-**Note:** No custom keybindings are configured. To add a toggle keybinding, you could add to `nvim/lua/mappings.lua`:
-```lua
-map("n", "<leader>md", "<cmd>RenderMarkdown toggle<CR>", { desc = "toggle markdown rendering" })
+### Git Signs
+Git integration for modified lines and hunks.
+- Line indicators show git changes
+- Configured in `lua/configs/gitsigns.lua`
+
+### Lazygit
+Terminal UI for Git.
+- `<leader>gg` - Open Lazygit
+
+### Unified.nvim
+Inline git diff viewer.
+- `<leader>gd` - Toggle inline diff
+
+### distant.nvim (Remote Development)
+Edit files, run programs, and use LSP on remote machines (e.g., Raspberry Pi).
+- **Group:** `<leader>r` (remote)
+
+**Keybindings:**
+| Key | Action |
+|-----|--------|
+| `<leader>rl` | Launch distant server and connect (prompts for ssh://user@host) |
+| `<leader>rp` | Quick connect to Raspberry Pi (192.168.101.7) |
+| `<leader>ro` | Open remote file or directory (enter path) |
+| `<leader>rs` | Open interactive shell on remote machine |
+| `<leader>rx` | Spawn/run command on remote (enter command) |
+
+**Available Commands:**
+| Command | Action |
+|---------|--------|
+| `:DistantLaunch ssh://user@host` | SSH to remote, start server, and connect |
+| `:DistantConnect ssh://user@host` | Connect to already running distant server |
+| `:DistantOpen /path/` | Open a remote file or directory |
+| `:DistantShell` | Open interactive shell on remote |
+| `:DistantSpawn <command>` | Run a command on remote machine |
+| `:checkhealth distant` | Check installation status |
+
+**First-Time Setup:**
+1. Install distant locally (macOS):
+   ```bash
+   curl -L https://sh.distant.dev | sh
+   ```
+2. Install distant on your Raspberry Pi:
+   ```bash
+   ssh user@pi 'curl -L https://sh.distant.dev | sh'
+   ```
+3. Add all SSH host keys (required for distant's SSH library):
+   ```bash
+   ssh-keyscan <pi-ip> >> ~/.ssh/known_hosts
+   ```
+
+**Workflow (after restart):**
 ```
+1. Open Neovim
+2. <leader>rp              → Connects to Pi at 192.168.101.7
+   (or <leader>rl          → Enter custom ssh://user@host)
+3. <leader>ro /home/ukibbb/ → Browse remote files
+4. Edit files normally, :w saves to Pi
+5. <leader>rx python main.py → Run script on Pi
+6. <leader>rs              → Open shell for interactive work
+7. Close Neovim when done (server shuts down automatically)
+```
+
+**If Pi IP changes:** Run `find_rasp.sh` to discover new IP, then update
+`nvim/lua/configs/distant.lua` or use `<leader>rl` with the new IP.
+
+**Configuration:** `nvim/lua/configs/distant.lua`
 
 ---
 
 ## Most Frequent Commands
 
-| Action | Keybinding |
-|--------|-----------|
-| Find file | `<leader>ff` |
-| Toggle comment | `<leader>/` |
-| Open file manager | `<leader>i` |
-| Next buffer | `<Cmd-h>` |
-| Close buffer | `<Cmd-q>` |
-| Vertical split | `<Cmd-\>` |
-| Horizontal split | `<Cmd-->` |
-| Save file | `<C-s>` |
-| Go to definition | `gd` |
-| Rename symbol | `<leader>ra` |
-
----
-
-
-
-
-
+| Action | You Press | Neovim Key |
+|--------|-----------|------------|
+| Find file | `Space ff` | `<leader>ff` |
+| Toggle comment | `Space /` | `<leader>/` |
+| Open file explorer | `-` | `-` |
+| Previous buffer | `Cmd+h` | `<M-C-H>` |
+| Next buffer | `Cmd+l` | `<M-C-L>` |
+| Close buffer | `Cmd+q` | `<M-C-Q>` |
+| Vertical split | `Cmd+\` | `<M-C-\>` |
+| Horizontal split | `Cmd+-` | `<M-C-_>` |
+| Go to definition | `gd` | `gd` |
+| Rename symbol | `Space ra` | `<leader>ra` |
+| Open Lazygit | `Space gg` | `<leader>gg` |
+| Toggle inline diff | `Space gd` | `<leader>gd` |
