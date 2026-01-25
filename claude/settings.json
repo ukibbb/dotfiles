@@ -1,0 +1,18 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [{"type": "command", "command": "fp=$(cat | jq -r '.tool_input.file_path'); for s in /tmp/nvim*.sock; do [ -S \"$s\" ] && nvim --server \"$s\" --remote-expr \"bufloaded('$fp')\" 2>/dev/null | grep -q 1 && nvim --server \"$s\" --remote-send '<cmd>checktime<CR>'; done"}]
+      }
+    ]
+  }
+}
