@@ -115,9 +115,11 @@ Session: "myproject"
 
 ## Tmux Prefix Key
 
-**Prefix:** `Ctrl+a` (changed from default `Ctrl+b`)
+**Prefix:** `Ctrl+s` (changed from default `Ctrl+b`)
 
-All tmux commands below require pressing the prefix key first, unless otherwise noted.
+All tmux commands below require pressing the prefix key first, unless otherwise noted. The prefix doesn't conflict with Neovim since `Ctrl+s` is mapped to save file in Neovim (normal/insert mode).
+
+**Nested tmux:** Press `prefix + Ctrl-s` to send the prefix to a nested tmux session (e.g., when SSH'd into a remote machine running tmux).
 
 ---
 
@@ -210,7 +212,7 @@ tmux new -s database
 |-----|--------|
 | `prefix + 0-9` | Switch to window by number |
 | `prefix + w` | List and switch windows (interactive) |
-| `prefix + l` | Toggle to last used window |
+| `prefix + l` | *(default overridden - see Pane Resizing)* |
 
 **Window Tips:**
 - Windows are shown in the status bar at the bottom with numbers and names
@@ -264,6 +266,8 @@ prefix + w          # See list of all windows
 | `Ctrl+l` | Move to right pane |
 
 **Note:** `Ctrl+h/j/k/l` navigation works seamlessly between tmux panes and vim splits thanks to vim-tmux-navigator plugin. This is the fastest and most intuitive method since it matches vim movement keys.
+
+**Important:** Don't confuse `Ctrl+j` (pane navigation, no prefix) with `prefix + Ctrl-j` (fzf session switcher).
 
 **Alternative methods (using prefix):**
 | Key | Action |
