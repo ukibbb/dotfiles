@@ -4,7 +4,7 @@
 
 -- Load base46's git theme for consistent sign colors with NvChad's themes
 -- This ensures the git signs match your current colorscheme
-dofile(vim.g.base46_cache .. "git")
+pcall(dofile, vim.g.base46_cache .. "git")
 
 -- Return the configuration table
 -- Most options use defaults; we only customize the sign characters
@@ -23,6 +23,12 @@ return {
     -- 󱕖 is a Nerd Font icon representing modified-delete
     -- This happens when you modify a line and delete adjacent lines
     changedelete = { text = "󱕖" },
+  },
+
+  current_line_blame = true,
+  current_line_blame_opts = {
+    delay = 300,
+    virt_text_pos = "eol",
   },
   
   -- OTHER OPTIONS (using defaults)

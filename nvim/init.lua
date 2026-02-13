@@ -88,8 +88,9 @@ require("lazy").setup(
 -- Load pre-compiled theme files using dofile (not require)
 -- dofile executes Lua files directly - faster for compiled bytecode files
 -- These must be loaded AFTER lazy.nvim setup but BEFORE options/mappings
-dofile(vim.g.base46_cache .. "defaults")
-dofile(vim.g.base46_cache .. "statusline")
+-- pcall prevents crash if cache doesn't exist yet (run :lua require("base46").load_all_highlights() to rebuild)
+pcall(dofile, vim.g.base46_cache .. "defaults")
+pcall(dofile, vim.g.base46_cache .. "statusline")
 
 -- Load editor options (line numbers, tabs, etc.)
 require("options")

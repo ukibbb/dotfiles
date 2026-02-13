@@ -148,7 +148,8 @@ M.capabilities.textDocument.completion.completionItem = {
   
   M.defaults = function()
     -- Load base46's LSP theme for consistent diagnostic colors
-    dofile(vim.g.base46_cache .. "lsp")
+    -- pcall = "protected call", skips if cache file is missing instead of crashing
+    pcall(dofile, vim.g.base46_cache .. "lsp")
     
     -- Apply NvChad's diagnostic configuration (signs, virtual text, etc.)
     require("nvchad.lsp").diagnostic_config()

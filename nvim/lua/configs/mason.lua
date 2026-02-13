@@ -4,7 +4,7 @@
 
 -- Load base46's mason theme for consistent styling with NvChad's themes
 -- This styles the Mason UI window to match your colorscheme
-dofile(vim.g.base46_cache .. "mason")
+pcall(dofile, vim.g.base46_cache .. "mason")
 
 -- Return the configuration table
 return {

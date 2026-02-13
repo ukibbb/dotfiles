@@ -2,8 +2,9 @@
 -- Telescope is a highly extensible fuzzy finder for files, text, buffers, etc.
 -- It's like Ctrl+P/Cmd+P in VS Code but much more powerful.
 
--- Load base46's telescope theme for consistent styling with NvChad's themes
-dofile(vim.g.base46_cache .. "telescope")
+-- pcall = "protected call", skips if cache file is missing instead of crashing
+-- rebuild cache with :lua require("base46").load_all_highlights()
+pcall(dofile, vim.g.base46_cache .. "telescope")
 
 -- Return the configuration table
 return {

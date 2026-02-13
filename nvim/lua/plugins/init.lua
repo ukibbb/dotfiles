@@ -61,8 +61,15 @@ return {
       scope = { char = "│", highlight = "IblScopeChar" },
     },
     config = function(_, opts)
-      -- Load base46 theme colors for the indent lines
-      dofile(vim.g.base46_cache .. "blankline")
+      -- pcall = "protected call". It tries to run the function but if the file
+      -- doesn't exist yet (e.g. cache was deleted), it just skips instead of crashing.
+      -- The cache gets rebuilt when you run :lua require("base46").load_all_highlights()
+      local ok = pcall(dofile, vim.g.base46_cache .. "blankline")
+      -- If cache is missing, create temporary fallback highlights so ibl doesn't crash
+      if not ok then
+        vim.api.nvim_set_hl(0, "IblChar", { fg = "#3b3f4c" })
+        vim.api.nvim_set_hl(0, "IblScopeChar", { fg = "#5c6370" })
+      end
 
       -- Register hooks to hide indentation on first space level
       -- This prevents an indent line at column 0 which looks weird
@@ -73,7 +80,7 @@ return {
       require("ibl").setup(opts)
 
       -- Reload theme (ensures colors are applied correctly)
-      dofile(vim.g.base46_cache .. "blankline")
+      pcall(dofile, vim.g.base46_cache .. "blankline")
     end,
   },
 
@@ -122,24 +129,6 @@ return {
       { "<leader>gd", "<cmd>Unified<cr>", desc = "Toggle inline diff" },
     },
     opts = {},
-  },
-
-  -- Lazygit: Terminal UI for git inside Neovim
-  -- Full git interface with staging, committing, rebasing, and conflict resolution
-  {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = {
-      "LazyGit",
-      "LazyGitConfig",
-      "LazyGitCurrentFile",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
-    },
-    keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Open Lazygit" },
-    },
   },
 
   -- LSP (LANGUAGE SERVER PROTOCOL)
@@ -339,6 +328,266 @@ return {
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
+  },
+
+  -- NVIM-TREE
+  -- File explorer sidebar with git integration and icons
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeFindFile" },
+    keys = {
+      { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Toggle file explorer" },
+      { "<leader>E", "<cmd>NvimTreeFindFile<cr>", desc = "Find file in explorer" },
+    },
+    opts = function()
+      local api = require "nvim-tree.api"
+      local function on_attach(bufnr)
+        -- Apply all default mappings first
+        api.config.mappings.default_on_attach(bufnr)
+        local opts = { buffer = bufnr, noremap = true, silent = true }
+        -- Cmd+\ → open in vertical split (via Karabiner)
+        vim.keymap.set("n", "<M-C-\\>", api.node.open.vertical, vim.tbl_extend("force", opts, { desc = "Open: Vertical Split" }))
+        -- Cmd+- → open in horizontal split (via Karabiner)
+        vim.keymap.set("n", "<M-C-_>", api.node.open.horizontal, vim.tbl_extend("force", opts, { desc = "Open: Horizontal Split" }))
+      end
+      return {
+        on_attach = on_attach,
+      filters = {
+        dotfiles = false,
+        custom = { ".DS_Store", ".git" },
+      },
+      disable_netrw = true,
+      hijack_netrw = true,
+      hijack_cursor = true,
+      sync_root_with_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = false,
+      },
+      view = {
+        side = "left",
+        width = 35,
+        preserve_window_proportions = true,
+      },
+      renderer = {
+        root_folder_label = false,
+        highlight_git = "name",
+        icons = {
+          glyphs = {
+            default = "󰈚",
+            folder = {
+              default = "",
+              empty = "",
+              empty_open = "",
+              open = "",
+              symlink = "",
+            },
+            git = {
+              unmerged = "",
+              untracked = "★",
+            },
+          },
+        },
+      },
+      actions = {
+        open_file = {
+          quit_on_open = false,
+        },
+      },
+      git = {
+        enable = true,
+        ignore = false,
+      },
+    }
+    end,
+  },
+
+  -- NEOGIT
+  -- Magit-inspired git interface - powerful interactive git UI
+  -- Full git workflow: staging, committing, branching, rebasing, etc.
+  -- Replaces lazygit with a native Neovim experience
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",        -- Required
+      "sindrets/diffview.nvim",        -- For diff integration
+      "nvim-telescope/telescope.nvim", -- For fuzzy finding
+    },
+    cmd = "Neogit",
+    keys = {
+      -- <leader>gg = "git gui" - main entry point (same as old lazygit binding)
+      { "<leader>gg", "<cmd>Neogit<cr>", desc = "Neogit: open" },
+      -- Quick access to common popups
+      { "<leader>gc", "<cmd>Neogit commit<cr>", desc = "Neogit: commit" },
+      { "<leader>gp", "<cmd>Neogit push<cr>", desc = "Neogit: push" },
+      { "<leader>gP", "<cmd>Neogit pull<cr>", desc = "Neogit: pull" },
+      { "<leader>gb", "<cmd>Neogit branch<cr>", desc = "Neogit: branch" },
+    },
+    opts = {
+      -- APPEARANCE
+      -- Open in a new tab (like lazygit) - other options: "split", "floating", "vsplit"
+      kind = "tab",
+
+      -- Show hints at bottom of status buffer (helpful for learning)
+      disable_hint = false,
+
+      -- Graph style for commit history
+      -- "ascii" = basic, "unicode" = prettier lines, "kitty" = requires kitty terminal
+      graph_style = "unicode",
+
+      -- Signs in the gutter
+      signs = {
+        hunk = { "", "" },
+        item = { "", "" },
+        section = { "", "" },
+      },
+
+      -- INTEGRATIONS
+      integrations = {
+        -- Use telescope for fuzzy menus
+        telescope = true,
+        -- Use diffview for viewing diffs (you have it installed)
+        diffview = true,
+      },
+
+      -- BEHAVIOR
+      -- Automatically refresh when git files change
+      filewatcher = {
+        enabled = true,
+      },
+
+      -- Remember cursor position in status buffer
+      remember_settings = true,
+
+      -- Auto show console output on errors
+      console_timeout = 2000,
+
+      -- COMMIT EDITOR
+      commit_editor = {
+        kind = "tab",           -- Open commit editor in new tab
+        show_staged_diff = true, -- Show diff of staged changes
+      },
+
+      -- MAPPINGS
+      -- Default mappings are intuitive, but listed here for reference:
+      -- s = stage, u = unstage, x = discard, c = commit, P = push, F = fetch
+      -- Tab = toggle section, Enter = go to item, q = close
+    },
+  },
+
+  -- DIFFVIEW.NVIM
+  -- Git diff viewer with file panel - browse all changed files in one tabpage
+  -- Great for: reviewing PRs, browsing history, resolving merge conflicts
+  -- Complements codediff.nvim (diffview = file navigation, codediff = char-level diffs)
+  {
+    "sindrets/diffview.nvim",
+    -- Lazy load on commands
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles" },
+    keys = {
+      -- <leader>gv = "git view" - open diff view for all changed files
+      { "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Diffview: open" },
+      -- Compare against a specific branch (e.g., main)
+      { "<leader>gm", "<cmd>DiffviewOpen origin/main...HEAD<cr>", desc = "Diffview: vs main" },
+      -- <leader>gl = "git log" - file history browser
+      { "<leader>gl", "<cmd>DiffviewFileHistory %<cr>", desc = "Diffview: file history" },
+      -- History for entire repo
+      { "<leader>gL", "<cmd>DiffviewFileHistory<cr>", desc = "Diffview: repo history" },
+      -- Close diffview from anywhere
+      { "<leader>gq", "<cmd>DiffviewClose<cr>", desc = "Diffview: close" },
+    },
+    opts = {
+      -- Use diff3 conflict style (shows base in middle)
+      diff_binaries = false,
+      enhanced_diff_hl = true,  -- Better diff highlighting
+
+      -- FILE PANEL (left sidebar)
+      file_panel = {
+        listing_style = "tree",  -- "list" or "tree"
+        tree_options = {
+          flatten_dirs = true,   -- Flatten single-child directories
+          folder_statuses = "only_folded",  -- Show status on folders
+        },
+        win_config = {
+          position = "left",
+          width = 35,
+        },
+      },
+
+      -- KEY MAPPINGS
+      -- These apply inside diffview tabs
+      keymaps = {
+        view = {
+          -- Navigation between files
+          { "n", "<tab>", "<cmd>DiffviewFocusFiles<cr>", { desc = "Focus file panel" } },
+          { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+        },
+        file_panel = {
+          -- File panel specific
+          { "n", "j", "j", { desc = "Move down" } },
+          { "n", "k", "k", { desc = "Move up" } },
+          { "n", "<cr>", "<cmd>DiffviewOpen<cr>", { desc = "Open diff" } },
+          { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+          -- Staging
+          { "n", "s", "<cmd>DiffviewStageFile<cr>", { desc = "Stage file" } },
+          { "n", "-", "<cmd>DiffviewStageFile<cr>", { desc = "Stage file" } },
+          { "n", "S", "<cmd>DiffviewStageAllFiles<cr>", { desc = "Stage all" } },
+          { "n", "u", "<cmd>DiffviewUnstageFile<cr>", { desc = "Unstage file" } },
+          { "n", "U", "<cmd>DiffviewUnstageAllFiles<cr>", { desc = "Unstage all" } },
+        },
+        file_history_panel = {
+          { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+        },
+      },
+
+      -- HOOKS
+      -- Customize behavior at certain events
+      hooks = {
+        -- Disable fold column in diff views for cleaner look
+        diff_buf_read = function()
+          vim.opt_local.foldcolumn = "0"
+        end,
+      },
+    },
+  },
+
+  -- CODEDIFF.NVIM
+  -- VSCode-style side-by-side diff with character-level highlighting
+  -- Uses VSCode's diff algorithm (implemented in C) for accurate diffs
+  -- Much better than built-in vimdiff for reviewing changes
+  {
+    "esmuellert/codediff.nvim",
+    -- Requires nui.nvim for the UI components
+    dependencies = { "MunifTanjim/nui.nvim" },
+    -- Lazy load on command (C library downloads automatically on first use)
+    cmd = "CodeDiff",
+    keys = {
+      -- <leader>gD = "git Diff" - compare current file with git
+      { "<leader>gD", "<cmd>CodeDiff<cr>", desc = "CodeDiff explorer" },
+      -- Compare current buffer with HEAD (most common use case)
+      { "<leader>gf", function()
+          local file = vim.fn.expand("%")
+          if file ~= "" then
+            vim.cmd("CodeDiff file " .. file .. " HEAD")
+          else
+            vim.notify("No file in current buffer", vim.log.levels.WARN)
+          end
+        end,
+        desc = "Diff file vs HEAD"
+      },
+      -- View file history (commits that touched this file)
+      { "<leader>gh", "<cmd>CodeDiff history<cr>", desc = "File history" },
+    },
+    opts = {
+      -- Highlight groups for diff colors
+      -- These link to standard diff highlights by default
+      -- Customize if you want different colors
+      highlights = {
+        added_line = "DiffAdd",        -- Green background for added lines
+        removed_line = "DiffDelete",   -- Red background for removed lines
+        added_char = "DiffText",       -- Deeper green for added characters
+        removed_char = "DiffText",     -- Deeper red for removed characters
+      },
+    },
   },
 
   -- CLAUDE.NVIM

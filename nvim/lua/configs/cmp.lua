@@ -1,9 +1,10 @@
 -- nvim-cmp is the autocompletion engine - it shows suggestions as you type
 -- This file configures how completions are displayed and interacted with
 
--- Load base46's cmp theme for consistent styling with NvChad's themes
--- dofile() executes a Lua file, vim.g.base46_cache is the path to cached themes
-dofile(vim.g.base46_cache .. "cmp")
+-- pcall = "protected call". Tries to load the theme cache file, but if
+-- the file doesn't exist (cache was cleared), it skips instead of crashing.
+-- Rebuild cache with :lua require("base46").load_all_highlights()
+pcall(dofile, vim.g.base46_cache .. "cmp")
 
 -- Load the nvim-cmp module
 local cmp = require "cmp"
@@ -34,12 +35,13 @@ local options = {
   -- These control how you interact with the completion menu
   
   mapping = {
-    -- Ctrl+p: Select previous item in the completion menu (p = previous)
-    -- Standard Vim convention for "previous" in lists
+    -- Ctrl+p / Alt+k: Select previous item in the completion menu
     ["<C-p>"] = cmp.mapping.select_prev_item(),
-    
-    -- Ctrl+n: Select next item in the completion menu (n = next)
+    ["<M-k>"] = cmp.mapping.select_prev_item(),
+
+    -- Ctrl+n / Alt+j: Select next item in the completion menu
     ["<C-n>"] = cmp.mapping.select_next_item(),
+    ["<M-j>"] = cmp.mapping.select_next_item(),
     
     -- Ctrl+d: Scroll documentation window DOWN by 4 lines
     -- When hovering a completion item, this scrolls its documentation
