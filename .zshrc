@@ -47,31 +47,32 @@ source $ZSH/oh-my-zsh.sh
 # Mason (Neovim LSP/tools) bin directory
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 
+# DISABLED: No longer needed — fs_event watcher in autocmds.lua replaced hook-based approach
 # Start Neovim with server socket for Claude Code integration
 # Socket named by directory; multiple instances get numbered suffix
 # Claude hook broadcasts to all instances that have the file loaded
-unalias nvim 2>/dev/null
-nvim() {
-    local dir_slug=$(pwd | tr '/' '_')
-    local base="/tmp/nvim${dir_slug}"
-    local sock="${base}.sock"
-    local i=1
-
-    # Find available socket (remove stale ones, skip active ones)
-    while [[ -S "$sock" ]]; do
-        if command nvim --server "$sock" --remote-expr "1" &>/dev/null; then
-            sock="${base}_${i}.sock"
-            ((i++))
-        else
-            rm -f "$sock"
-            break
-        fi
-    done
-
-    command nvim --listen "$sock" "$@"
-    # Clean up socket on exit
-    rm -f "$sock"
-}
+# unalias nvim 2>/dev/null
+# nvim() {
+#     local dir_slug=$(pwd | tr '/' '_')
+#     local base="/tmp/nvim${dir_slug}"
+#     local sock="${base}.sock"
+#     local i=1
+#
+#     # Find available socket (remove stale ones, skip active ones)
+#     while [[ -S "$sock" ]]; do
+#         if command nvim --server "$sock" --remote-expr "1" &>/dev/null; then
+#             sock="${base}_${i}.sock"
+#             ((i++))
+#         else
+#             rm -f "$sock"
+#             break
+#         fi
+#     done
+#
+#     command nvim --listen "$sock" "$@"
+#     # Clean up socket on exit
+#     rm -f "$sock"
+# }
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -111,3 +112,10 @@ nt() {
 
 # opencode
 export PATH=/Users/lukasz/.opencode/bin:$PATH
+
+# bun completions
+[ -s "/Users/lukasz/.bun/_bun" ] && source "/Users/lukasz/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
