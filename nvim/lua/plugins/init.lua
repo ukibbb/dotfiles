@@ -590,6 +590,14 @@ return {
     },
   },
 
+  -- WATCHDIFF.NVIM
+  -- Detects external file changes and highlights diffs inline
+  {
+    dir = "~/Desktop/dotfiles/watchdiff.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+
   -- CLAUDE.NVIM
   {
     dir = "~/Desktop/dotfiles/claude.nvim",
