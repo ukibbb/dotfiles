@@ -199,7 +199,12 @@ if require("nvconfig").ui.tabufline.enabled then
   map("n", "<M-C-L>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
 
   -- Cmd+Q: Close the current buffer (Karabiner → ctrl+shift+alt+q → <M-C-Q>)
-  map("n", "<M-C-Q>", function() require("nvchad.tabufline").close_buffer() end, { desc = "buffer close" })
+  map("n", "<M-C-Q>", function()
+    local ok, err = pcall(require("nvchad.tabufline").close_buffer)
+    if not ok and not err:match("E517") then
+      error(err)
+    end
+  end, { desc = "buffer close" })
 end
 
 -- COMMENTING
