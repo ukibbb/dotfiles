@@ -197,14 +197,37 @@ M.capabilities.textDocument.completion.completionItem = {
     
     -- Apply Lua-specific settings to the lua_ls (lua-language-server)
     vim.lsp.config("lua_ls", { settings = lua_lsp_settings })
-    
+
+    -- Ruff LSP: linting + formatting for Python
+    -- Disable hover since pyright's is better
+    vim.lsp.config("ruff", {
+      on_attach = function(client)
+        client.server_capabilities.hoverProvider = false
+      end,
+    })
+
+    -- Pyright: disable diagnostics that overlap with ruff
+    vim.lsp.config("pyright", {
+      settings = {
+        pyright = { disableOrganizeImports = true },
+        python = {
+          analysis = {
+            diagnosticSeverityOverrides = {
+              reportUnusedImport = "none",
+              reportUnusedVariable = "none",
+            },
+          },
+        },
+      },
+    })
+
     -- Enable the Lua language server
     -- This tells Neovim to start lua_ls when editing Lua files
     vim.lsp.enable "lua_ls"
-    
+
     -- Enable language servers
     -- These provide completions and diagnostics for their respective file types
-    local servers = { "html", "cssls", "pyright", "ts_ls", "dockerls", "docker_compose_language_service" }
+    local servers = { "html", "cssls", "pyright", "ruff", "ts_ls", "dockerls", "docker_compose_language_service" }
     vim.lsp.enable(servers)
   end
   

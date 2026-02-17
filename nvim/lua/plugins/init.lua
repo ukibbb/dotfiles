@@ -92,8 +92,44 @@ return {
 
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
+  },
+
+  -- LINTING
+  -- nvim-lint: Asynchronous linter plugin
+  -- Runs mypy on save for Python type checking (complements pyright)
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local lint = require("lint")
+      local mypy_missing_notified = false
+
+      if vim.fn.executable("mypy") == 1 then
+        lint.linters_by_ft = { python = { "mypy" } }
+      else
+        lint.linters_by_ft = {}
+      end
+
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        group = vim.api.nvim_create_augroup("Lint", { clear = true }),
+        callback = function(args)
+          if vim.bo[args.buf].filetype ~= "python" then return end
+
+          if vim.fn.executable("mypy") ~= 1 then
+            if not mypy_missing_notified then
+              vim.notify("nvim-lint: mypy is not installed or not on PATH; skipping Python lint.", vim.log.levels.WARN)
+              mypy_missing_notified = true
+            end
+            return
+          end
+
+          mypy_missing_notified = false
+          lint.try_lint()
+        end,
+      })
+    end,
   },
 
 
