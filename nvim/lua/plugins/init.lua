@@ -283,43 +283,6 @@ return {
     end,
   },
 
-  -- FILE MANAGER
-  -- Oil: Edit your filesystem like a buffer
-  -- Navigate directories and rename/move/delete files using normal editing commands
-  {
-    "stevearc/oil.nvim",
-    cmd = "Oil",
-    keys = {
-      { "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
-    },
-    opts = {
-      -- Automatically open preview when entering Oil buffer
-      view_options = {
-        show_hidden = true,
-      },
-      preview_win = {
-        update_on_cursor_moved = true,
-      },
-      keymaps = {
-        ["<C-p>"] = "actions.preview",
-        ["q"] = "actions.close",
-      },
-    },
-    config = function(_, opts)
-      require("oil").setup(opts)
-      -- Auto-open preview when Oil buffer is entered
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "OilEnter",
-        callback = vim.schedule_wrap(function(args)
-          local oil = require("oil")
-          if vim.api.nvim_get_current_buf() == args.data.buf and oil.get_cursor_entry() then
-            oil.open_preview()
-          end
-        end),
-      })
-    end,
-  },
-
   -- MARKDOWN RENDERING
   -- render-markdown.nvim: Enhanced markdown rendering with treesitter
   -- Renders markdown with proper formatting, heading highlights, code blocks, etc.
@@ -433,6 +396,9 @@ return {
       git = {
         enable = true,
         ignore = false,
+      },
+      filesystem_watchers = {
+        ignore_dirs = { ".next", "node_modules", ".git" },
       },
     }
     end,

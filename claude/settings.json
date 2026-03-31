@@ -1,4 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "mcp__pencil"
+    ]
+  },
   "hooks": {},
   "statusLine": {
     "type": "command",
@@ -8,6 +13,13 @@
     "superpowers@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  }
+    "typescript-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "voiceEnabled": true
 }
