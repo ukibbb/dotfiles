@@ -394,6 +394,39 @@ local function highlight_external_changes(bufnr, old_lines, new_lines, abs_path)
   return entry
 end
 
+-- Reload a changed buffer via :checktime.
+-- Some Neovim sessions intermittently fail to update the persistent undo file
+-- during external reloads (E828). Retry once with undofile disabled so the
+-- buffer still reloads and watchdiff can continue processing the change.
+local function reload_buffer_with_checktime(bufnr)
+  local ok, err = pcall(vim.cmd, "checktime " .. bufnr)
+  if ok then
+    return true
+  end
+
+  local err_text = tostring(err)
+  if not err_text:match("E828") or not vim.api.nvim_buf_is_valid(bufnr) then
+    return false, err_text
+  end
+
+  local restore_undofile = vim.bo[bufnr].undofile
+  if not restore_undofile then
+    return false, err_text
+  end
+
+  vim.bo[bufnr].undofile = false
+  local retry_ok, retry_err = pcall(vim.cmd, "checktime " .. bufnr)
+  if vim.api.nvim_buf_is_valid(bufnr) then
+    vim.bo[bufnr].undofile = restore_undofile
+  end
+
+  if retry_ok then
+    return true
+  end
+
+  return false, tostring(retry_err)
+end
+
 -- ═══════════════════════════════════════════════════════
 -- FILE SYSTEM WATCHER (the main detection mechanism)
 -- ═══════════════════════════════════════════════════════
@@ -457,9 +490,17 @@ local function process_file_change(abs_path)
     reloading[bufnr] = true
     suppress_baseline_update[bufnr] = true
 
-    -- :checktime tells Neovim: "check if this file changed on disk".
-    -- Since autoread is on, Neovim reloads the buffer from disk.
-    vim.cmd("checktime " .. bufnr)
+    local reload_ok, reload_err = reload_buffer_with_checktime(bufnr)
+    reloading[bufnr] = nil
+    suppress_baseline_update[bufnr] = nil
+
+    if not reload_ok then
+      local filename = vim.fn.fnamemodify(abs_path, ":t")
+      vim.notify("watchdiff: failed to reload " .. filename .. ": " .. reload_err, vim.log.levels.WARN)
+      return
+    end
+
+    if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     -- Diff from the ACKNOWLEDGED baseline (what user last saw/saved).
     -- NOT from the pre-reload content. This is the key to accumulating highlights
@@ -467,9 +508,13 @@ local function process_file_change(abs_path)
     local old_lines = acknowledged_content[bufnr] or current_lines
     local new_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-    highlight_external_changes(bufnr, old_lines, new_lines, resolved)
-    reloading[bufnr] = nil
-    suppress_baseline_update[bufnr] = nil
+    local highlight_ok, highlight_err = xpcall(function()
+      highlight_external_changes(bufnr, old_lines, new_lines, resolved)
+    end, debug.traceback)
+    if not highlight_ok then
+      local filename = vim.fn.fnamemodify(abs_path, ":t")
+      vim.notify("watchdiff: failed to diff " .. filename .. ": " .. highlight_err, vim.log.levels.WARN)
+    end
 
   -- ── CASE 2: File is NOT open in any buffer ──
   else
