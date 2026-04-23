@@ -110,6 +110,19 @@ nt() {
     fi
 }
 
+restore_tmux_shell_terminal_state() {
+    [[ -n "${TMUX:-}" ]] || return
+
+    # Some fullscreen apps leave tmux panes with mouse reporting and alternate
+    # screen enabled. Clear those modes before zsh redraws the next prompt.
+    printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l\033[?1049l'
+    stty sane 2>/dev/null || true
+}
+
+if [[ ${precmd_functions[(Ie)restore_tmux_shell_terminal_state]} -eq 0 ]]; then
+    precmd_functions+=(restore_tmux_shell_terminal_state)
+fi
+
 # opencode
 export PATH=/Users/lukasz/.opencode/bin:$PATH
 
