@@ -4,7 +4,7 @@
 return {
   -- Client settings (local distant binary)
   client = {
-    bin = '/Users/lukasz/.local/bin/distant',
+    bin = vim.fn.expand('~/.local/bin/distant'),
   },
 
   -- Manager settings

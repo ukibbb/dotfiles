@@ -1,3 +1,5 @@
+local dotfiles_dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath("config")), ":h")
+
 return {
   -- CORE
   -- plenary.nvim: Lua utility library (like lodash for Neovim Lua)
@@ -595,14 +597,14 @@ return {
   -- WATCHDIFF.NVIM
   -- Detects external file changes and highlights diffs inline
   {
-    dir = "~/Desktop/dotfiles/watchdiff.nvim",
+    dir = dotfiles_dir .. "/watchdiff.nvim",
     event = "VeryLazy",
     opts = {},
   },
 
   -- CLAUDE.NVIM
   {
-    dir = "~/Desktop/dotfiles/claude.nvim",
+    dir = dotfiles_dir .. "/claude.nvim",
     event = "VeryLazy",
     opts = {},
   },

@@ -36,6 +36,14 @@ print_warning() { echo -e "${YELLOW}!${NC} $1"; }
 print_error() { echo -e "${RED}✗${NC} $1"; }
 print_info() { echo -e "${BLUE}→${NC} $1"; }
 
+backup_existing() {
+    local target="$1"
+    local backup="${target}.backup.$(date +%Y%m%d%H%M%S)"
+
+    mv "$target" "$backup"
+    print_warning "Backed up existing $target to $backup"
+}
+
 create_symlink() {
     local source="$DOTFILES_DIR/$1"
     local target="$2"
@@ -45,8 +53,12 @@ create_symlink() {
 
     mkdir -p "$target_dir"
 
-    # Remove whatever is there
-    [[ -e "$target" || -L "$target" ]] && rm -rf "$target"
+    if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+        print_success "$target already linked"
+        return 0
+    fi
+
+    [[ -e "$target" || -L "$target" ]] && backup_existing "$target"
 
     ln -s "$source" "$target"
     print_success "$target -> $source"
@@ -72,6 +84,14 @@ copy_file() {
     [[ ! -e "$source" ]] && { print_error "Source missing: $source"; return 1; }
 
     mkdir -p "$target_dir"
+
+    if [[ -e "$target" ]] && cmp -s "$source" "$target"; then
+        print_success "$target already up to date"
+        return 0
+    fi
+
+    [[ -e "$target" || -L "$target" ]] && backup_existing "$target"
+
     cp "$source" "$target"
     print_success "$target <- $source (copied)"
 }
@@ -109,9 +129,12 @@ show_status() {
         fi
     done
     for entry in "${COPIES[@]}"; do
+        local source="$DOTFILES_DIR/${entry%%:*}"
         local target="${entry##*:}"
-        if [[ -e "$target" ]]; then
+        if [[ -e "$target" ]] && cmp -s "$source" "$target"; then
             print_success "$target (copy)"
+        elif [[ -e "$target" ]]; then
+            print_warning "$target (copy differs)"
         else
             print_error "$target (missing)"
         fi

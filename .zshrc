@@ -1,5 +1,11 @@
 export ZSH="$HOME/.oh-my-zsh"
 
+if [[ -z "${DOTFILES_DIR:-}" ]]; then
+  DOTFILES_ZSHRC="${(%):-%x}"
+  [[ "$DOTFILES_ZSHRC" != /* ]] && DOTFILES_ZSHRC="$PWD/$DOTFILES_ZSHRC"
+  export DOTFILES_DIR="${DOTFILES_ZSHRC:A:h}"
+fi
+
 
 ZSH_THEME="robbyrussell"
 
@@ -86,7 +92,7 @@ export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-. "$HOME/.local/bin/env"
+[ -s "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -95,7 +101,7 @@ export NVM_DIR="$HOME/.nvm"
 # Fast system navigation with fuzzy folder selection
 n() {
     local selected
-    selected=$("$HOME/Desktop/dotfiles/fuzzy/select-folder.sh" "$@")
+    selected=$("$DOTFILES_DIR/fuzzy/select-folder.sh" "$@")
     if [[ -n "$selected" ]]; then
         cd "$selected" || return 1
     fi
@@ -104,9 +110,9 @@ n() {
 # Navigate and create/attach to tmux session
 nt() {
     local selected
-    selected=$("$HOME/Desktop/dotfiles/fuzzy/select-folder.sh" "$@")
+    selected=$("$DOTFILES_DIR/fuzzy/select-folder.sh" "$@")
     if [[ -n "$selected" ]]; then
-        "$HOME/Desktop/dotfiles/fuzzy/tmux-session.sh" "$selected"
+        "$DOTFILES_DIR/fuzzy/tmux-session.sh" "$selected"
     fi
 }
 
@@ -114,10 +120,10 @@ nt() {
 stty -ixon 2>/dev/null || true
 
 # opencode
-export PATH=/Users/lukasz/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
 
 # bun completions
-[ -s "/Users/lukasz/.bun/_bun" ] && source "/Users/lukasz/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

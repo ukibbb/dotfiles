@@ -1,0 +1,11 @@
+brew "neovim"
+brew "tmux"
+brew "fzf"
+brew "fd"
+brew "ripgrep"
+brew "jq"
+brew "stylua"
+brew "ruff"
+
+cask "ghostty"
+cask "karabiner-elements"
