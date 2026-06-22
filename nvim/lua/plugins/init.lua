@@ -355,7 +355,6 @@ return {
         on_attach = on_attach,
       filters = {
         dotfiles = false,
-        custom = { ".DS_Store", ".git" },
       },
       disable_netrw = true,
       hijack_netrw = true,
