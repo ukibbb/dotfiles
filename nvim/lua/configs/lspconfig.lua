@@ -33,6 +33,11 @@ M.on_attach = function(_, bufnr)
   -- You can't have multiple definitions, but you can have multiple declarations.
   map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
 
+  -- gr: Go to References / Usages
+  -- Opens Telescope with every place the symbol under your cursor is used.
+  -- Useful for finding where a class/component/function is instantiated or called.
+  map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Go to references")
+
   -- WORKSPACE MANAGEMENT
   -- What is an "LSP workspace"?  
   -- Workspace in LSP (Language Server Protocol) - is a set of folders and files that the language 
