@@ -36,10 +36,10 @@ map("i", "<C-k>", "<Up>", { desc = "move up" })
 -- WINDOW SPLITS
 -- Create new split windows with intuitive keybindings
 
--- Cmd+\: Create vertical split (Karabiner → ctrl+shift+alt+\)
+-- Cmd+\: Create vertical split (Karabiner -> ctrl+alt+\)
 map("n", "<M-C-\\>", "<cmd>vsplit<CR>", { desc = "vertical split" })
 
--- Cmd+-: Create horizontal split (Karabiner → ctrl+shift+alt+-)
+-- Cmd+-: Create horizontal split (Karabiner -> ctrl+alt+-)
 map("n", "<M-C-_>", "<cmd>split<CR>", { desc = "horizontal split" })
 
 -- GENERAL UTILITIES
@@ -192,13 +192,13 @@ if require("nvconfig").ui.tabufline.enabled then
   -- :enew = edit new (creates empty unnamed buffer)
   map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
 
-  -- Cmd+H: Go to previous buffer (Karabiner → ctrl+shift+alt+h → <M-C-H>)
+  -- Cmd+H: Go to previous buffer (Karabiner -> ctrl+alt+h -> <M-C-H>)
   map("n", "<M-C-H>", function() require("nvchad.tabufline").prev() end, { desc = "buffer goto prev" })
 
-  -- Cmd+L: Go to next buffer (Karabiner → ctrl+shift+alt+l → <M-C-L>)
+  -- Cmd+L: Go to next buffer (Karabiner -> ctrl+alt+l -> <M-C-L>)
   map("n", "<M-C-L>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
 
-  -- Cmd+Q: Close the current buffer (Karabiner → ctrl+shift+alt+q → <M-C-Q>)
+  -- Cmd+Q: Close the current buffer (Karabiner -> ctrl+alt+q -> <M-C-Q>)
   map("n", "<M-C-Q>", function()
     local ok, err = pcall(require("nvchad.tabufline").close_buffer)
     if not ok and not err:match("E517") then
@@ -298,4 +298,3 @@ map("n", "<leader>rx", ":DistantSpawn ", { desc = "distant spawn remote command"
 -- Leader+rp: Quick connect to Raspberry Pi
 -- Shortcut for connecting to Pi at known IP
 map("n", "<leader>rp", "<cmd>DistantLaunch ssh://ukibbb@192.168.101.7<CR>", { desc = "distant connect to Raspberry Pi" })
-

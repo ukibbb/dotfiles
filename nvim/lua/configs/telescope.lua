@@ -63,6 +63,10 @@ return {
 
       -- Insert mode mappings (default mode when telescope opens)
       i = {
+        ["<D-j>"] = require("telescope.actions").move_selection_next,
+        ["<D-k>"] = require("telescope.actions").move_selection_previous,
+        ["<M-C-j>"] = require("telescope.actions").move_selection_next,
+        ["<M-C-k>"] = require("telescope.actions").move_selection_previous,
         ["<M-j>"] = require("telescope.actions").move_selection_next,
         ["<M-k>"] = require("telescope.actions").move_selection_previous,
       },
