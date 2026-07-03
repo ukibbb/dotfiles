@@ -53,6 +53,14 @@ source $ZSH/oh-my-zsh.sh
 # Mason (Neovim LSP/tools) bin directory
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 
+# Go toolchain installed by the official macOS installer
+export PATH="/usr/local/go/bin:$PATH"
+
+# Go tools installed by `go install` (gopls, goimports, dlv, etc.)
+if command -v go >/dev/null 2>&1; then
+  export PATH="$(go env GOPATH)/bin:$PATH"
+fi
+
 # DISABLED: No longer needed — fs_event watcher in autocmds.lua replaced hook-based approach
 # Start Neovim with server socket for Claude Code integration
 # Socket named by directory; multiple instances get numbered suffix

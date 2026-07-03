@@ -199,6 +199,27 @@ M.capabilities.textDocument.completion.completionItem = {
     -- Apply our capabilities and on_init to ALL LSP servers
     -- "*" is a wildcard that matches any server name
     vim.lsp.config("*", { capabilities = M.capabilities, on_init = M.on_init })
+
+    -- Compatibility helper: newer Neovim/native LSP setups may not provide :LspInfo.
+    -- This gives us a quick way to see which LSP clients are attached to the current buffer.
+    if vim.fn.exists(":LspInfo") == 0 then
+      vim.api.nvim_create_user_command("LspInfo", function()
+        local clients = vim.lsp.get_clients { bufnr = 0 }
+
+        if #clients == 0 then
+          vim.notify("No LSP clients attached to the current buffer", vim.log.levels.WARN, { title = "LspInfo" })
+          return
+        end
+
+        local lines = { "LSP clients attached to current buffer:" }
+        for _, client in ipairs(clients) do
+          local root_dir = client.config and client.config.root_dir or "unknown root"
+          table.insert(lines, string.format("- %s (id=%s, root=%s)", client.name, client.id, root_dir))
+        end
+
+        vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO, { title = "LspInfo" })
+      end, { desc = "Show LSP clients attached to the current buffer" })
+    end
     
     -- Apply Lua-specific settings to the lua_ls (lua-language-server)
     vim.lsp.config("lua_ls", { settings = lua_lsp_settings })
@@ -226,20 +247,44 @@ M.capabilities.textDocument.completion.completionItem = {
       },
     })
 
+    -- Gopls: official Go language server
+    vim.lsp.config("gopls", {
+      settings = {
+        gopls = {
+          completeUnimported = true,
+          staticcheck = true,
+          usePlaceholders = true,
+          analyses = {
+            nilness = true,
+            unusedparams = true,
+            unusedwrite = true,
+            useany = true,
+          },
+        },
+      },
+    })
+
     -- Enable the Lua language server
     -- This tells Neovim to start lua_ls when editing Lua files
     vim.lsp.enable "lua_ls"
 
     -- Enable language servers
     -- These provide completions and diagnostics for their respective file types
-    local servers = { "html", "cssls", "pyright", "ruff", "ts_ls", "dockerls", "docker_compose_language_service" }
+    local servers = {
+      "html",
+      "cssls",
+      "pyright",
+      "ruff",
+      "ts_ls",
+      "dockerls",
+      "docker_compose_language_service",
+      "gopls",
+    }
     vim.lsp.enable(servers)
   end
   
   -- Export the module so other files can require() it
   return M
-
-
 
 
 
