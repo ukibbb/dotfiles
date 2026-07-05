@@ -227,6 +227,13 @@ map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 -- Uses ripgrep under the hood for fast searching
 map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
 
+-- Leader+fW: Live grep across project, prefilled with the word under cursor
+map("n", "<leader>fW", function()
+  require("telescope.builtin").live_grep {
+    default_text = vim.fn.expand "<cword>",
+  }
+end, { desc = "telescope live grep word under cursor" })
+
 -- Leader+fb: List and search through open buffers
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 
@@ -241,6 +248,13 @@ map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find o
 
 -- Leader+fz: Fuzzy search within the current buffer only
 map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
+
+-- Leader+fZ: Fuzzy search within the current buffer, prefilled with the word under cursor
+map("n", "<leader>fZ", function()
+  require("telescope.builtin").current_buffer_fuzzy_find {
+    default_text = vim.fn.expand "<cword>",
+  }
+end, { desc = "telescope find word under cursor in current buffer" })
 
 -- Leader+cm: Browse git commits with preview
 map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
