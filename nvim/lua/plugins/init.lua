@@ -268,20 +268,43 @@ return {
   -- Much better than Vim's traditional regex-based syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    -- Use the master branch (some plugins require specific branches)
-    branch = "master",
-    -- Load when opening or creating files
-    event = { "BufReadPost", "BufNewFile" },
-    -- Also load when these commands are used
-    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    -- The master branch is frozen; Neovim 0.12 requires the new main branch API.
+    branch = "main",
+    -- Upstream does not support lazy-loading on the main branch.
+    lazy = false,
     -- Run :TSUpdate after install to compile the parsers
     build = ":TSUpdate",
     opts = function()
       return require "configs.treesitter"
     end,
     config = function(_, opts)
-      -- Setup treesitter with our configuration
-      require("nvim-treesitter.configs").setup(opts)
+      local treesitter = require "nvim-treesitter"
+
+      treesitter.setup(opts.setup)
+
+      for filetype, parser in pairs(opts.parsers_by_filetype or {}) do
+        vim.treesitter.language.register(parser, filetype)
+      end
+
+      if opts.ensure_installed and #opts.ensure_installed > 0 then
+        treesitter.install(opts.ensure_installed)
+      end
+
+      local indent_filetypes = {}
+      for _, filetype in ipairs(opts.indent_filetypes or {}) do
+        indent_filetypes[filetype] = true
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Start treesitter",
+        group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
+        pattern = opts.highlight_filetypes,
+        callback = function(args)
+          if pcall(vim.treesitter.start, args.buf) and indent_filetypes[vim.bo[args.buf].filetype] then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
     end,
   },
 
@@ -355,7 +378,6 @@ return {
         on_attach = on_attach,
       filters = {
         dotfiles = false,
-        custom = { ".DS_Store", ".git" },
       },
       disable_netrw = true,
       hijack_netrw = true,

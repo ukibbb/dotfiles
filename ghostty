@@ -84,23 +84,27 @@ macos-window-shadow = false
 
 
 # CUSTOM KEYBINDINGS
-# All cmd+key combos handled by Karabiner → ctrl+shift+alt → CSI u sequences
+# Cmd shortcuts that need to reach terminal apps are routed through Karabiner
+# as ctrl+alt chords, then converted here to CSI u sequences.
 keybind = cmd+n=text:\x1b[32~
 
-# Send escape sequences for cmd+j/k (for Telescope navigation)
+# Direct cmd+j/k fallback if Karabiner is not running
 keybind = cmd+j=text:\x1b[106;9u
 keybind = cmd+k=text:\x1b[107;9u
 
-# Buffer navigation (Karabiner remaps cmd+h/l/q → ctrl+alt+h/l/q)
+# Telescope navigation (Karabiner remaps cmd+j/k → ctrl+alt+j/k)
+keybind = ctrl+alt+j=text:\x1b[106;7u
+keybind = ctrl+alt+k=text:\x1b[107;7u
+
+# Buffer navigation (Karabiner remaps cmd+h/l/q -> ctrl+alt+h/l/q)
 keybind = ctrl+alt+h=text:\x1b[104;7u
 keybind = ctrl+alt+l=text:\x1b[108;7u
 keybind = ctrl+alt+q=text:\x1b[113;7u
 
-# Splits (Karabiner remaps cmd+\/- → ctrl+alt+\/-)
+# Splits (Karabiner remaps cmd+\/- -> ctrl+alt+\/-)
 keybind = ctrl+alt+backslash=text:\x1b[92;7u
 keybind = ctrl+alt+-=text:\x1b[45;7u
 
 
 # Window sizing
 maximize = true
-

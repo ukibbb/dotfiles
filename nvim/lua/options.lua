@@ -192,7 +192,34 @@ opt.shortmess:append("sI")
 opt.whichwrap:append("<>[]hl")
 
 -- ============================================================================
--- SECTION 9: DISABLE UNUSED PROVIDERS
+-- SECTION 9: EXTERNAL TOOL PATHS
+-- ============================================================================
+-- Make tools installed outside the shell startup path visible to Neovim.
+-- Mason is lazy-loaded, so its bin directory must be available before LSP starts.
+
+local function prepend_path(path)
+  path = vim.fn.expand(path)
+
+  if path == "" or vim.fn.isdirectory(path) == 0 then
+    return
+  end
+
+  local separator = package.config:sub(1, 1) == "\\" and ";" or ":"
+  for entry in string.gmatch(vim.env.PATH or "", "([^" .. separator .. "]+)") do
+    if entry == path then
+      return
+    end
+  end
+
+  vim.env.PATH = path .. separator .. (vim.env.PATH or "")
+end
+
+prepend_path "$HOME/.local/share/nvim/mason/bin"
+prepend_path "/usr/local/go/bin"
+prepend_path "$HOME/go/bin"
+
+-- ============================================================================
+-- SECTION 10: DISABLE UNUSED PROVIDERS
 -- ============================================================================
 -- Neovim can use external interpreters for plugins (Python, Ruby, etc.)
 -- Most modern plugins are pure Lua, so we disable unused providers
