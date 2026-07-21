@@ -7,7 +7,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "cmd+h to ctrl+shift+alt+h in Ghostty",
+                        "description": "cmd+h to ctrl+alt+h in Ghostty",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -18,7 +18,29 @@
                         ]
                     },
                     {
-                        "description": "cmd+l to ctrl+shift+alt+l in Ghostty",
+                        "description": "cmd+j to ctrl+alt+j in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "j", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "j", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+k to ctrl+alt+k in Ghostty",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "k", "modifiers": { "mandatory": ["command"] } },
+                                "to": [{ "key_code": "k", "modifiers": ["control", "option"] }],
+                                "conditions": [{ "type": "frontmost_application_if", "bundle_identifiers": ["com.mitchellh.ghostty"] }]
+                            }
+                        ]
+                    },
+                    {
+                        "description": "cmd+l to ctrl+alt+l in Ghostty",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -29,7 +51,7 @@
                         ]
                     },
                     {
-                        "description": "cmd+q to ctrl+shift+alt+q in Ghostty",
+                        "description": "cmd+q to ctrl+alt+q in Ghostty",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -40,7 +62,7 @@
                         ]
                     },
                     {
-                        "description": "cmd+backslash to ctrl+shift+alt+backslash in Ghostty",
+                        "description": "cmd+backslash to ctrl+alt+backslash in Ghostty",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -51,7 +73,7 @@
                         ]
                     },
                     {
-                        "description": "cmd+minus to ctrl+shift+alt+minus in Ghostty",
+                        "description": "cmd+minus to ctrl+alt+minus in Ghostty",
                         "manipulators": [
                             {
                                 "type": "basic",
