@@ -268,20 +268,12 @@ return {
   -- Much better than Vim's traditional regex-based syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    -- Use the master branch (some plugins require specific branches)
-    branch = "master",
-    -- Load when opening or creating files
-    event = { "BufReadPost", "BufNewFile" },
-    -- Also load when these commands are used
-    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
-    -- Run :TSUpdate after install to compile the parsers
+    branch = "main",
+    -- The Neovim 0.12 rewrite does not support lazy-loading.
+    lazy = false,
     build = ":TSUpdate",
-    opts = function()
-      return require "configs.treesitter"
-    end,
-    config = function(_, opts)
-      -- Setup treesitter with our configuration
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      require("configs.treesitter").setup()
     end,
   },
 

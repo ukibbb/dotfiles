@@ -1,4 +1,5 @@
 brew "neovim"
+brew "tree-sitter-cli"
 brew "tmux"
 brew "fzf"
 brew "fd"
