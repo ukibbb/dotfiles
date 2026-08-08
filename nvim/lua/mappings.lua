@@ -50,6 +50,24 @@ map("n", "<M-C-_>", "<cmd>split<CR>", { desc = "horizontal split" })
 -- :noh = :nohlsearch command
 map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 
+-- Leader+h (visual mode): Highlight every occurrence of selected text
+-- Reads the visual selection without changing your yank/clipboard registers.
+-- Press <Esc> afterwards to clear the highlights.
+map("x", "<leader>h", function()
+  local lines = vim.fn.getregion(vim.fn.getpos ".", vim.fn.getpos "v", { type = vim.fn.mode() })
+  local text = table.concat(lines, "\n")
+
+  if text == "" then
+    return
+  end
+
+  local pattern = "\\V" .. vim.fn.escape(text, "\\")
+  pattern = pattern:gsub("\n", "\\n")
+
+  vim.fn.setreg("/", pattern)
+  vim.opt.hlsearch = true
+end, { desc = "highlight selected text" })
+
 -- Semicolon: Enter command mode faster (instead of Shift+:)
 -- Saves a keypress! ; is easier to hit than Shift+;
 -- You lose the original ; (repeat last f/t motion), but ',' still works
@@ -154,16 +172,9 @@ end, { desc = "general format file" })
 -- Useful for seeing all errors/warnings in the current file
 map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
 
--- [d: Jump to previous diagnostic (error, warning, hint)
--- vim.diagnostic.goto_prev() is the Lua API for navigating diagnostics
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP previous diagnostic" })
-
--- ]d: Jump to next diagnostic
-map("n", "]d", vim.diagnostic.goto_next, { desc = "LSP next diagnostic" })
-
--- Leader+d: Show diagnostic in floating window
+-- Leader+dd: Show diagnostic in floating window
 -- vim.diagnostic.open_float() shows details for diagnostic under cursor
-map("n", "<leader>d", vim.diagnostic.open_float, { desc = "LSP show diagnostic" })
+map("n", "<leader>dd", vim.diagnostic.open_float, { desc = "LSP show diagnostic" })
 
 -- Leader+q: Open diagnostics list in location list
 -- vim.diagnostic.setloclist() populates the location list with diagnostics
@@ -208,15 +219,15 @@ if require("nvconfig").ui.tabufline.enabled then
 end
 
 -- COMMENTING
--- Toggle comments on lines or selections using Comment.nvim plugin
+-- Toggle comments using Neovim's built-in gc operator
 
 -- Leader+/: Toggle comment in normal mode
--- gcc is the default mapping from Comment.nvim to toggle line comment
+-- gcc is Neovim's built-in mapping to toggle a line comment
 -- remap = true is needed because we're mapping to another mapping (gcc)
 map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
 
 -- Leader+/: Toggle comment in visual mode
--- gc is the Comment.nvim mapping for toggling comment on selection
+-- gc is Neovim's built-in operator for toggling comments on a selection
 map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 
 
@@ -312,4 +323,3 @@ map("n", "<leader>rx", ":DistantSpawn ", { desc = "distant spawn remote command"
 -- Leader+rp: Quick connect to Raspberry Pi
 -- Shortcut for connecting to Pi at known IP
 map("n", "<leader>rp", "<cmd>DistantLaunch ssh://ukibbb@192.168.101.7<CR>", { desc = "distant connect to Raspberry Pi" })
-

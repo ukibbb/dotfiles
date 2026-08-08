@@ -6,6 +6,10 @@ local parsers = {
   "printf",
   "vim",
   "vimdoc",
+  "go",
+  "html",
+  "markdown",
+  "markdown_inline",
   "python",
   "typescript",
   "tsx",
@@ -16,10 +20,14 @@ local filetypes = {
   "lua",
   "vim",
   "help",
+  "go",
+  "html",
+  "markdown",
   "python",
   "typescript",
   "typescriptreact",
   "javascript",
+  "javascriptreact",
 }
 
 function M.setup()

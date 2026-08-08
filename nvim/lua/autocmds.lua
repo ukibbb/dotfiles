@@ -258,11 +258,6 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
 
       -- Delete this augroup (only need to fire once)
       vim.api.nvim_del_augroup_by_name("FilePost")
-
-      -- Schedule filetype detection (after event loop completes)
-      vim.schedule(function()
-        vim.api.nvim_exec_autocmds("FileType", {})
-      end)
     end
   end,
 })

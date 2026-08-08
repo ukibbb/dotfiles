@@ -13,7 +13,7 @@ return {
   
   defaults = {
     -- Hide .git internals but show .github, .gitignore, etc.
-    file_ignore_patterns = { "^.git/" },
+    file_ignore_patterns = { "^%.git/" },
 
     -- PROMPT APPEARANCE
     -- The text shown before where you type in the prompt

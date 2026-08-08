@@ -12,7 +12,7 @@ local map = vim.keymap.set
 -- This function runs whenever an LSP server attaches to a buffer
 -- sets up buffer-local keymaps for LSP features
 
-M.on_attach = function(_, bufnr)
+M.on_attach = function(client, bufnr)
   -- Helper function to create keymap options with a description
   -- buffer = bufnr makes the keymap only work in this specific buffer
   local function opts(desc)
@@ -32,6 +32,16 @@ M.on_attach = function(_, bufnr)
   -- (e.g., 'int x = 5;' or a function implementation). 
   -- You can't have multiple definitions, but you can have multiple declarations.
   map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+
+  -- Show fixes and refactors offered by the attached language server.
+  map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
+  map("n", "<leader>lr", "<cmd>lsp restart<CR>", opts "Restart servers")
+
+  -- gS: Follow TypeScript declarations to their actual source implementation
+  if client.name == "ts_ls" then
+    map("n", "gS", "<cmd>LspTypescriptGoToSourceDefinition<CR>", opts "Go to source definition")
+    map("n", "<leader>ci", "<cmd>LspTypescriptSourceAction<CR>", opts "TypeScript import actions")
+  end
 
   -- gr: Go to References / Usages
   -- Opens Telescope with every place the symbol under your cursor is used.
@@ -106,47 +116,13 @@ M.on_init = function(client, _)
 end
 
 
--- Starts with default capabilities from Neovim's LSP protocol module
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
-
-
--- Enhance completion capabilities
--- These tell the LSP what completion features we support
-M.capabilities.textDocument.completion.completionItem = {
-    -- We can display documentation in markdown or plain text
-    documentationFormat = { "markdown", "plaintext" },
-    
-    -- We support snippets (completions that expand into templates)
-    snippetSupport = true,
-    
-    -- We support preselecting the "best" completion item
-    preselectSupport = true,
-    
-    -- We support insertReplace mode (replacing existing text)
-    insertReplaceSupport = true,
-    
-    -- We can show extra label details (like function signatures)
-    labelDetailsSupport = true,
-    
-    -- We can show deprecated items differently (usually strikethrough)
-    deprecatedSupport = true,
-    
-    -- We support commit characters (characters that auto-confirm completion)
-    commitCharactersSupport = true,
-    
-    -- We support completion item tags (like deprecated markers)
-    tagSupport = { valueSet = { 1 } },
-    
-    -- We support resolving additional info lazily
-    -- This improves performance by loading docs only when needed
-    resolveSupport = {
-      properties = {
-        "documentation",        -- Fetch documentation lazily
-        "detail",               -- Fetch detail text lazily
-        "additionalTextEdits",  -- Fetch extra edits (like auto-imports) lazily
-      },
-    },
-  }
+-- Advertise every completion feature supported by nvim-cmp, including the
+-- additionalTextEdits used by TypeScript auto-import completions.
+M.capabilities = vim.tbl_deep_extend(
+  "force",
+  vim.lsp.protocol.make_client_capabilities(),
+  require("cmp_nvim_lsp").default_capabilities()
+)
   
   -- DEFAULTS FUNCTION
   -- Sets up the default LSP configuration for all servers
@@ -164,7 +140,10 @@ M.capabilities.textDocument.completion.completionItem = {
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(args)
         -- args.buf is the buffer that the LSP attached to
-        M.on_attach(_, args.buf)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then
+          M.on_attach(client, args.buf)
+        end
       end,
     })
   
@@ -203,6 +182,15 @@ M.capabilities.textDocument.completion.completionItem = {
     -- Apply Lua-specific settings to the lua_ls (lua-language-server)
     vim.lsp.config("lua_ls", { settings = lua_lsp_settings })
 
+    -- Prefer aliases from tsconfig paths when TypeScript creates imports.
+    vim.lsp.config("ts_ls", {
+      init_options = {
+        preferences = {
+          importModuleSpecifierPreference = "non-relative",
+        },
+      },
+    })
+
     -- Ruff LSP: linting + formatting for Python
     -- Disable hover since pyright's is better
     vim.lsp.config("ruff", {
@@ -238,9 +226,5 @@ M.capabilities.textDocument.completion.completionItem = {
   
   -- Export the module so other files can require() it
   return M
-
-
-
-
 
 

@@ -108,11 +108,7 @@ return {
       local lint = require("lint")
       local mypy_missing_notified = false
 
-      if vim.fn.executable("mypy") == 1 then
-        lint.linters_by_ft = { python = { "mypy" } }
-      else
-        lint.linters_by_ft = {}
-      end
+      lint.linters_by_ft = { python = { "mypy" } }
 
       vim.api.nvim_create_autocmd("BufWritePost", {
         group = vim.api.nvim_create_augroup("Lint", { clear = true }),
@@ -128,7 +124,7 @@ return {
           end
 
           mypy_missing_notified = false
-          lint.try_lint()
+          lint.try_lint("mypy")
         end,
       })
     end,
@@ -140,7 +136,8 @@ return {
   -- Pre-configured settings for language servers (lua_ls, html, cssls)
   {
     "neovim/nvim-lspconfig",
-    event = "User FilePost",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
       -- Load your custom LSP configuration
       require("configs.lspconfig").defaults()
@@ -179,6 +176,76 @@ return {
     opts = function()
       -- Load config from our separate mason config file
       return require "configs.mason"
+    end,
+  },
+
+  -- DEBUGGING
+  -- nvim-dap: Debug Adapter Protocol client for Python, Go, and JavaScript/TypeScript
+  {
+    "mfussenegger/nvim-dap",
+    cmd = {
+      "DapClearBreakpoints",
+      "DapContinue",
+      "DapDisconnect",
+      "DapEval",
+      "DapNew",
+      "DapPause",
+      "DapRestartFrame",
+      "DapSetLogLevel",
+      "DapShowLog",
+      "DapStepInto",
+      "DapStepOut",
+      "DapStepOver",
+      "DapTerminate",
+      "DapToggleBreakpoint",
+      "DapToggleRepl",
+    },
+    dependencies = {
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+      },
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+      },
+      "mfussenegger/nvim-dap-python",
+      "leoluz/nvim-dap-go",
+    },
+    keys = {
+      { "<F5>", function() require("dap").continue() end, desc = "DAP: start or continue" },
+      { "<F10>", function() require("dap").step_over() end, desc = "DAP: step over" },
+      { "<F11>", function() require("dap").step_into() end, desc = "DAP: step into" },
+      { "<F12>", function() require("dap").step_out() end, desc = "DAP: step out" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "DAP: toggle breakpoint" },
+      {
+        "<leader>dB",
+        function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end,
+        desc = "DAP: conditional breakpoint",
+      },
+      { "<leader>dc", function() require("dap").continue() end, desc = "DAP: start or continue" },
+      { "<leader>de", function() require("dapui").eval() end, mode = { "n", "x" }, desc = "DAP: evaluate" },
+      {
+        "<leader>dn",
+        function()
+          if vim.bo.filetype == "python" then
+            require("dap-python").test_method()
+          elseif vim.bo.filetype == "go" then
+            require("dap-go").debug_test()
+          else
+            vim.notify("Nearest-test debugging is configured for Python and Go only", vim.log.levels.WARN)
+          end
+        end,
+        desc = "DAP: debug nearest test",
+      },
+      { "<leader>dp", function() require("dap").pause() end, desc = "DAP: pause" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "DAP: run last" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "DAP: toggle REPL" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "DAP: terminate" },
+      { "<leader>du", function() require("dapui").toggle() end, desc = "DAP: toggle UI" },
+    },
+    config = function()
+      require("configs.dap").setup()
     end,
   },
 
@@ -232,13 +299,10 @@ return {
           require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
       },
-      {
-        "saadparwaiz1/cmp_luasnip",  -- Snippets from LuaSnip as completion items
-        "hrsh7th/cmp-nvim-lua",       -- Neovim Lua API completions (for plugin dev)
-        "hrsh7th/cmp-nvim-lsp",       -- LSP completions (most important source)
-        "hrsh7th/cmp-buffer",         -- Words from the current buffer
-        "https://codeberg.org/FelipeLema/cmp-async-path.git", -- File path completions (async version)
-      },
+      "saadparwaiz1/cmp_luasnip",  -- Snippets from LuaSnip as completion items
+      "hrsh7th/cmp-nvim-lua",       -- Neovim Lua API completions (for plugin dev)
+      "hrsh7th/cmp-buffer",         -- Words from the current buffer
+      "https://codeberg.org/FelipeLema/cmp-async-path.git", -- File path completions (async version)
     },
     opts = function()
       -- Load our main cmp configuration
@@ -277,6 +341,13 @@ return {
     end,
   },
 
+  -- Auto-close and rename HTML/JSX/TSX tags
+  {
+    "windwp/nvim-ts-autotag",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
+  },
+
   -- MARKDOWN RENDERING
   -- render-markdown.nvim: Enhanced markdown rendering with treesitter
   -- Renders markdown with proper formatting, heading highlights, code blocks, etc.
@@ -286,6 +357,14 @@ return {
     ft = "markdown",
     -- Requires treesitter for markdown parsing
     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    keys = {
+      {
+        "<leader>mr",
+        "<cmd>RenderMarkdown buf_toggle<cr>",
+        ft = "markdown",
+        desc = "Markdown: toggle rendering",
+      },
+    },
     opts = function()
       return require "configs.render-markdown"
     end,
@@ -347,7 +426,7 @@ return {
         on_attach = on_attach,
       filters = {
         dotfiles = false,
-        custom = { ".DS_Store", ".git" },
+        custom = { [[^\.DS_Store$]], [[^\.git$]] },
       },
       disable_netrw = true,
       hijack_netrw = true,
@@ -392,7 +471,10 @@ return {
         ignore = false,
       },
       filesystem_watchers = {
-        ignore_dirs = { ".next", "node_modules", ".git" },
+        ignore_dirs = function(path)
+          local name = vim.fs.basename(path)
+          return name == ".next" or name == "node_modules" or name == ".git"
+        end,
       },
     }
     end,
@@ -518,17 +600,7 @@ return {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
         },
         file_panel = {
-          -- File panel specific
-          { "n", "j", "j", { desc = "Move down" } },
-          { "n", "k", "k", { desc = "Move up" } },
-          { "n", "<cr>", "<cmd>DiffviewOpen<cr>", { desc = "Open diff" } },
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
-          -- Staging
-          { "n", "s", "<cmd>DiffviewStageFile<cr>", { desc = "Stage file" } },
-          { "n", "-", "<cmd>DiffviewStageFile<cr>", { desc = "Stage file" } },
-          { "n", "S", "<cmd>DiffviewStageAllFiles<cr>", { desc = "Stage all" } },
-          { "n", "u", "<cmd>DiffviewUnstageFile<cr>", { desc = "Unstage file" } },
-          { "n", "U", "<cmd>DiffviewUnstageAllFiles<cr>", { desc = "Unstage all" } },
         },
         file_history_panel = {
           { "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
@@ -560,30 +632,11 @@ return {
       -- <leader>gD = "git Diff" - compare current file with git
       { "<leader>gD", "<cmd>CodeDiff<cr>", desc = "CodeDiff explorer" },
       -- Compare current buffer with HEAD (most common use case)
-      { "<leader>gf", function()
-          local file = vim.fn.expand("%")
-          if file ~= "" then
-            vim.cmd("CodeDiff file " .. file .. " HEAD")
-          else
-            vim.notify("No file in current buffer", vim.log.levels.WARN)
-          end
-        end,
-        desc = "Diff file vs HEAD"
-      },
+      { "<leader>gf", "<cmd>CodeDiff file HEAD<cr>", desc = "Diff file vs HEAD" },
       -- View file history (commits that touched this file)
-      { "<leader>gh", "<cmd>CodeDiff history<cr>", desc = "File history" },
+      { "<leader>gh", "<cmd>CodeDiff history %<cr>", desc = "File history" },
     },
-    opts = {
-      -- Highlight groups for diff colors
-      -- These link to standard diff highlights by default
-      -- Customize if you want different colors
-      highlights = {
-        added_line = "DiffAdd",        -- Green background for added lines
-        removed_line = "DiffDelete",   -- Red background for removed lines
-        added_char = "DiffText",       -- Deeper green for added characters
-        removed_char = "DiffText",     -- Deeper red for removed characters
-      },
-    },
+    opts = {},
   },
 
   -- WATCHDIFF.NVIM

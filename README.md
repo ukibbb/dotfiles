@@ -38,6 +38,11 @@ brew bundle --file Brewfile
 if [ ! -s "$HOME/.nvm/nvm.sh" ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm install --lts
+nvm alias default 'lts/*'
 ```
 
 5. Link the dotfiles.
@@ -69,8 +74,10 @@ nvim --headless "+Lazy! restore" +qa
 Then open Neovim and install external tools through Mason:
 
 ```vim
-:MasonInstall lua-language-server pyright ruff typescript-language-server html-lsp css-lsp dockerfile-language-server docker-compose-language-service stylua mypy
+:MasonInstall lua-language-server pyright ruff typescript-language-server html-lsp css-lsp dockerfile-language-server docker-compose-language-service stylua mypy debugpy delve js-debug-adapter
 ```
+
+Neovim debugging uses `nvim-dap` with `debugpy` for Python, `delve` for Go, and `js-debug-adapter` for Node and Chrome. Project-specific JavaScript and TypeScript runners can be configured in `.vscode/launch.json` with the `pwa-node` or `pwa-chrome` adapter type.
 
 8. Optional tools.
 
@@ -93,7 +100,7 @@ Keep setup reproducible by treating every machine dependency as declared state:
 
 - Homebrew apps and CLI tools belong in `Brewfile`.
 - Neovim plugin versions are pinned in `nvim/lazy-lock.json`.
-- Mason packages are listed in this README and should be updated when LSP, formatter, or linter requirements change.
+- Mason packages are listed in this README and should be updated when LSP, formatter, linter, or debugger requirements change.
 - Local dotfile links are owned by `install.sh`; run `bash install.sh status` after changes.
 - Existing local config should never be silently deleted; the installer creates timestamped backups.
 - Paths should use `$HOME`, `~`, or paths resolved from the repo instead of hardcoded usernames.
@@ -103,7 +110,7 @@ When dependencies change:
 
 - Add Homebrew dependencies to `Brewfile`.
 - Run `:Lazy sync` intentionally and commit changes to `nvim/lazy-lock.json` when Neovim plugins should be upgraded.
-- Update the Mason package list in this README when LSP, formatter, or linter tools change.
+- Update the Mason package list in this README when external Neovim tools change.
 - Run `bash install.sh install` twice; the second run should report existing links and no new backups.
 
 For exact recreation on a new Mac:

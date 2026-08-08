@@ -11,7 +11,7 @@ return {
   -- PATH SETTING
 
   -- PATH = "skip" tells Mason to NOT modify the system PATH
-  -- Why? Because we already add Mason's bin directory to PATH in options.lua
+  -- Why? Because .zshrc already adds Mason's bin directory to PATH
   -- Having both would be redundant and could cause issues
   -- Options: "prepend" (add to start), "append" (add to end), "skip" (don't modify)
   PATH = "skip",

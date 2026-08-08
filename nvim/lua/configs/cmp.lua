@@ -31,6 +31,21 @@ local options = {
     end,
   },
 
+  -- Show which completion provider produced each item. Only LSP entries can
+  -- carry TypeScript auto-import edits; buffer entries insert plain text.
+  formatting = {
+    format = function(entry, item)
+      item.menu = ({
+        nvim_lsp = "[LSP]",
+        luasnip = "[Snippet]",
+        buffer = "[Buffer]",
+        nvim_lua = "[Nvim]",
+        async_path = "[Path]",
+      })[entry.source.name]
+      return item
+    end,
+  },
+
   -- KEYBINDINGS
   -- These control how you interact with the completion menu
   
@@ -103,29 +118,16 @@ local options = {
   -- Sources provide the actual completion candidates
   -- Order matters: first sources have higher priority in the menu
   
-  sources = {
-    -- LSP completions: Most important source
-    -- Provides language-aware completions (functions, types, variables, etc.)
-    -- This is what makes completion "smart" and context-aware
-    { name = "nvim_lsp" },
-    
-    -- Snippet completions from LuaSnip
-    -- Shows available snippets that match what you're typing
-    { name = "luasnip" },
-    
-    -- Buffer completions: Words from the current buffer
-    -- Useful fallback when LSP doesn't have suggestions
-    { name = "buffer" },
-    
-    -- Neovim Lua API completions
-    -- Only useful when writing Neovim config or plugins
-    -- Provides vim.api, vim.fn, vim.lsp, etc.
-    { name = "nvim_lua" },
-    
-    -- File path completions (async version for better performance)
-    -- When you type a path like "./src/", it shows matching files
-    { name = "async_path" },
-  },
+  sources = cmp.config.sources({
+    -- Prefer semantic completions that may include edits such as auto-imports.
+    { name = "nvim_lsp", priority = 1000 },
+    { name = "luasnip", priority = 750 },
+  }, {
+    -- Use text-only and path sources only when the primary group is empty.
+    { name = "nvim_lua", priority = 500 },
+    { name = "buffer", priority = 250 },
+    { name = "async_path", priority = 200 },
+  }),
 }
 
 return options
