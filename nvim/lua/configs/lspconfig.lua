@@ -7,6 +7,65 @@
 
 local M = {}
 local map = vim.keymap.set
+local default_log_message_handler = vim.lsp.handlers["window/logMessage"]
+local ts_recovery_group = vim.api.nvim_create_augroup("TsLspRecovery", { clear = true })
+local ts_restart_pending = {}
+
+local function ts_client_has_uri(client, uri)
+  for bufnr in pairs(client.attached_buffers) do
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.uri_from_bufnr(bufnr) == uri then
+      return true
+    end
+  end
+
+  return false
+end
+
+local function schedule_ts_restart(client_id, reason)
+  if ts_restart_pending[client_id] then return end
+  ts_restart_pending[client_id] = true
+
+  local function restart()
+    ts_restart_pending[client_id] = nil
+
+    local client = vim.lsp.get_client_by_id(client_id)
+    if not client or client.name ~= "ts_ls" or client:is_stopped() then return end
+
+    vim.notify("TypeScript LSP " .. reason .. "; restarting", vim.log.levels.WARN)
+    -- This is the same client-specific restart used by Neovim's :lsp restart command.
+    client:_restart(client.exit_timeout)
+  end
+
+  local mode = vim.api.nvim_get_mode().mode
+  if mode:match("^[iR]") then
+    vim.api.nvim_create_autocmd("InsertLeave", {
+      group = ts_recovery_group,
+      once = true,
+      callback = function()
+        vim.schedule(restart)
+      end,
+    })
+  else
+    vim.defer_fn(restart, 100)
+  end
+end
+
+local function ts_log_message_handler(err, params, ctx, config)
+  local result = default_log_message_handler(err, params, ctx, config)
+  if err or not params or type(params.message) ~= "string" then return result end
+
+  local client = vim.lsp.get_client_by_id(ctx.client_id)
+  if not client or client.name ~= "ts_ls" or client:is_stopped() then return result end
+
+  local uri = params.message:match("^Unexpected resource (file://.+)$")
+  if uri and ts_client_has_uri(client, uri) then
+    schedule_ts_restart(client.id, "lost document sync")
+  elseif params.message:match("%[tsserver%].-Signal: SIGABRT") then
+    schedule_ts_restart(client.id, "server crashed")
+  end
+
+  return result
+end
 
 -- on_attach CALLBACK
 -- This function runs whenever an LSP server attaches to a buffer
@@ -189,6 +248,9 @@ M.capabilities = vim.tbl_deep_extend(
           importModuleSpecifierPreference = "non-relative",
         },
       },
+      handlers = {
+        ["window/logMessage"] = ts_log_message_handler,
+      },
     })
 
     -- Ruff LSP: linting + formatting for Python
@@ -226,5 +288,4 @@ M.capabilities = vim.tbl_deep_extend(
   
   -- Export the module so other files can require() it
   return M
-
 
