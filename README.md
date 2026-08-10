@@ -8,6 +8,10 @@ Personal macOS dotfiles for the terminal/editor stack:
 - WezTerm terminal config with macOS `Cmd` key mappings
 - Claude Code global settings and status line
 
+## Documentation
+
+- [Polish tmux and Neovim guide](neovim_docs/README.md), split by topic and formatted for printing
+
 ## Fresh Mac Setup
 
 1. Install Homebrew if it is not already installed.

@@ -1,0 +1,147 @@
+<a id="aktywne-mapowania-neovim"></a>
+# Aktywne mapowania Neovim
+
+## Podstawy, ruch i edycja
+
+- **`jk`**: Wyjście do Normal. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-b`**: Pierwszy niepusty znak wiersza. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-e`**: Koniec wiersza. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-h/j/k/l`**: Lewo / dół / góra / prawo. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **fizyczne `Cmd-\`, `<M-C-\>`**: Nowy pionowy podział, okna obok siebie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **fizyczne `Cmd--`, `<M-C-_>`**: Nowy poziomy podział, okna góra/dół. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`Esc`**: Wyłączenie podświetlenia wyszukiwania. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>h`**: Ustawienie dosłownego wzorca wyszukiwania z zaznaczenia i podświetlenie wszystkich wystąpień. **Tryb:** `x`. **Stan:** **Aktywne lokalne**.
+- **`;`**: Wejście do linii poleceń `:`; zastępuje powtórzenie ruchu `f/t`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-c`**: Kopia całego pliku do rejestru systemowego `+`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-a`**: Zaznaczenie całego pliku. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`J` / `K`**: Przesunięcie zaznaczonych wierszy w dół / górę i ponowne wcięcie. **Tryb:** `v`. **Stan:** **Aktywne lokalne**.
+- **`J`**: Połączenie wierszy bez przesuwania kursora. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-d` / `Ctrl-u`**: Pół strony w dół / górę i wycentrowanie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`n` / `N`**: Następny / poprzedni wynik, wycentrowany i odsłonięty z folda. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`p`**: Wklejenie nad zaznaczenie bez nadpisania rejestru wklejanego tekstu. **Tryb:** `x`. **Stan:** **Aktywne lokalne**.
+- **`<leader>n`**: Przełączenie numerów bezwzględnych. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>rn`**: Przełączenie numerów względnych. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>w`**: Przełączenie zawijania wierszy. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>y`**: Kopia całego pliku do schowka systemowego. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>/`**: Komentarz bieżącego wiersza przez wbudowane `gcc`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>/`**: Komentarz zaznaczenia przez wbudowane `gc`. **Tryb:** `v`. **Stan:** **Aktywne lokalne**.
+
+Mapowanie `v` jest zainstalowane także w Select. Wbudowany operator komentarza Neovim ma właściwe mapowanie w `n`, `x` i `o`, dlatego komentarz zaznaczenia należy praktycznie uruchamiać z Visual.
+
+## Bufory, formatowanie i listy
+
+- **`<leader>b`**: Nowy pusty bufor. **Tryb:** `n`. **Stan:** **Warunkowe/wyłączone**: aktywne, bo NvChad tabufline jest włączone.
+- **fizyczne `Cmd-h`, `<M-C-H>`**: Poprzedni bufor tabufline. **Tryb:** `n`. **Stan:** **Warunkowe/wyłączone**: tabufline.
+- **fizyczne `Cmd-l`, `<M-C-L>`**: Następny bufor tabufline. **Tryb:** `n`. **Stan:** **Warunkowe/wyłączone**: tabufline.
+- **fizyczne `Cmd-q`, `<M-C-Q>`**: Zamknięcie bieżącego bufora tabufline. **Tryb:** `n`. **Stan:** **Warunkowe/wyłączone**: tabufline.
+- **`<leader>fm`**: Format całego pliku lub zakresu przez Conform, z fallbackiem LSP. **Tryb:** `n,x`. **Stan:** **Aktywne lokalne**.
+- **`<leader>ds`**: Diagnostyka do location list. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`[d` / `]d`**: Poprzednia / następna diagnostyka i wsparcie licznikami. **Tryb:** `n`. **Stan:** **Domyślne Neovim 0.12**.
+- **`<leader>dd`**: Pływający opis diagnostyki. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>q`**: Diagnostyka do location list, to samo przeznaczenie co `<leader>ds`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`[q` / `]q`**: Poprzedni / następny wpis quickfix i wycentrowanie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+
+## Telescope i wybór motywu
+
+- **`<leader>ff`**: Pliki, z dotfiles, z poszanowaniem ignore. **Stan:** **Aktywne lokalne**.
+- **`<leader>fa`**: Wszystkie pliki: hidden, ignored i symlinki. **Stan:** **Aktywne lokalne**.
+- **`<leader>fw`**: `live_grep`, także pliki ukryte, bez wnętrza `.git/`. **Stan:** **Aktywne lokalne**.
+- **`<leader>fW`**: `live_grep` z tekstem początkowym równym słowu pod kursorem. **Stan:** **Aktywne lokalne**.
+- **`<leader>fb`**: Otwarte bufory. **Stan:** **Aktywne lokalne**.
+- **`<leader>fh`**: Tagi pomocy. **Stan:** **Aktywne lokalne**.
+- **`<leader>ma`**: Marki. **Stan:** **Aktywne lokalne**.
+- **`<leader>fo`**: Ostatnio otwarte pliki. **Stan:** **Aktywne lokalne**.
+- **`<leader>fz`**: Wyszukiwanie w bieżącym buforze. **Stan:** **Aktywne lokalne**.
+- **`<leader>fZ`**: Wyszukiwanie w buforze ze słowem pod kursorem. **Stan:** **Aktywne lokalne**.
+- **`<leader>cm`**: Historia commitów katalogu. **Stan:** **Aktywne lokalne**.
+- **`<leader>gt`**: Status Git; `Tab` w tym pickerze stage/unstage. **Stan:** **Aktywne lokalne**.
+- **`<leader>th`**: Picker motywów NvChad. **Stan:** **Aktywne lokalne**.
+
+W każdym pickerze lokalne `Alt-j` / `Alt-k` poruszają wyborem w Insert, a `q` zamyka picker w Normal.
+
+## Git i przegląd różnic
+
+- **`<leader>gd`**: Otwarcie lub odświeżenie inline diff `Unified` względem `HEAD`; drzewo automatycznie otwiera pierwszy zmieniony plik, a `:Unified reset` czyści bieżący bufor. **Stan:** **Aktywne lokalne**.
+- **`<leader>gg`**: Status Neogit w nowej karcie. **Stan:** **Aktywne lokalne**.
+- **`<leader>gc`**: Popup commit Neogit. **Stan:** **Aktywne lokalne**.
+- **`<leader>gp`**: Popup push Neogit. **Stan:** **Aktywne lokalne**.
+- **`<leader>gP`**: Popup pull Neogit. **Stan:** **Aktywne lokalne**.
+- **`<leader>gb`**: Popup branch Neogit. **Stan:** **Aktywne lokalne**.
+- **`<leader>gv`**: `DiffviewOpen` dla zmian roboczych. **Stan:** **Aktywne lokalne**.
+- **`<leader>gm`**: Porównanie `origin/main...HEAD` w Diffview. **Stan:** **Aktywne lokalne**.
+- **`<leader>gl`**: Historia bieżącego pliku w Diffview. **Stan:** **Aktywne lokalne**.
+- **`<leader>gL`**: Historia całego repozytorium w Diffview. **Stan:** **Aktywne lokalne**.
+- **`<leader>gq`**: Zamknięcie aktywnego Diffview. **Stan:** **Aktywne lokalne**.
+- **`<leader>gD`**: Explorer CodeDiff. **Stan:** **Aktywne lokalne**.
+- **`<leader>gf`**: Dokładnie `CodeDiff file HEAD`, bieżący zapisany plik kontra `HEAD`. **Stan:** **Aktywne lokalne**.
+- **`<leader>gh`**: Dokładnie `CodeDiff history %`, historia bieżącego pliku. **Stan:** **Aktywne lokalne**.
+
+## DAP
+
+- **`F5`**: Start albo kontynuacja. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`F10`**: Krok ponad. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`F11`**: Krok do środka. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`F12`**: Krok na zewnątrz. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>db`**: Przełączenie breakpointu. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dB`**: Breakpoint warunkowy po wpisaniu warunku. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dc`**: Start albo kontynuacja. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>de`**: Ewaluacja wyrażenia lub zaznaczenia w UI. **Tryb:** `n,x`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dn`**: Najbliższy test Python albo Go; dla innych filetype ostrzeżenie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dp`**: Pauza. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dl`**: Ponowne uruchomienie ostatniej konfiguracji. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dr`**: REPL. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>dt`**: Zakończenie sesji. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>du`**: Przełączenie paneli DAP UI. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+
+## LSP po podłączeniu klienta
+
+- **`gD`**: Deklaracja. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`gd`**: Definicja. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>ca`**: Akcja kodu/refaktoryzacja dla pozycji lub zakresu. **Tryb:** `n,x`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>lr`**: Wbudowane `:lsp restart` dla klientów bieżącego bufora. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP i Neovim 0.12.
+- **`gr`**: Referencje w Telescope. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>wa` / `<leader>wr`**: Dodanie / usunięcie folderu workspace. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>wl`**: Wypisanie folderów workspace. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>D`**: Definicja typu. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`<leader>ra`**: Zmiana nazwy przez UI NvChad. **Tryb:** `n`. **Stan:** **Kontekstowe**, buffer-local LSP.
+- **`gS`**: Źródłowa definicja TypeScript zamiast deklaracji typów. **Tryb:** `n`. **Stan:** **Kontekstowe**, tylko klient `ts_ls`.
+- **`<leader>ci`**: Akcje źródłowe TypeScript, np. organizacja importów i usunięcie nieużywanego kodu. **Tryb:** `n`. **Stan:** **Kontekstowe**, tylko klient `ts_ls`.
+
+Wbudowane globalne skróty Neovim 0.12 pozostają dostępne: `grn` rename, `gra` w `n,x` code action, `gri` implementation, `grr` references, `grt` type definition, `grx` code lens, `gO` symbole dokumentu, `gx` link dokumentu, `an`/`in` wybór węzła oraz `Ctrl-s` w `i,s` pomoc sygnatur. Po attach `K` pokazuje hover, o ile `keywordprg` lub własne mapowanie go nie zastąpiło. `[D` / `]D` skaczą do pierwszej / ostatniej diagnostyki, a `Ctrl-w d` i `Ctrl-w Ctrl-d` otwierają jej opis.
+
+## `nvim-cmp`: dokładne tryby
+
+- **`Ctrl-p` / `Alt-k`**: Poprzednia propozycja. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-n` / `Alt-j`**: Następna propozycja. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-d` / `Ctrl-f`**: Dokumentacja o 4 wiersze w górę / w dół. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-Spacja`**: Ręczne otwarcie completion. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Ctrl-e`**: Zamknięcie menu completion. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Enter`**: Potwierdzenie; `select=true` wybiera pierwszy element także bez jawnego zaznaczenia. **Tryb:** `i`. **Stan:** **Aktywne lokalne**.
+- **`Tab`**: Następna propozycja, inaczej rozwinięcie/skok LuaSnip, inaczej zwykły fallback. **Tryb:** `i,s`. **Stan:** **Aktywne lokalne**.
+- **`Shift-Tab`**: Poprzednia propozycja, inaczej poprzedni placeholder LuaSnip, inaczej fallback. **Tryb:** `i,s`. **Stan:** **Aktywne lokalne**.
+
+Wszystkie pozycje poza `Tab` i `Shift-Tab` są tylko w Insert. Brak jawnej listy trybów w API `cmp.mapping` domyślnie oznacza `i`, nie `i,s`.
+
+## Distant, Markdown i lokalne wtyczki
+
+- **`<leader>rl`**: Prompt celu SSH i `DistantLaunch`. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>ro`**: Prefiks linii `:DistantOpen ` do dopisania ścieżki. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>rs`**: Powłoka zdalna. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>rx`**: Prefiks linii `:DistantSpawn ` do dopisania polecenia. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>rp`**: Połączenie `ssh://ukibbb@192.168.101.7`. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>mr`**: `RenderMarkdown buf_toggle` dla bieżącego bufora. **Tryb/kontekst:** `n`, tylko Markdown. **Stan:** **Kontekstowe**.
+- **`<leader>ch`**: Usunięcie podświetleń watchdiff i przesunięcie baseline. **Tryb/kontekst:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>ac`**: Popup Claude, z zaznaczeniem w `v`. **Tryb/kontekst:** `n,v`. **Stan:** **Aktywne lokalne**.
+- **`<leader>aC`**: Claude w trybie natychmiastowego komentarza. **Tryb/kontekst:** `n,v`. **Stan:** **Aktywne lokalne**.
+
+## Mapowania kontekstowe z autocmdów i paneli
+
+- **`q`**: `:close`, bufor poza listą. **Kontekst:** `help`, `qf`, `lspinfo`, `man`, `notify`, `spectre_panel`, `startuptime`, `checkhealth`. **Stan:** **Kontekstowe**.
+- **fizyczne `Cmd-\` / `Cmd--`**: Otwórz w pionowym / poziomym splicie. **Kontekst:** bufor nvim-tree. **Stan:** **Kontekstowe**.
+- **`<leader>rr`**: Reload wszystkich modułów `claude.*`. **Kontekst:** plik pod `*/claude.nvim/lua/*.lua`, po pierwszym wejściu w sesji. **Stan:** **Kontekstowe**.
+- **`<leader>rt`**: Reload i otwarcie popupu. **Kontekst:** ten sam tryb deweloperski. **Stan:** **Kontekstowe**.
+- **`<leader>rd`**: Lista załadowanych modułów Claude. **Kontekst:** ten sam tryb deweloperski. **Stan:** **Kontekstowe**.
+- **`q`**: Zamknięcie splitu historii. **Kontekst:** historia watchdiff. **Stan:** **Kontekstowe**.
+- **`>` w Insert**: Wstawienie `>` i ewentualne domknięcie tagu. **Kontekst:** obsługiwany bufor tagów. **Stan:** **Kontekstowe**, nvim-ts-autotag.
+
+Pełne mapowania paneli każdej wtyczki są dostępne w [indeksie wtyczek](plugins/README.md#indeks-wtyczek).
