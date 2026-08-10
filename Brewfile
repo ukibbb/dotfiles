@@ -8,5 +8,4 @@ brew "jq"
 brew "stylua"
 brew "ruff"
 
-cask "ghostty"
-cask "karabiner-elements"
+cask "wezterm"

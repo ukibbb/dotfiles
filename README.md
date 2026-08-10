@@ -5,8 +5,7 @@ Personal macOS dotfiles for the terminal/editor stack:
 - zsh and Oh My Zsh
 - Neovim with lazy.nvim, NvChad UI pieces, LSP, formatting, Telescope, and local plugins
 - tmux with TPM plugins
-- Ghostty terminal config
-- Karabiner key remaps for Ghostty
+- WezTerm terminal config with macOS `Cmd` key mappings
 - Claude Code global settings and status line
 
 ## Fresh Mac Setup
@@ -29,8 +28,6 @@ cd "$HOME/Desktop/dotfiles"
 ```sh
 brew bundle --file Brewfile
 ```
-
-`karabiner-elements` is a pkg-based cask and may ask for an interactive sudo password. If automation cannot install it, run the same `brew bundle` command in a local terminal and enter your password there.
 
 4. Install nvm if `~/.nvm/nvm.sh` does not exist.
 
@@ -90,8 +87,7 @@ Run `claude` once to authenticate if you use Claude Code.
 
 9. Restart apps.
 
-- Restart Ghostty so it reads `~/.config/ghostty/config`.
-- Open Karabiner-Elements and approve macOS permissions.
+- Restart WezTerm so it reads `~/.config/wezterm/wezterm.lua`.
 - Restart the shell or run `source ~/.zshrc`.
 
 ## Reproducible Setup
@@ -104,7 +100,7 @@ Keep setup reproducible by treating every machine dependency as declared state:
 - Local dotfile links are owned by `install.sh`; run `bash install.sh status` after changes.
 - Existing local config should never be silently deleted; the installer creates timestamped backups.
 - Paths should use `$HOME`, `~`, or paths resolved from the repo instead of hardcoded usernames.
-- App-specific manual steps, like Karabiner permissions and Claude authentication, must be documented here.
+- App-specific manual steps, like Claude authentication, must be documented here.
 
 When dependencies change:
 
@@ -136,4 +132,4 @@ tmux source-file "$HOME/.tmux.conf"
 bash install.sh uninstall
 ```
 
-This removes symlinks managed by the installer. It does not remove backups, copied Karabiner config, Homebrew packages, Neovim data, or tmux plugins.
+This removes symlinks managed by the installer. It does not remove backups, Homebrew packages, Neovim data, or tmux plugins.

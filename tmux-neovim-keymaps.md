@@ -105,14 +105,14 @@
 
 ### Klawisze fizyczne na macOS
 
-Karabiner dla Ghostty tłumaczy fizyczne `Cmd-h`, `Cmd-l`, `Cmd-q`, `Cmd-\` i `Cmd--` na kombinacje widziane przez terminal jako mapowania `Meta+Ctrl`. Dlatego konfiguracja Neovim zapisuje je jako `<M-C-H>`, `<M-C-L>`, `<M-C-Q>`, `<M-C-\>` i `<M-C-_>`. W tabelach podano zarówno zamiar fizyczny, jak i kod Neovim tam, gdzie to potrzebne.
+WezTerm bezpośrednio koduje fizyczne `Cmd-h`, `Cmd-l`, `Cmd-q`, `Cmd-\` i `Cmd--` jako sekwencje CSI-u widziane przez Neovim jako `Meta+Ctrl`. Dlatego konfiguracja Neovim zapisuje je jako `<M-C-H>`, `<M-C-L>`, `<M-C-Q>`, `<M-C-\>` i `<M-C-_>`. `Cmd-j` i `Cmd-k` są kodowane jako sekwencje używane przez mapowania `<M-j>` i `<M-k>`. W tabelach podano zarówno zamiar fizyczny, jak i kod Neovim tam, gdzie to potrzebne.
 
 <a id="tmux"></a>
 ## Tmux
 
 ### Konfiguracja i zachowanie terminala
 
-- Terminal domyślny: `tmux-256color`; dla Ghostty włączone są RGB, synchronized output i extended keys w formacie CSI-u.
+- Terminal domyślny: `tmux-256color`; dla WezTerm włączone są RGB, synchronized output i extended keys w formacie CSI-u.
 - `allow-passthrough` jest wyłączone, aby surowe odpowiedzi DCS nie trafiały do aplikacji TUI.
 - Mysz jest włączona.
 - Czas powtarzania mapowań wynosi 1000 ms.
@@ -2522,16 +2522,16 @@ Po aktywacji mapowania deweloperskie są globalne do końca sesji, nie tylko buf
 
 | Składnik | Wersja/stan | Dlaczego ma znaczenie |
 |---|---|---|
-| macOS + Ghostty | konfiguracja repo dla Ghostty | True color, synchronized output i extended keys CSI-u |
+| macOS + WezTerm | konfiguracja repo dla WezTerm | True color, synchronized output i extended keys CSI-u |
 | Neovim | `v0.12.4`, LuaJIT | nowe API LSP i gałąź `main` nvim-treesitter |
 | tmux | `3.6a` | tabela defaultów tmux w tym przewodniku odpowiada tej wersji |
 | zsh + Oh My Zsh | shell użytkownika | ładuje `PATH`, NVM i wyłącza XON/XOFF |
-| Karabiner-Elements | reguły repo dla Ghostty | fizyczne `Cmd-h`, `Cmd-l`, `Cmd-q`, `Cmd-\` i `Cmd--` do kodów terminalowych |
-| Nerd Font | wymagana w wybranym foncie Ghostty | poprawne ikony NvChad, drzewa, Git, DAP i Markdown |
+| WezTerm keybindings | mapowania `Cmd` w `wezterm.lua` | fizyczne `Cmd-h/j/k/l/q`, `Cmd-\`, `Cmd--` i `Cmd-n` do kodów terminalowych |
+| Nerd Font Symbols | dołączone do WezTerm jako fallback | poprawne ikony NvChad, drzewa, Git, DAP i Markdown |
 
 ### Instalacja warstw
 
-1. W katalogu repo uruchom `brew bundle --file Brewfile`. Deklarowane są: Neovim, tree-sitter-cli, tmux, fzf, fd, ripgrep, jq, stylua, ruff, Ghostty i Karabiner-Elements.
+1. W katalogu repo uruchom `brew bundle --file Brewfile`. Deklarowane są: Neovim, tree-sitter-cli, tmux, fzf, fd, ripgrep, jq, stylua, ruff i WezTerm.
 2. Zainstaluj NVM oraz domyślne Node LTS zgodnie z `README.md`; Node uruchamia część serwerów Mason i adapter JS/TS.
 3. Utwórz dowiązania przez `bash install.sh install` i sprawdź je przez `bash install.sh status`. Instalator wykonuje timestampowane backupy zastępowanych celów.
 4. Sklonuj TPM do `~/.tmux/plugins/tpm`, wczytaj konfigurację przez `tmux source-file "$HOME/.tmux.conf"`, a wewnątrz tmux naciśnij `Ctrl-s I`.
@@ -2693,7 +2693,7 @@ Brak pojedynczego opcjonalnego executable nie musi blokować całego edytora. Pr
 | stary parser po zmianie rewizji | `:TSUpdate` |
 | render Markdown nie działa | `:RenderMarkdown config`, `:RenderMarkdown debug`, sprawdź `markdown` i `markdown_inline` |
 
-### Tmux, Ghostty i kod klawisza
+### Tmux, WezTerm i kod klawisza
 
 1. Sprawdź składnię i przeładuj przez `tmux source-file "$HOME/.tmux.conf"`.
 2. Obejrzyj efektywne mapowania przez `tmux list-keys -T root`, `tmux list-keys -T prefix` i `tmux list-keys -T copy-mode-vi`.

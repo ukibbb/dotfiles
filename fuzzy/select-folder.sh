@@ -2,7 +2,7 @@
 #
 # ╔═══════════════════════════════════════════════════════════════════════════╗
 # ║                         SELECT-FOLDER.SH                                   ║
-# ║  Select a folder using FZF with Ghostty-themed colors                      ║
+# ║  Select a folder using FZF with WezTerm-themed colors                      ║
 # ║  Searches your entire home directory with smart exclusions                 ║
 # ╚═══════════════════════════════════════════════════════════════════════════╝
 #
@@ -74,7 +74,7 @@ command -v fzf &>/dev/null || {
 START_DIR="${1:-$HOME}"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FZF COLOR CONFIGURATION (Ghostty "Deep Space" theme)
+# FZF COLOR CONFIGURATION (WezTerm "Deep Space" theme)
 # ─────────────────────────────────────────────────────────────────────────────
 FZF_COLORS="--color=bg:#000000,fg:#e0e0e0,hl:#00d9ff"
 FZF_COLORS+=",bg+:#2a4a7a,fg+:#ffffff,hl+:#4dffff"

@@ -417,9 +417,9 @@ return {
         -- Apply all default mappings first
         api.config.mappings.default_on_attach(bufnr)
         local opts = { buffer = bufnr, noremap = true, silent = true }
-        -- Cmd+\ → open in vertical split (via Karabiner)
+        -- Cmd+\ → open in vertical split (encoded by WezTerm)
         vim.keymap.set("n", "<M-C-\\>", api.node.open.vertical, vim.tbl_extend("force", opts, { desc = "Open: Vertical Split" }))
-        -- Cmd+- → open in horizontal split (via Karabiner)
+        -- Cmd+- → open in horizontal split (encoded by WezTerm)
         vim.keymap.set("n", "<M-C-_>", api.node.open.horizontal, vim.tbl_extend("force", opts, { desc = "Open: Horizontal Split" }))
       end
       return {

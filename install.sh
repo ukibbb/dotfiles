@@ -18,7 +18,7 @@ NC='\033[0m'
 SYMLINKS=(
     ".zshrc:$HOME/.zshrc"
     "nvim:$HOME/.config/nvim"
-    "ghostty:$HOME/.config/ghostty/config"
+    "wezterm.lua:$HOME/.config/wezterm/wezterm.lua"
     "tmux.conf:$HOME/.tmux.conf"
 claude/settings.json:$HOME/.claude/settings.json
     "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
@@ -27,9 +27,7 @@ claude/settings.json:$HOME/.claude/settings.json
 )
 
 # Define copies (for apps that don't work with symlinks): "source:target"
-COPIES=(
-    "karabiner/karabiner.json:$HOME/.config/karabiner/karabiner.json"
-)
+COPIES=()
 
 print_success() { echo -e "${GREEN}✓${NC} $1"; }
 print_warning() { echo -e "${YELLOW}!${NC} $1"; }

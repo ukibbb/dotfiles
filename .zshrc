@@ -1,5 +1,8 @@
 export ZSH="$HOME/.oh-my-zsh"
 
+# Avoid macOS's low default descriptor limit in tmux and Bun applications.
+ulimit -S -n 65536 2>/dev/null || true
+
 if [[ -z "${DOTFILES_DIR:-}" ]]; then
   DOTFILES_ZSHRC="${(%):-%x}"
   [[ "$DOTFILES_ZSHRC" != /* ]] && DOTFILES_ZSHRC="$PWD/$DOTFILES_ZSHRC"
@@ -137,3 +140,11 @@ case ":$PATH:" in
 esac
 # pnpm end
 export PATH="$HOME/.local/bin:$PATH"
+
+# WezTerm shell integration for semantic prompts and working-directory tracking.
+# User vars require tmux DCS passthrough, which is intentionally disabled.
+if [[ "${TERM_PROGRAM:-}" == "WezTerm" ]] && [[ -r /Applications/WezTerm.app/Contents/Resources/wezterm.sh ]]; then
+  WEZTERM_SHELL_SKIP_USER_VARS=1
+  source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
+  unset WEZTERM_SHELL_SKIP_USER_VARS
+fi
