@@ -204,6 +204,19 @@ autocmd("FileType", {
   end,
 })
 
+-- TypeScript: 4-space indent
+autocmd("FileType", {
+  desc = "TypeScript 4-space indent",
+  group = "FileTypeSettings",
+  pattern = { "typescript", "typescriptreact" },
+  callback = function()
+    vim.opt_local.expandtab = true
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
+
 -- SECTION 9: CLAUDE.NVIM DEVELOPMENT MODE
 -- Auto-load development helpers when editing the claude.nvim plugin
 -- This sets up hot-reload keymaps automatically when you open plugin files
