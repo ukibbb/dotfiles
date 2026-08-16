@@ -73,7 +73,6 @@ end, { desc = "highlight selected text" })
 -- You lose the original ; (repeat last f/t motion), but ',' still works
 map("n", ";", ":", { desc = "enter command mode" })
 
-
 -- Ctrl+c: Copy entire file to clipboard
 -- %y+ = select all lines (%) and yank to system clipboard (+)
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
@@ -98,10 +97,15 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "move selection up" })
 
 -- J (normal mode): Join lines but keep cursor position
 -- Default J joins lines but moves cursor. This version keeps cursor in place.
--- mz = set mark 'z' at current position
--- J = join lines
--- `z = jump back to mark 'z'
-map("n", "J", "mzJ`z", { desc = "join lines (keep cursor)" })
+-- Save the cursor through the API so joining never overwrites a user mark.
+map("n", "J", function()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local count = vim.v.count
+  local command = (count > 0 and tostring(count) or "") .. "J"
+
+  vim.cmd.normal { command, bang = true }
+  vim.api.nvim_win_set_cursor(0, cursor)
+end, { desc = "join lines (keep cursor)" })
 
 -- SCROLLING (CENTERED)
 -- Keep cursor in the center of screen while scrolling for better visibility
@@ -151,7 +155,6 @@ map("n", "<leader>w", "<cmd>set wrap!<CR>", { desc = "toggle word wrap" })
 -- "+ = use system clipboard register
 -- yG = yank to last line
 map("n", "<leader>y", 'gg"+yG', { desc = "copy entire file to clipboard" })
-
 
 -- FORMATTING
 -- Code formatting using conform.nvim plugin
@@ -204,15 +207,19 @@ if require("nvconfig").ui.tabufline.enabled then
   map("n", "<leader>b", "<cmd>enew<CR>", { desc = "buffer new" })
 
   -- Cmd+H: WezTerm sends Ctrl+Alt+h as <M-C-H>
-  map("n", "<M-C-H>", function() require("nvchad.tabufline").prev() end, { desc = "buffer goto prev" })
+  map("n", "<M-C-H>", function()
+    require("nvchad.tabufline").prev()
+  end, { desc = "buffer goto prev" })
 
   -- Cmd+L: WezTerm sends Ctrl+Alt+l as <M-C-L>
-  map("n", "<M-C-L>", function() require("nvchad.tabufline").next() end, { desc = "buffer goto next" })
+  map("n", "<M-C-L>", function()
+    require("nvchad.tabufline").next()
+  end, { desc = "buffer goto next" })
 
   -- Cmd+Q: WezTerm sends Ctrl+Alt+q as <M-C-Q>
   map("n", "<M-C-Q>", function()
     local ok, err = pcall(require("nvchad.tabufline").close_buffer)
-    if not ok and not err:match("E517") then
+    if not ok and not err:match "E517" then
       error(err)
     end
   end, { desc = "buffer close" })
@@ -229,7 +236,6 @@ map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
 -- Leader+/: Toggle comment in visual mode
 -- gc is Neovim's built-in operator for toggling comments on a selection
 map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
-
 
 -- TELESCOPE (FUZZY FINDER)
 -- Telescope is a powerful fuzzy finder for files, text, git, and more
@@ -276,7 +282,7 @@ map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git 
 -- Leader+th: Open NvChad's theme picker to change colorschemes
 map("n", "<leader>th", function()
   require("nvchad.themes").open()
-end, { desc = "telescope nvchad themes" })
+end, { desc = "nvchad theme picker" })
 
 -- Leader+ff: Find files in the project (respects .gitignore)
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
@@ -291,7 +297,6 @@ map(
   "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
   { desc = "telescope find all files" }
 )
-
 
 -- DISTANT (REMOTE DEVELOPMENT)
 -- distant.nvim for editing files on Raspberry Pi or remote servers
@@ -322,4 +327,9 @@ map("n", "<leader>rx", ":DistantSpawn ", { desc = "distant spawn remote command"
 
 -- Leader+rp: Quick connect to Raspberry Pi
 -- Shortcut for connecting to Pi at known IP
-map("n", "<leader>rp", "<cmd>DistantLaunch ssh://ukibbb@192.168.101.7<CR>", { desc = "distant connect to Raspberry Pi" })
+map(
+  "n",
+  "<leader>rp",
+  "<cmd>DistantLaunch ssh://ukibbb@192.168.101.7<CR>",
+  { desc = "distant connect to Raspberry Pi" }
+)

@@ -1,6 +1,6 @@
 # Tmux i Neovim: mapowania, wtyczki i przepływy pracy
 
-> Stan opisany w tym zestawie dokumentów odpowiada konfiguracji repozytorium zweryfikowanej 9 sierpnia 2026. Zachowanie wtyczek pochodzi z lokalnie zainstalowanych rewizji przypiętych w `nvim/lazy-lock.json`, a nie z dokumentacji najnowszej wersji w sieci. Dla każdej wtyczki źródłem nadrzędnym jest kod przypiętego commita; internetowe README i strony dokumentacji służą tylko wtedy, gdy odpowiadają tej samej rewizji.
+> Stan opisany w tym zestawie dokumentów odpowiada konfiguracji repozytorium zweryfikowanej 16 sierpnia 2026. Zachowanie wtyczek pochodzi z lokalnie zainstalowanych rewizji przypiętych w `nvim/lazy-lock.json`, a nie z dokumentacji najnowszej wersji w sieci. Dla każdej wtyczki źródłem nadrzędnym jest kod przypiętego commita; internetowe README i strony dokumentacji służą tylko wtedy, gdy odpowiadają tej samej rewizji.
 
 Dokumenty używają jednokolumnowych list zamiast tabel, aby zachować czytelność w druku i jednoznacznie odróżniać separatory od skrótów klawiszowych.
 

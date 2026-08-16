@@ -26,7 +26,7 @@
 - **`y`**: Kopiowanie zaznaczenia do bufora tmux. **Kontekst:** copy-mode-vi. **Stan:** **Aktywne lokalne**.
 - **zakończenie przeciągania myszą**: Nie wychodzi automatycznie z copy mode. **Kontekst:** copy-mode-vi. **Stan:** **Warunkowe/wyłączone**: domyślna akcja została odpięta.
 
-## Przydatne domyślne mapowania tmux 3.6a, które nadal działają
+## Przydatne domyślne mapowania tmux 3.7b, które nadal działają
 
 - **`d`**: Odłącz klienta od sesji. **Obszar:** sesje.
 - **`s`**: Interaktywna lista sesji. **Obszar:** sesje.

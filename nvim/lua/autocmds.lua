@@ -12,8 +12,8 @@ local vim = vim
 -- We set this after ColorScheme loads so it doesn't get overwritten by the theme
 vim.api.nvim_set_hl(0, "@keyword.exception.python", { fg = "#F07178" })
 
-local autocmd = vim.api.nvim_create_autocmd  -- Function to create autocommands
-local augroup = vim.api.nvim_create_augroup  -- Function to create autocommand groups
+local autocmd = vim.api.nvim_create_autocmd -- Function to create autocommands
+local augroup = vim.api.nvim_create_augroup -- Function to create autocommand groups
 
 -- ABOUT AUTOCOMMAND GROUPS (augroups)
 -- Groups organize related autocommands together
@@ -24,16 +24,16 @@ local augroup = vim.api.nvim_create_augroup  -- Function to create autocommand g
 -- Flash/highlight text briefly when you yank (copy) it
 -- This provides visual feedback so you know what was copied
 
-augroup("YankHighlight", { clear = true })  -- Create group named "YankHighlight"
+augroup("YankHighlight", { clear = true }) -- Create group named "YankHighlight"
 
-autocmd("TextYankPost", {  -- Event: after yanking text
-  desc = "Highlight yanked text",  -- Description (shows in :autocmd)
-  group = "YankHighlight",         -- Assign to our group
+autocmd("TextYankPost", { -- Event: after yanking text
+  desc = "Highlight yanked text", -- Description (shows in :autocmd)
+  group = "YankHighlight", -- Assign to our group
   callback = function()
     -- vim.highlight.on_yank() is a built-in helper function
     -- higroup = highlight group to use (default: "IncSearch")
     -- timeout = how long to highlight in milliseconds
-    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+    vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
   end,
 })
 
@@ -42,13 +42,13 @@ autocmd("TextYankPost", {  -- Event: after yanking text
 -- Extremely useful - you don't lose your place!
 augroup("RestoreCursor", { clear = true })
 
-autocmd("BufReadPost", {  -- Event: after reading a buffer (opening a file)
+autocmd("BufReadPost", { -- Event: after reading a buffer (opening a file)
   desc = "Restore cursor to last position",
   group = "RestoreCursor",
   callback = function()
     -- Get the mark " (double quote) which stores last cursor position
-    local mark = vim.api.nvim_buf_get_mark(0, '"')  -- 0 = current buffer
-    local line_count = vim.api.nvim_buf_line_count(0)  -- Total lines in file
+    local mark = vim.api.nvim_buf_get_mark(0, '"') -- 0 = current buffer
+    local line_count = vim.api.nvim_buf_line_count(0) -- Total lines in file
 
     -- Only restore if:
     -- 1. mark[1] > 0 = mark exists (line number > 0)
@@ -67,13 +67,13 @@ autocmd("BufReadPost", {  -- Event: after reading a buffer (opening a file)
 
 augroup("AutoResize", { clear = true })
 
-autocmd("VimResized", {  -- Event: Neovim window was resized
+autocmd("VimResized", { -- Event: Neovim window was resized
   desc = "Auto-resize splits when window is resized",
   group = "AutoResize",
   callback = function()
     -- tabdo = execute command in all tabs
     -- wincmd = = make all windows equal size
-    vim.cmd("tabdo wincmd =")
+    vim.cmd "tabdo wincmd ="
   end,
 })
 
@@ -83,29 +83,29 @@ autocmd("VimResized", {  -- Event: Neovim window was resized
 
 augroup("CloseWithQ", { clear = true })
 
-autocmd("FileType", {  -- Event: filetype was detected for a buffer
+autocmd("FileType", { -- Event: filetype was detected for a buffer
   desc = "Close certain filetypes with just 'q'",
   group = "CloseWithQ",
   -- pattern = list of filetypes this applies to
   pattern = {
-    "help",              -- :help windows
-    "qf",                -- Quickfix list (:copen)
-    "lspinfo",           -- :LspInfo window
-    "man",               -- :Man pages
-    "notify",            -- Notification windows
-    "spectre_panel",     -- Search/replace plugin
-    "startuptime",       -- :StartupTime profiling
-    "checkhealth",       -- :checkhealth window
+    "help", -- :help windows
+    "qf", -- Quickfix list (:copen)
+    "lspinfo", -- :LspInfo window
+    "man", -- :Man pages
+    "notify", -- Notification windows
+    "spectre_panel", -- Search/replace plugin
+    "startuptime", -- :StartupTime profiling
+    "checkhealth", -- :checkhealth window
   },
   callback = function(event)
     -- event.buf = buffer number where the event occurred
-    vim.bo[event.buf].buflisted = false  -- Don't show in buffer list
+    vim.bo[event.buf].buflisted = false -- Don't show in buffer list
 
     -- Set buffer-local keymap: q = close window
     -- buffer = event.buf means this only applies to this specific buffer
     vim.keymap.set("n", "q", "<cmd>close<CR>", {
       buffer = event.buf,
-      silent = true,  -- Don't show message when pressing q
+      silent = true, -- Don't show message when pressing q
       desc = "Close this window",
     })
   end,
@@ -119,18 +119,18 @@ autocmd("FileType", {  -- Event: filetype was detected for a buffer
 -- Example: :w ~/new/deep/path/file.lua creates ~/new/deep/path/ if needed
 augroup("AutoMkdir", { clear = true })
 
-autocmd("BufWritePre", {  -- Event: before writing a buffer (saving)
+autocmd("BufWritePre", { -- Event: before writing a buffer (saving)
   desc = "Auto-create parent directories",
   group = "AutoMkdir",
   callback = function(event)
     -- Only for regular files (not special buffers)
-    if event.match:match("^%w%w+://") then
-      return  -- Skip URLs (fugitive://, oil://, etc.)
+    if event.match:match "^%w%w+://" then
+      return -- Skip URLs (fugitive://, oil://, etc.)
     end
 
     -- Get directory path from full file path
     local file = vim.uv.fs_realpath(event.match) or event.match
-    local dir = vim.fn.fnamemodify(file, ":p:h")  -- :h = head (parent directory)
+    local dir = vim.fn.fnamemodify(file, ":p:h") -- :h = head (parent directory)
 
     -- Create directory if it doesn't exist
     -- 755 = permissions (rwxr-xr-x)
@@ -145,10 +145,10 @@ autocmd("BufWritePre", {  -- Event: before writing a buffer (saving)
 
 augroup("TrimWhitespace", { clear = true })
 
-autocmd("BufWritePre", {  -- Event: before writing/saving
+autocmd("BufWritePre", { -- Event: before writing/saving
   desc = "Remove trailing whitespace on save",
   group = "TrimWhitespace",
-  pattern = "*",  -- Apply to all files
+  pattern = "*", -- Apply to all files
   callback = function()
     -- Save current cursor position
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
@@ -156,7 +156,7 @@ autocmd("BufWritePre", {  -- Event: before writing/saving
     -- %s = substitute command (like sed)
     -- \s\+$ = one or more whitespace characters at end of line
     -- //e = replace with nothing, 'e' flag suppresses error if no match
-    vim.cmd([[%s/\s\+$//e]])
+    vim.cmd [[%s/\s\+$//e]]
 
     -- Restore cursor position (substitute might have moved it)
     pcall(vim.api.nvim_win_set_cursor, 0, cursor_pos)
@@ -175,8 +175,8 @@ autocmd("FileType", {
   group = "FileTypeSettings",
   pattern = { "markdown", "text", "gitcommit" },
   callback = function()
-    vim.opt_local.wrap = true       -- Enable line wrapping
-    vim.opt_local.spell = true      -- Enable spell checking
+    vim.opt_local.wrap = true -- Enable line wrapping
+    vim.opt_local.spell = true -- Enable spell checking
   end,
 })
 
@@ -186,9 +186,9 @@ autocmd("FileType", {
   group = "FileTypeSettings",
   pattern = "go",
   callback = function()
-    vim.opt_local.expandtab = false  -- Use real tabs, not spaces
-    vim.opt_local.tabstop = 4        -- Tab = 4 characters wide
-    vim.opt_local.shiftwidth = 4     -- Indent = 4 characters
+    vim.opt_local.expandtab = false -- Use real tabs, not spaces
+    vim.opt_local.tabstop = 4 -- Tab = 4 characters wide
+    vim.opt_local.shiftwidth = 4 -- Indent = 4 characters
   end,
 })
 
@@ -231,8 +231,8 @@ augroup("ClaudeNvimDev", { clear = true })
 autocmd("BufEnter", {
   desc = "Auto-load claude.nvim dev helpers",
   group = "ClaudeNvimDev",
-  pattern = "*/claude.nvim/lua/*.lua",  -- Only files in the plugin
-  once = true,                           -- Fire only once, then remove
+  pattern = "*/claude.nvim/lua/*.lua", -- Only files in the plugin
+  once = true, -- Fire only once, then remove
   callback = function()
     -- pcall catches errors if the module doesn't exist yet
     local ok, dev = pcall(require, "claude.dev")
@@ -253,8 +253,8 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
   desc = "Custom FilePost event for lazy-loading",
   group = "FilePost",
   callback = function(args)
-    local file = vim.api.nvim_buf_get_name(args.buf)  -- Get filename
-    local buftype = vim.bo[args.buf].buftype          -- Get buffer type
+    local file = vim.api.nvim_buf_get_name(args.buf) -- Get filename
+    local buftype = vim.bo[args.buf].buftype -- Get buffer type
 
     -- vim.g.ui_entered tracks if UIEnter has fired
     if not vim.g.ui_entered and args.event == "UIEnter" then
@@ -270,7 +270,7 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
       vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
 
       -- Delete this augroup (only need to fire once)
-      vim.api.nvim_del_augroup_by_name("FilePost")
+      vim.api.nvim_del_augroup_by_name "FilePost"
     end
   end,
 })

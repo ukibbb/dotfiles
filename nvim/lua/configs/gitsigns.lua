@@ -12,13 +12,13 @@ return {
   -- SIGN CHARACTERS
   -- These are the icons shown in the sign column (gutter) next to changed lines
   -- Each sign type can have a custom text character
-  
+
   signs = {
     -- delete: Shows where lines were removed
     -- 󰍵 is a Nerd Font icon (trash/delete icon)
     -- Default signs for add, change, etc. are kept (usually vertical bars)
     delete = { text = "󰍵" },
-    
+
     -- changedelete: Shows where lines were both changed AND deleted
     -- 󱕖 is a Nerd Font icon representing modified-delete
     -- This happens when you modify a line and delete adjacent lines
@@ -30,9 +30,9 @@ return {
     delay = 300,
     virt_text_pos = "eol",
   },
-  
+
   -- OTHER OPTIONS (using defaults)
-  
+
   -- Gitsigns has many other options that use sensible defaults:
   -- signs.add = { text = "│" }           -- Added lines (green bar)
   -- signs.change = { text = "│" }        -- Modified lines (blue bar)

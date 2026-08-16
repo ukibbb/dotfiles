@@ -14,6 +14,8 @@ local parsers = {
   "typescript",
   "tsx",
   "javascript",
+  "json",
+  "sql",
 }
 
 local filetypes = {
@@ -28,6 +30,8 @@ local filetypes = {
   "typescriptreact",
   "javascript",
   "javascriptreact",
+  "json",
+  "sql",
 }
 
 function M.setup()

@@ -7,9 +7,13 @@
 
 **Ładowanie lokalne:** `lazy=false`, bo ta wersja nie wspiera lazy-loadingu; build wykonuje `:TSUpdate`. Setup instaluje parsery i przy `FileType` wywołuje `vim.treesitter.start`.
 
-**Konfigurowany zestaw parserów:** `lua`, `luadoc`, `printf`, `vim`, `vimdoc`, `go`, `python`, `typescript`, `tsx`, `javascript`, `html`, `markdown`, `markdown_inline`.
+**Konfigurowany zestaw parserów:** `lua`, `luadoc`, `printf`, `vim`, `vimdoc`, `go`, `html`, `markdown`, `markdown_inline`, `python`, `typescript`, `tsx`, `javascript`, `json`, `sql`.
 
-**Filetype z automatycznym startem:** `lua`, `vim`, `help`, `go`, `python`, `typescript`, `typescriptreact`, `javascript`, `javascriptreact`, `html`, `markdown`. Język `tsx` jest zarejestrowany dla `typescriptreact`.
+**Filetype z automatycznym startem:** `lua`, `vim`, `help`, `go`, `html`, `markdown`, `python`, `typescript`, `typescriptreact`, `javascript`, `javascriptreact`, `json`, `sql`. Język `tsx` jest zarejestrowany dla `typescriptreact`.
+
+Parser `sql` obsługuje relacyjne Queryery Dbout, notatki SQL DBee, bufory Dadbod/DBUI i query pad Grip. Tylko DBee używa drzewa do znalezienia instrukcji pod kursorem przez `Enter`; Dadbod, DBUI, Dbout i Grip wykonują tekst przez własną warstwę poleceń lub CLI. Parser `json` obsługuje Queryer Dbout dla MongoDB oraz JSON-owe bufory Inspectora i Viewera.
+
+Treesitter zapewnia tu parsowanie, podświetlanie i warunkowy indent, ale nie wykonuje ani nie formatuje SQL. W Dbout wykonanie `F6` realizują sterowniki Node, w Dadbod/DBUI klient CLI, a w Grip adapter CLI. Grip wybiera fenced block Markdown własną implementacją notebooka; parser nie odpowiada za jego wykonanie. W DBee po wybraniu instrukcji przez Treesitter wykonuje ją backend DBee.
 
 **Polecenia:** `:TSInstall[!] {language...}`, `:TSInstallFromGrammar[!] {language...}`, `:TSUpdate [language...]`, `:TSUninstall {language...}`, `:TSLog`. Wariant `!` nadal wymaga co najmniej jednej nazwy języka.
 
@@ -29,7 +33,7 @@ Folding Treesitter nie jest lokalnie ustawiony, incremental selection starego `n
 ### Tutorial: instalacja i inspekcja
 
 1. Sprawdź narzędzia: `:echo executable('tree-sitter')`, `:echo executable('cc')`, `:echo executable('curl')`.
-2. `:TSInstall html markdown markdown_inline` instaluje parsery asynchronicznie. `:TSLog` pokazuje pobieranie, generowanie i kompilację.
+2. `:TSInstall html markdown markdown_inline json sql` instaluje parsery asynchronicznie. `:TSLog` pokazuje pobieranie, generowanie i kompilację.
 3. Otwórz plik i wykonaj `:InspectTree`, aby zobaczyć drzewo; `:Inspect` pokazuje capture/highlight pod kursorem.
 4. Jeżeli parser istnieje, ale podświetlanie nie startuje, sprawdź czy filetype znajduje się na lokalnej liście i ręcznie porównaj `:lua vim.treesitter.start()`.
 5. Po zmianie commita wtyczki wykonaj `:TSUpdate`, ponieważ parsery są zgodne z konkretnymi rewizjami definicji w pluginie.

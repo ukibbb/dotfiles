@@ -15,7 +15,7 @@
 - **`Ctrl-c`**: Kopia całego pliku do rejestru systemowego `+`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`Ctrl-a`**: Zaznaczenie całego pliku. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`J` / `K`**: Przesunięcie zaznaczonych wierszy w dół / górę i ponowne wcięcie. **Tryb:** `v`. **Stan:** **Aktywne lokalne**.
-- **`J`**: Połączenie wierszy bez przesuwania kursora. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`J`**: Połączenie wierszy bez przesuwania kursora; pozycja jest zachowywana przez API, więc skrót nie tworzy ani nie przenosi marki `z`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`Ctrl-d` / `Ctrl-u`**: Pół strony w dół / górę i wycentrowanie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`n` / `N`**: Następny / poprzedni wynik, wycentrowany i odsłonięty z folda. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`p`**: Wklejenie nad zaznaczenie bez nadpisania rejestru wklejanego tekstu. **Tryb:** `x`. **Stan:** **Aktywne lokalne**.
@@ -43,13 +43,18 @@ Mapowanie `v` jest zainstalowane także w Select. Wbudowany operator komentarza 
 
 ## Telescope i wybór motywu
 
+Przed pickerami dwa globalne launchery obsługują drzewo plików:
+
+- **`<leader>e`**: Przełącz nvim-tree. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>E`**: Otwórz nvim-tree i odsłoń bieżący plik. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+
 - **`<leader>ff`**: Pliki, z dotfiles, z poszanowaniem ignore. **Stan:** **Aktywne lokalne**.
 - **`<leader>fa`**: Wszystkie pliki: hidden, ignored i symlinki. **Stan:** **Aktywne lokalne**.
 - **`<leader>fw`**: `live_grep`, także pliki ukryte, bez wnętrza `.git/`. **Stan:** **Aktywne lokalne**.
 - **`<leader>fW`**: `live_grep` z tekstem początkowym równym słowu pod kursorem. **Stan:** **Aktywne lokalne**.
 - **`<leader>fb`**: Otwarte bufory. **Stan:** **Aktywne lokalne**.
 - **`<leader>fh`**: Tagi pomocy. **Stan:** **Aktywne lokalne**.
-- **`<leader>ma`**: Marki. **Stan:** **Aktywne lokalne**.
+- **`<leader>ma`**: Picker `:Telescope marks` dla natywnych marek Neovim; nie pokazuje bookmarków `marks.nvim`. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
 - **`<leader>fo`**: Ostatnio otwarte pliki. **Stan:** **Aktywne lokalne**.
 - **`<leader>fz`**: Wyszukiwanie w bieżącym buforze. **Stan:** **Aktywne lokalne**.
 - **`<leader>fZ`**: Wyszukiwanie w buforze ze słowem pod kursorem. **Stan:** **Aktywne lokalne**.
@@ -58,6 +63,52 @@ Mapowanie `v` jest zainstalowane także w Select. Wbudowany operator komentarza 
 - **`<leader>th`**: Picker motywów NvChad. **Stan:** **Aktywne lokalne**.
 
 W każdym pickerze lokalne `Alt-j` / `Alt-k` poruszają wyborem w Insert, a `q` zamyka picker w Normal.
+
+## Wayfinder
+
+- **`<leader>Wf`**: Otwórz Wayfinder dla symbolu pod kursorem albo bieżącego pliku. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Wn`**: Otwórz następny poprawny element roboczego Trail, z zawijaniem i pomijaniem brakujących plików. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Wp`**: Otwórz poprzedni poprawny element roboczego Trail. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Wo`**: Otwórz bieżący poprawny element roboczego Trail. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Ws`**: Otwórz Wayfinder bezpośrednio na fasecie `Trail`; nie wykonuje automatycznie resume zapisu po restarcie. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+
+Wielkie `W` jest częścią skrótów. Pełna mapa trzech paneli, Explore, filtra, Trail, zapisów i quickfix znajduje się w [tutorialu Wayfinder](plugins/13-wayfinder.md#plugin-wayfinder).
+
+## Natywne marki i `marks.nvim`
+
+Wszystkie poniższe mapowania są aktywnymi defaultami `marks.nvim` w trybie Normal. Operacje na literach kończą się prawdziwą marką Neovim; bookmarki cyfr są osobnymi, sesyjnymi extmarkami wtyczki.
+
+- **`m{a-z}` / `m{A-Z}`**: Ustaw natywną markę lokalną / globalną. Obsługiwane są też specjalne nazwy `.`, `^`, `'`, `` ` ``, `"`, `<` i `>`; dokładne `m[` / `m]` oraz `m0`-`m9` mają opisane niżej znaczenie wtyczki.
+- **`m,`**: Ustaw najniższą wolną markę `a`-`z` w bieżącym buforze.
+- **`m;`**: Ustaw następną wolną małą markę, gdy wiersz nie ma śledzonej marki; w przeciwnym razie usuń wszystkie śledzone natywne marki tego wiersza.
+- **`dm{znak}`**: Usuń wskazaną zarejestrowaną literę albo obsługiwaną markę specjalną; wariant wielkoliterowy działa z cache bieżącego bufora.
+- **`dm-`**: Usuń wszystkie śledzone natywne marki bieżącego wiersza.
+- **`dm<Space>`**: Wykonaj `:delmarks!` dla bieżącego bufora i wyczyść jego cache oraz znaki. Czyści też changelistę; nie usuwa globalnie `A`-`Z` ani `0`-`9`.
+- **`m]` / `m[`**: Następna / poprzednia literowa marka według położenia w bieżącym buforze, z cyklicznym zawijaniem. Nie jest to natywne ustawianie marek specjalnych `]` / `[`.
+- **`m:`**: Zapytaj o nazwę marki i otwórz fokusowany, edytowalny podgląd w nowym floacie; zamknij go przez `:close`.
+- **`m0`-`m9`**: Dodaj bookmark odpowiedniej grupy w bieżącym wierszu. Nie ustawia to natywnej marki numerowanej.
+- **`dm0`-`dm9`**: Usuń całą odpowiednią grupę bookmarków ze wszystkich buforów.
+- **`m}` / `m{`**: Z bookmarka dokładnie pod kursorem przejdź do następnego / poprzedniego bookmarka tej samej grupy, także w innym buforze.
+- **`dm=`**: Usuń jeden bookmark pod kursorem; przy kilku grupach na tym samym wierszu wybór grupy nie jest gwarantowany.
+
+`<leader>ma` pozostaje niezależnym pickerem Telescope dla natywnych marek, a nie interfejsem bookmarków. Polecenia list, quickfix, znaki, trwałość ShaDa i komplet ograniczeń są opisane w [tutorialu marek](plugins/14-marks.md#plugin-marks).
+
+## Bazy danych
+
+- **`<leader>Bd`**: Przełącz czteropanelowy workspace DBee. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Bo`**: Otwórz manager połączeń Dbout w Telescope. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Bu`**: Przełącz drawer Dadbod UI. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Bg`**: Otwórz picker połączeń Dadbod Grip. **Tryb:** `n`. **Stan:** **Aktywne lokalne**.
+- **`<leader>Bs`**: Zapisz tymczasowy query utworzony przez DBUI. **Tryb/kontekst:** `n`, bufor DBUI `sql`, `mysql` albo `plsql` z dostępną akcją save. **Stan:** **Kontekstowe lokalne**.
+- **`<leader>Bp`**: Edytuj bind parameters query DBUI. **Tryb/kontekst:** `n`, bufor SQL faktycznie przypisany do DBUI. **Stan:** **Kontekstowe lokalne**.
+- **`F6`**: Wykonaj cały bufor albo wizualny zakres pełnych wierszy. **Tryb/kontekst:** `n,i,v`, tylko Queryer Dbout. **Stan:** **Kontekstowe**.
+- **`F7`**: Sformatuj cały bufor albo wizualny zakres pełnych wierszy i zastąp wskazany tekst wynikiem formattera. **Tryb/kontekst:** `n,i,v`, tylko Queryer Dbout. **Stan:** **Kontekstowe**.
+- **`F8`**: Przełącz Inspector powiązany z aktywnym Queryerem. **Tryb/kontekst:** `n,i`, Queryer, Inspector albo Viewer Dbout. **Stan:** **Kontekstowe**.
+- **`F9`**: Przełącz Viewer powiązany z aktywnym Queryerem. **Tryb/kontekst:** `n,i`, Queryer, Inspector albo Viewer Dbout. **Stan:** **Kontekstowe**.
+
+`F6` i `F7` nie wybierają instrukcji pod kursorem, a Visual ogranicza wiersze, nie kolumny. Surowy Dadbod jest dostępny przez `:DB` bez globalnego klawisza. `g:db_ui_disable_mappings_sql=1` wyłącza upstreamowe DBUI `<leader>W`, `<leader>S` i `<leader>E`, dzięki czemu nie kolidują z Wayfinderem. `Bs` i `Bp` są dodawane tylko po rozpoznaniu `b:dbui_db_key_name`; zapis `:write` nadal wykonuje query DBUI.
+
+Grip ma własne mapowania buforowe: `Ctrl-p` otwiera palette, `1`/`2`/`3` przechodzi między sidebarem, query padem i gridem, `Ctrl-Enter` wykonuje query, `a` stosuje obejrzane zmiany, `u` je wycofuje, a `?` pokazuje pomoc. Pełne mapy zawierają [tutorial DBee](plugins/11-nvim-dbee.md#plugin-nvim-dbee), [tutorial Dbout](plugins/12-dbout.md#plugin-dbout), [tutorial Dadbod/DBUI](plugins/15-vim-dadbod.md#plugin-vim-dadbod) i [tutorial Grip](plugins/16-dadbod-grip.md#plugin-dadbod-grip).
 
 ## Git i przegląd różnic
 

@@ -7,7 +7,9 @@
 
 **Konfiguracja lokalna:** układ 87% szerokości i 80% wysokości, prompt u góry, preview 55%, wyniki rosnąco. Pliki ukryte są widoczne, `.git/` jest ignorowane, `live_grep` dodaje `--hidden`. Lokalne mapowania pickerów: `Alt-j`, `Alt-k` w Insert i `q` w Normal.
 
-**Aktywne launchery:** `<leader>ff`, `<leader>fa`, `<leader>fw`, `<leader>fW`, `<leader>fb`, `<leader>fh`, `<leader>ma`, `<leader>fo`, `<leader>fz`, `<leader>fZ`, `<leader>cm`, `<leader>gt`. `<leader>th` używa osobnego pickera NvChad i nie dziedziczy mapowań Telescope.
+**Aktywne launchery:** `<leader>ff`, `<leader>fa`, `<leader>fw`, `<leader>fW`, `<leader>fb`, `<leader>fh`, `<leader>ma`, `<leader>fo`, `<leader>fz`, `<leader>fZ`, `<leader>cm`, `<leader>gt`, `<leader>Bo`. `<leader>th` używa osobnego pickera NvChad i nie dziedziczy mapowań Telescope.
+
+`<leader>ma` uruchamia `:Telescope marks`, czyli builtin Telescope pokazujący natywne marki Neovim. Nie jest to picker dostarczany przez `marks.nvim` i nie obejmuje jego ulotnych bookmarków sesji; natywne marki ustawione za pośrednictwem `marks.nvim` nadal mogą się pojawić.
 
 ### Domyślne klawisze pickera
 
@@ -37,6 +39,24 @@
 - **`Enter`**: Otwarcie pliku. **Picker:** `git_status`.
 - **`Enter`, `Ctrl-t`, `Ctrl-r`, `Ctrl-a`, `Ctrl-s`, `Ctrl-d`, `Ctrl-y`**: Checkout, track, rebase, utwórz, `git switch`, usuń, merge; w tmux `Ctrl-s` wymaga `Ctrl-s Ctrl-s`. **Picker:** `git_branches`.
 
+### Rozszerzenie Dbout
+
+`<leader>Bo` jest aktywnym launcherem Normal: ładuje Dbout wraz z zależnością Telescope, jawnie ładuje rozszerzenie `dbout` i otwiera picker profili połączeń. Bezpośrednie `:Telescope dbout` również działa na zimnym starcie w tej konfiguracji, ponieważ wyszukanie modułu rozszerzenia uruchamia autoload Lazy dla Dbout; `<leader>Bo` pozostaje jednoznacznym lokalnym launcherem.
+
+Akcje rozszerzenia są zmapowane wyłącznie w Normal, a domyślne `select_default` jest zastąpione pustą funkcją. Picker startuje zwykle w Insert, więc najpierw użyj `Esc`; `Enter` w Insert nie otwiera profilu.
+
+- **`Enter`**: Otwórz zaznaczony profil w nowym Queryerze. **Tryb:** `n`.
+- **`n`**: Zamknij picker, utwórz profil i odśwież albo ponownie otwórz listę. **Tryb:** `n`.
+- **`d`**: Natychmiast usuń zaznaczony profil i odśwież listę. Nie ma potwierdzenia ani undo. **Tryb:** `n`.
+- **`e`**: Edytuj nazwę i connection string profilu; typ bazy pozostaje bez zmian. **Tryb:** `n`.
+- **`a`**: Otwórz profil i dołącz go do bufora bieżącego po zakończeniu asynchronicznego otwierania. **Tryb:** `n`.
+
+### Telescope wewnątrz Dadbod Grip
+
+Lokalne `picker="telescope"` deleguje do Telescope proste pickery Grip: tabele, historię i command palette. Picker połączeń uruchamiany przez `<leader>Bg` oraz picker zapisanych query pozostają własnymi, złożonymi oknami Grip. Wtyczka nie rejestruje rozszerzenia `:Telescope grip`, a `<leader>Bg` nie jest bezpośrednim launcherem Telescope.
+
+`<leader>Bp` również nie jest pickerem Telescope: to buforowa akcja DBUI edytująca bind parameters.
+
 **Polecenie:** `:Telescope {builtin} [opcje]`, na przykład `:Telescope resume`, `:Telescope lsp_references`, `:Telescope git_branches`. To jedno publiczne polecenie udostępnia builtiny i rozszerzenia.
 
 **Wymagania:** Neovim co najmniej 0.10.4, `ripgrep` dla live grep, `fd` dla szybkiego find files, Git dla pickerów Git. Wszystkie trzy executable są przewidziane przez środowisko repo.
@@ -54,7 +74,7 @@ Picker składa się z promptu, listy wyników i preview. Startuje w Insert, aby 
 - **LSP**: `lsp_definitions`, `lsp_implementations`, `lsp_type_definitions`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_dynamic_workspace_symbols`, `lsp_incoming_calls`, `lsp_outgoing_calls`.
 - **Git**: `git_bcommits`, `git_branches`, `git_stash` oraz lokalnie używane `git_commits`, `git_status`.
 - **składnia i historia**: `treesitter`, `pickers`, `resume`, `builtin`.
-- **rozszerzenia UI**: `themes` i `terms` dostarczane przez NvChad UI po dynamicznym załadowaniu.
+- **rozszerzenia**: `themes` jest wskazane w lokalnym `extensions_list`, a `themes` i `terms` dostarcza NvChad UI do dynamicznego załadowania po nazwie; `dbout` jest jawnie ładowane przez konfigurację Dbout dopiero razem z tą wtyczką.
 
 `builtin` pozwala wybrać nazwę pickera z listy, `pickers` pokazuje wcześniejsze pickery, a `resume` wraca do ostatniego promptu i stanu. Opcje można dopisać po nazwie, na przykład `:Telescope find_files hidden=true no_ignore=true`.
 

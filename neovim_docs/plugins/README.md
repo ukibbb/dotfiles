@@ -36,13 +36,24 @@ Każdy dokument opisuje najpierw to, co działa bez zmiany konfiguracji. Funkcje
 - [`cmp-async-path`](03-lsp-completion-snippets-autopairs.md#plugin-cmp-async-path)
 - [`friendly-snippets`](03-lsp-completion-snippets-autopairs.md#plugin-friendly-snippets)
 
-### Nawigacja, składnia i Markdown
+### Nawigacja, marki, składnia i Markdown
 
 - [`telescope.nvim`](04-telescope-nvim-tree.md#plugin-telescope)
 - [`nvim-tree.lua`](04-telescope-nvim-tree.md#plugin-nvim-tree)
+- [`wayfinder.nvim`](13-wayfinder.md#plugin-wayfinder)
+- [`marks.nvim`](14-marks.md#plugin-marks)
 - [`nvim-treesitter`](05-treesitter-autotag-markdown.md#plugin-nvim-treesitter)
 - [`nvim-ts-autotag`](05-treesitter-autotag-markdown.md#plugin-nvim-ts-autotag)
 - [`render-markdown.nvim`](05-treesitter-autotag-markdown.md#plugin-render-markdown)
+
+### Bazy danych
+
+- [`nvim-dbee`](11-nvim-dbee.md#plugin-nvim-dbee)
+- [`dbout.nvim`](12-dbout.md#plugin-dbout)
+- [`vim-dadbod`](15-vim-dadbod.md#plugin-vim-dadbod)
+- [`vim-dadbod-ui`](15-vim-dadbod.md#plugin-vim-dadbod-ui)
+- [`vim-dadbod-completion`](15-vim-dadbod.md#plugin-vim-dadbod-completion)
+- [`dadbod-grip.nvim`](16-dadbod-grip.md#plugin-dadbod-grip)
 
 ### Git
 

@@ -3,9 +3,9 @@
 -- vim.g   = Global variables (g:variable in Vimscript)
 
 -- Create shortcuts for cleaner code
-local opt = vim.opt  -- vim.opt provides a Lua-friendly way to set options
-local o = vim.o      -- vim.o is a direct interface to options (slightly faster)
-local g = vim.g      -- vim.g accesses global Vimscript variables
+local opt = vim.opt -- vim.opt provides a Lua-friendly way to set options
+local o = vim.o -- vim.o is a direct interface to options (slightly faster)
+local g = vim.g -- vim.g accesses global Vimscript variables
 
 -- SECTION 1: USER INTERFACE
 
@@ -182,14 +182,14 @@ o.timeoutlen = 400
 --   s = don't show "search hit BOTTOM, continuing at TOP"
 --   I = don't show intro message on startup (:intro)
 -- This makes the UI feel cleaner
-opt.shortmess:append("sI")
+opt.shortmess:append "sI"
 
 -- whichwrap:append "<>[]hl" allows these keys to move across line boundaries:
 --   < > = arrow keys in normal/visual mode
 --   [ ] = arrow keys in insert/replace mode
 --   h l = h and l in normal mode
 -- Without this, pressing l at end of line does nothing
-opt.whichwrap:append("<>[]hl")
+opt.whichwrap:append "<>[]hl"
 
 -- ============================================================================
 -- SECTION 9: DISABLE UNUSED PROVIDERS
@@ -198,7 +198,7 @@ opt.whichwrap:append("<>[]hl")
 -- Most modern plugins are pure Lua, so we disable unused providers
 -- This speeds up startup and removes "provider not found" warnings
 
-g.loaded_node_provider = 0      -- Disable Node.js provider
-g.loaded_python3_provider = 0   -- Disable Python 3 provider
-g.loaded_perl_provider = 0      -- Disable Perl provider
-g.loaded_ruby_provider = 0      -- Disable Ruby provider
+g.loaded_node_provider = 0 -- Disable Node.js provider
+g.loaded_python3_provider = 0 -- Disable Python 3 provider
+g.loaded_perl_provider = 0 -- Disable Perl provider
+g.loaded_ruby_provider = 0 -- Disable Ruby provider

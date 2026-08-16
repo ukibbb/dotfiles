@@ -9,6 +9,17 @@ if [[ -z "${DOTFILES_DIR:-}" ]]; then
   export DOTFILES_DIR="${DOTFILES_ZSHRC:A:h}"
 fi
 
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+if (( $+commands[brew] )); then
+  BREW_PREFIX="$(brew --prefix)"
+  export PATH="$BREW_PREFIX/opt/libpq/bin:$BREW_PREFIX/opt/mysql-client/bin:$BREW_PREFIX/opt/sqlite/bin:$PATH"
+  unset BREW_PREFIX
+fi
 
 ZSH_THEME="robbyrussell"
 

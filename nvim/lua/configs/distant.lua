@@ -4,7 +4,7 @@
 return {
   -- Client settings (local distant binary)
   client = {
-    bin = vim.fn.expand('~/.local/bin/distant'),
+    bin = vim.fn.expand "~/.local/bin/distant",
   },
 
   -- Manager settings
@@ -22,36 +22,36 @@ return {
   -- Server configurations
   servers = {
     -- Default settings for all servers
-    ['*'] = {
+    ["*"] = {
       connect = {
         default = {
-          scheme = 'ssh',
+          scheme = "ssh",
         },
       },
       launch = {
         default = {
-          bin = '/home/ukibbb/.local/bin/distant',
+          bin = "/home/ukibbb/.local/bin/distant",
         },
       },
       lsp = {
-        ['*'] = {},
+        ["*"] = {},
       },
     },
 
     -- Raspberry Pi configuration
-    ['raspberry'] = {
+    ["raspberry"] = {
       connect = {
         default = {
-          scheme = 'ssh',
-          host = '192.168.101.7',
-          username = 'ukibbb',
+          scheme = "ssh",
+          host = "192.168.101.7",
+          username = "ukibbb",
         },
       },
       launch = {
         default = {
-          bin = '/home/ukibbb/.local/bin/distant',
-          host = '192.168.101.7',
-          username = 'ukibbb',
+          bin = "/home/ukibbb/.local/bin/distant",
+          host = "192.168.101.7",
+          username = "ukibbb",
         },
       },
     },

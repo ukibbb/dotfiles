@@ -1,4 +1,4 @@
-local dotfiles_dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath("config")), ":h")
+local dotfiles_dir = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.stdpath "config"), ":h")
 
 return {
   -- CORE
@@ -10,7 +10,6 @@ return {
   -- nvim-web-devicons: Provides file type icons
   -- Required by many plugins (NvChad UI, telescope, file managers, etc.)
   "nvim-tree/nvim-web-devicons",
-
 
   -- NVCHAD UI
   -- Base46: NvChad's theming engine
@@ -36,7 +35,6 @@ return {
     end,
   },
 
-
   -- Volt: NvChad's UI framework for building floating windows and popups
   -- Used by NvChad's theme picker, cheatsheet, and other UI elements
   "nvzone/volt",
@@ -47,7 +45,6 @@ return {
   -- Minty: Color picker utilities (Huefy = color picker, Shades = shade generator)
   -- cmd = {...} means lazy-load only when these commands are used
   { "nvzone/minty", cmd = { "Huefy", "Shades" } },
-
 
   -- INDENT GUIDES
   -- indent-blankline: Shows vertical lines at indentation levels
@@ -86,8 +83,6 @@ return {
     end,
   },
 
-
-
   -- CODE FORMATTING
   -- conform.nvim: Code formatter that runs external formatters (prettier, black, etc.)
   -- Faster and more reliable than LSP formatting for most use cases
@@ -105,7 +100,7 @@ return {
     "mfussenegger/nvim-lint",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local lint = require("lint")
+      local lint = require "lint"
       local mypy_missing_notified = false
 
       lint.linters_by_ft = { python = { "mypy" } }
@@ -113,9 +108,11 @@ return {
       vim.api.nvim_create_autocmd("BufWritePost", {
         group = vim.api.nvim_create_augroup("Lint", { clear = true }),
         callback = function(args)
-          if vim.bo[args.buf].filetype ~= "python" then return end
+          if vim.bo[args.buf].filetype ~= "python" then
+            return
+          end
 
-          if vim.fn.executable("mypy") ~= 1 then
+          if vim.fn.executable "mypy" ~= 1 then
             if not mypy_missing_notified then
               vim.notify("nvim-lint: mypy is not installed or not on PATH; skipping Python lint.", vim.log.levels.WARN)
               mypy_missing_notified = true
@@ -124,12 +121,11 @@ return {
           end
 
           mypy_missing_notified = false
-          lint.try_lint("mypy")
+          lint.try_lint "mypy"
         end,
       })
     end,
   },
-
 
   -- nvim-lspconfig: Configurations for LSP servers
   -- Your configs/lspconfig.lua uses vim.lsp.config() and vim.lsp.enable()
@@ -161,7 +157,7 @@ return {
     "axkirillov/unified.nvim",
     cmd = "Unified",
     keys = {
-      { "<leader>gd", "<cmd>Unified<cr>", desc = "Toggle inline diff" },
+      { "<leader>gd", "<cmd>Unified<cr>", desc = "Open or refresh inline diff" },
     },
     opts = {},
   },
@@ -213,18 +209,63 @@ return {
       "leoluz/nvim-dap-go",
     },
     keys = {
-      { "<F5>", function() require("dap").continue() end, desc = "DAP: start or continue" },
-      { "<F10>", function() require("dap").step_over() end, desc = "DAP: step over" },
-      { "<F11>", function() require("dap").step_into() end, desc = "DAP: step into" },
-      { "<F12>", function() require("dap").step_out() end, desc = "DAP: step out" },
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "DAP: toggle breakpoint" },
+      {
+        "<F5>",
+        function()
+          require("dap").continue()
+        end,
+        desc = "DAP: start or continue",
+      },
+      {
+        "<F10>",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "DAP: step over",
+      },
+      {
+        "<F11>",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "DAP: step into",
+      },
+      {
+        "<F12>",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "DAP: step out",
+      },
+      {
+        "<leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "DAP: toggle breakpoint",
+      },
       {
         "<leader>dB",
-        function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end,
+        function()
+          require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
+        end,
         desc = "DAP: conditional breakpoint",
       },
-      { "<leader>dc", function() require("dap").continue() end, desc = "DAP: start or continue" },
-      { "<leader>de", function() require("dapui").eval() end, mode = { "n", "x" }, desc = "DAP: evaluate" },
+      {
+        "<leader>dc",
+        function()
+          require("dap").continue()
+        end,
+        desc = "DAP: start or continue",
+      },
+      {
+        "<leader>de",
+        function()
+          require("dapui").eval()
+        end,
+        mode = { "n", "x" },
+        desc = "DAP: evaluate",
+      },
       {
         "<leader>dn",
         function()
@@ -238,11 +279,41 @@ return {
         end,
         desc = "DAP: debug nearest test",
       },
-      { "<leader>dp", function() require("dap").pause() end, desc = "DAP: pause" },
-      { "<leader>dl", function() require("dap").run_last() end, desc = "DAP: run last" },
-      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "DAP: toggle REPL" },
-      { "<leader>dt", function() require("dap").terminate() end, desc = "DAP: terminate" },
-      { "<leader>du", function() require("dapui").toggle() end, desc = "DAP: toggle UI" },
+      {
+        "<leader>dp",
+        function()
+          require("dap").pause()
+        end,
+        desc = "DAP: pause",
+      },
+      {
+        "<leader>dl",
+        function()
+          require("dap").run_last()
+        end,
+        desc = "DAP: run last",
+      },
+      {
+        "<leader>dr",
+        function()
+          require("dap").repl.toggle()
+        end,
+        desc = "DAP: toggle REPL",
+      },
+      {
+        "<leader>dt",
+        function()
+          require("dap").terminate()
+        end,
+        desc = "DAP: terminate",
+      },
+      {
+        "<leader>du",
+        function()
+          require("dapui").toggle()
+        end,
+        desc = "DAP: toggle UI",
+      },
     },
     config = function()
       require("configs.dap").setup()
@@ -269,7 +340,7 @@ return {
           -- history = true allows jumping back to previous snippet positions
           history = true,
           -- Update snippet placeholders as you type (real-time updates)
-          updateevents = "TextChanged,TextChangedI"
+          updateevents = "TextChanged,TextChangedI",
         },
         config = function(_, opts)
           -- Apply LuaSnip configuration
@@ -299,14 +370,29 @@ return {
           require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
       },
-      "saadparwaiz1/cmp_luasnip",  -- Snippets from LuaSnip as completion items
-      "hrsh7th/cmp-nvim-lua",       -- Neovim Lua API completions (for plugin dev)
-      "hrsh7th/cmp-buffer",         -- Words from the current buffer
+      "saadparwaiz1/cmp_luasnip", -- Snippets from LuaSnip as completion items
+      "hrsh7th/cmp-nvim-lua", -- Neovim Lua API completions (for plugin dev)
+      "hrsh7th/cmp-buffer", -- Words from the current buffer
       "https://codeberg.org/FelipeLema/cmp-async-path.git", -- File path completions (async version)
     },
     opts = function()
       -- Load our main cmp configuration
       return require "configs.cmp"
+    end,
+    config = function(_, opts)
+      local cmp = require "cmp"
+      cmp.setup(opts)
+      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+        sources = cmp.config.sources({
+          { name = "nvim_lsp", priority = 1000 },
+          { name = "vim-dadbod-completion", priority = 900 },
+          { name = "luasnip", priority = 750 },
+        }, {
+          { name = "nvim_lua", priority = 500 },
+          { name = "buffer", priority = 250 },
+          { name = "async_path", priority = 200 },
+        }),
+      })
     end,
   },
 
@@ -323,6 +409,309 @@ return {
     opts = function()
       return require "configs.telescope"
     end,
+  },
+
+  -- DATABASE CLIENTS
+
+  -- DBee: Full database workspace with connection drawer, SQL scratchpads,
+  -- paginated results, and call history. The fork keeps its Go backend patched.
+  {
+    "ukibbb/nvim-dbee",
+    commit = "6f2948a5bc958c0cb85c520c29953148663cd362",
+    cmd = "Dbee",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    build = function(plugin)
+      local output_dir = vim.fn.stdpath "data" .. "/dbee/bin"
+      local output = output_dir .. "/dbee" .. (vim.fn.has "win32" == 1 and ".exe" or "")
+      local candidate = output .. ".tmp-" .. vim.fn.getpid()
+      vim.fn.mkdir(output_dir, "p")
+      vim.fn.delete(candidate)
+
+      local function abort(message)
+        vim.fn.delete(candidate)
+        error(message)
+      end
+
+      local function run(command, opts)
+        local ok, process = pcall(vim.system, command, opts)
+        if not ok then
+          abort(tostring(process))
+        end
+        return process:wait()
+      end
+
+      local function command_error(result, fallback)
+        local stderr = result.stderr or ""
+        local stdout = result.stdout or ""
+        return stderr ~= "" and stderr or stdout ~= "" and stdout or fallback
+      end
+
+      local go_version = run({ "go", "env", "GOVERSION" }, {
+        env = { GOTOOLCHAIN = "local" },
+        text = true,
+      })
+      if go_version.code ~= 0 then
+        abort(command_error(go_version, "failed to read Go version"))
+      end
+      if vim.trim(go_version.stdout or "") ~= "go1.26.6" then
+        abort("DBee backend requires Go 1.26.6; found " .. vim.trim(go_version.stdout or "unknown"))
+      end
+
+      local checkout = run({ "git", "-C", plugin.dir, "rev-parse", "HEAD" }, { text = true })
+      if checkout.code ~= 0 then
+        abort(command_error(checkout, "failed to read DBee checkout revision"))
+      end
+      if vim.trim(checkout.stdout or "") ~= plugin.commit then
+        abort("DBee checkout does not match the pinned commit " .. plugin.commit)
+      end
+
+      local result = run({
+        "go",
+        "build",
+        "-C",
+        plugin.dir .. "/dbee",
+        "-o",
+        candidate,
+      }, { env = { CGO_ENABLED = "1", GOTOOLCHAIN = "local" }, text = true })
+
+      if result.code ~= 0 then
+        abort(command_error(result, "failed to build DBee backend"))
+      end
+
+      local metadata = run({ "go", "version", "-m", candidate }, {
+        env = { GOTOOLCHAIN = "local" },
+        text = true,
+      })
+      local metadata_output = metadata.stdout or ""
+      if metadata.code ~= 0 then
+        abort(command_error(metadata, "failed to read DBee binary metadata"))
+      end
+      if not metadata_output:find("vcs.revision=" .. plugin.commit, 1, true) then
+        abort("DBee binary metadata does not match the pinned commit " .. plugin.commit)
+      end
+      if not metadata_output:find("vcs.modified=false", 1, true) then
+        abort "DBee binary was built from a modified checkout"
+      end
+
+      local scan = run({ "govulncheck", "-mode=binary", candidate }, { text = true })
+      if scan.code ~= 0 then
+        abort(command_error(scan, "DBee backend failed vulnerability scan"))
+      end
+
+      local binary_version = run({ candidate, "-version" }, { text = true })
+      if binary_version.code ~= 0 or vim.trim(binary_version.stdout or "") ~= plugin.commit then
+        abort(command_error(binary_version, "DBee binary does not match the pinned commit"))
+      end
+
+      local installed, install_error = vim.uv.fs_rename(candidate, output)
+      if not installed then
+        abort("failed to install scanned DBee backend: " .. tostring(install_error))
+      end
+    end,
+    keys = {
+      {
+        "<leader>Bd",
+        function()
+          require("dbee").toggle()
+        end,
+        desc = "DBee: toggle database workspace",
+      },
+    },
+    opts = {},
+  },
+
+  -- Dbout: Node-backed database client with a Telescope connection manager,
+  -- object inspector, SQL formatter, and JSON result viewer.
+  {
+    "zongben/dbout.nvim",
+    commit = "411e46041adeb8661e044f8421d8db5c56a9ef5d",
+    cmd = "Dbout",
+    build = "npm ci",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    keys = {
+      {
+        "<leader>Bo",
+        function()
+          require("telescope").extensions.dbout.dbout()
+        end,
+        desc = "Dbout: connections",
+      },
+    },
+    opts = {
+      keymaps = {
+        global = {
+          toggle_inspector = "<F8>",
+          toggle_viewer = "<F9>",
+          close = "q",
+        },
+        queryer = {
+          query = "<F6>",
+          format = "<F7>",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("dbout").setup(opts)
+      require("telescope").load_extension "dbout"
+    end,
+  },
+
+  -- Dadbod: Lightweight command interface used directly through :DB and by DBUI.
+  {
+    "tpope/vim-dadbod",
+    commit = "6d1d41da4873a445c5605f2005ad2c68c99d8770",
+    cmd = "DB",
+  },
+
+  -- Dadbod UI: Connection drawer, schema browser, saved queries, and async results.
+  {
+    "kristijanhusak/vim-dadbod-ui",
+    commit = "afd07819d8efcefc3317205b855ad4e3513b0011",
+    dependencies = {
+      "tpope/vim-dadbod",
+      {
+        "kristijanhusak/vim-dadbod-completion",
+        commit = "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6",
+        dependencies = { "tpope/vim-dadbod" },
+        ft = { "sql", "mysql", "plsql" },
+      },
+    },
+    cmd = {
+      "DBUI",
+      "DBUIToggle",
+      "DBUIClose",
+      "DBUIAddConnection",
+      "DBUIFindBuffer",
+      "DBUIRenameBuffer",
+      "DBUILastQueryInfo",
+    },
+    keys = {
+      { "<leader>Bu", "<cmd>DBUIToggle<cr>", desc = "Dadbod UI: toggle database drawer" },
+    },
+    init = function()
+      vim.g.db_ui_use_nerd_fonts = 1
+      vim.g.db_ui_save_location = vim.fn.stdpath "data" .. "/db_ui"
+      vim.g.db_ui_disable_mappings_sql = 1
+    end,
+    config = function()
+      local group = vim.api.nvim_create_augroup("DadbodSqlMappings", { clear = true })
+
+      local function map_dbui_buffer(bufnr)
+        if not vim.api.nvim_buf_is_valid(bufnr) or vim.b[bufnr].dbui_db_key_name == nil then
+          return
+        end
+        if not vim.tbl_contains({ "sql", "mysql", "plsql" }, vim.bo[bufnr].filetype) then
+          return
+        end
+
+        vim.keymap.set("n", "<leader>Bp", "<Plug>(DBUI_EditBindParameters)", {
+          buffer = bufnr,
+          desc = "Dadbod UI: edit bind parameters",
+          remap = true,
+          silent = true,
+        })
+
+        local has_save_mapping = vim.api.nvim_buf_call(bufnr, function()
+          return not vim.tbl_isempty(vim.fn.maparg("<Plug>(DBUI_SaveQuery)", "n", false, true))
+        end)
+        if has_save_mapping then
+          vim.keymap.set("n", "<leader>Bs", "<Plug>(DBUI_SaveQuery)", {
+            buffer = bufnr,
+            desc = "Dadbod UI: save query",
+            remap = true,
+            silent = true,
+          })
+        end
+      end
+
+      vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+        group = group,
+        pattern = "*",
+        callback = function(args)
+          vim.schedule(function()
+            map_dbui_buffer(args.buf)
+          end)
+        end,
+      })
+    end,
+  },
+
+  -- Dadbod Grip: Editable grids and a query workspace backed by database CLIs.
+  {
+    "joryeugene/dadbod-grip.nvim",
+    commit = "2100fb7b9d817651ff417b8b8b40a061f0812553",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    keys = {
+      { "<leader>Bg", "<cmd>GripConnect<cr>", desc = "Dadbod Grip: connect" },
+    },
+    opts = function()
+      local state_dir = vim.fn.stdpath "state" .. "/dadbod-grip"
+      vim.fn.mkdir(state_dir, "p", 448)
+      return {
+        ai = false,
+        completion = true,
+        connections_path = state_dir .. "/connections.json",
+        discovery = false,
+        picker = "telescope",
+      }
+    end,
+  },
+
+  -- GUIDED CODE EXPLORATION
+  {
+    "error311/wayfinder.nvim",
+    cmd = {
+      "Wayfinder",
+      "WayfinderExportQuickfix",
+      "WayfinderExportTrailQuickfix",
+      "WayfinderTrailNext",
+      "WayfinderTrailPrev",
+      "WayfinderTrailOpen",
+      "WayfinderTrailShow",
+      "WayfinderTrailSave",
+      "WayfinderTrailSaveAs",
+      "WayfinderTrailLoad",
+      "WayfinderTrailResume",
+      "WayfinderTrailDelete",
+      "WayfinderTrailRename",
+    },
+    keys = {
+      { "<leader>Wf", "<cmd>Wayfinder<cr>", desc = "Wayfinder: explore" },
+      { "<leader>Wn", "<cmd>WayfinderTrailNext<cr>", desc = "Wayfinder: next Trail item" },
+      { "<leader>Wp", "<cmd>WayfinderTrailPrev<cr>", desc = "Wayfinder: previous Trail item" },
+      { "<leader>Wo", "<cmd>WayfinderTrailOpen<cr>", desc = "Wayfinder: open Trail item" },
+      { "<leader>Ws", "<cmd>WayfinderTrailShow<cr>", desc = "Wayfinder: show Trail" },
+    },
+    opts = {},
+  },
+
+  -- MARKS
+  -- Adds signs, navigation, previews, lists, and session-local bookmark groups
+  -- on top of Neovim's native lowercase/uppercase marks.
+  {
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
+    cmd = {
+      "MarksToggleSigns",
+      "MarksListBuf",
+      "MarksListGlobal",
+      "MarksListAll",
+      "MarksQFListBuf",
+      "MarksQFListGlobal",
+      "MarksQFListAll",
+      "BookmarksList",
+      "BookmarksListAll",
+      "BookmarksQFList",
+      "BookmarksQFListAll",
+    },
+    opts = {
+      default_mappings = true,
+      builtin_marks = { ".", "<", ">", "^" },
+      signs = true,
+      cyclic = true,
+      force_write_shada = false,
+      refresh_interval = 250,
+    },
   },
 
   -- SYNTAX HIGHLIGHTING
@@ -418,65 +807,75 @@ return {
         api.config.mappings.default_on_attach(bufnr)
         local opts = { buffer = bufnr, noremap = true, silent = true }
         -- Cmd+\ → open in vertical split (encoded by WezTerm)
-        vim.keymap.set("n", "<M-C-\\>", api.node.open.vertical, vim.tbl_extend("force", opts, { desc = "Open: Vertical Split" }))
+        vim.keymap.set(
+          "n",
+          "<M-C-\\>",
+          api.node.open.vertical,
+          vim.tbl_extend("force", opts, { desc = "Open: Vertical Split" })
+        )
         -- Cmd+- → open in horizontal split (encoded by WezTerm)
-        vim.keymap.set("n", "<M-C-_>", api.node.open.horizontal, vim.tbl_extend("force", opts, { desc = "Open: Horizontal Split" }))
+        vim.keymap.set(
+          "n",
+          "<M-C-_>",
+          api.node.open.horizontal,
+          vim.tbl_extend("force", opts, { desc = "Open: Horizontal Split" })
+        )
       end
       return {
         on_attach = on_attach,
-      filters = {
-        dotfiles = false,
-        custom = { [[^\.DS_Store$]], [[^\.git$]] },
-      },
-      disable_netrw = true,
-      hijack_netrw = true,
-      hijack_cursor = true,
-      sync_root_with_cwd = true,
-      update_focused_file = {
-        enable = true,
-        update_root = false,
-      },
-      view = {
-        side = "left",
-        width = 35,
-        preserve_window_proportions = true,
-      },
-      renderer = {
-        root_folder_label = false,
-        highlight_git = "name",
-        icons = {
-          glyphs = {
-            default = "󰈚",
-            folder = {
-              default = "",
-              empty = "",
-              empty_open = "",
-              open = "",
-              symlink = "",
-            },
-            git = {
-              unmerged = "",
-              untracked = "★",
+        filters = {
+          dotfiles = false,
+          custom = { [[^\.DS_Store$]], [[^\.git$]] },
+        },
+        disable_netrw = true,
+        hijack_netrw = true,
+        hijack_cursor = true,
+        sync_root_with_cwd = true,
+        update_focused_file = {
+          enable = true,
+          update_root = false,
+        },
+        view = {
+          side = "left",
+          width = 35,
+          preserve_window_proportions = true,
+        },
+        renderer = {
+          root_folder_label = false,
+          highlight_git = "name",
+          icons = {
+            glyphs = {
+              default = "󰈚",
+              folder = {
+                default = "",
+                empty = "",
+                empty_open = "",
+                open = "",
+                symlink = "",
+              },
+              git = {
+                unmerged = "",
+                untracked = "★",
+              },
             },
           },
         },
-      },
-      actions = {
-        open_file = {
-          quit_on_open = false,
+        actions = {
+          open_file = {
+            quit_on_open = false,
+          },
         },
-      },
-      git = {
-        enable = true,
-        ignore = false,
-      },
-      filesystem_watchers = {
-        ignore_dirs = function(path)
-          local name = vim.fs.basename(path)
-          return name == ".next" or name == "node_modules" or name == ".git"
-        end,
-      },
-    }
+        git = {
+          enable = true,
+          ignore = false,
+        },
+        filesystem_watchers = {
+          ignore_dirs = function(path)
+            local name = vim.fs.basename(path)
+            return name == ".next" or name == "node_modules" or name == ".git"
+          end,
+        },
+      }
     end,
   },
 
@@ -487,8 +886,8 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim",        -- Required
-      "sindrets/diffview.nvim",        -- For diff integration
+      "nvim-lua/plenary.nvim", -- Required
+      "sindrets/diffview.nvim", -- For diff integration
       "nvim-telescope/telescope.nvim", -- For fuzzy finding
     },
     cmd = "Neogit",
@@ -542,7 +941,7 @@ return {
 
       -- COMMIT EDITOR
       commit_editor = {
-        kind = "tab",           -- Open commit editor in new tab
+        kind = "tab", -- Open commit editor in new tab
         show_staged_diff = true, -- Show diff of staged changes
       },
 
@@ -576,14 +975,14 @@ return {
     opts = {
       -- Use diff3 conflict style (shows base in middle)
       diff_binaries = false,
-      enhanced_diff_hl = true,  -- Better diff highlighting
+      enhanced_diff_hl = true, -- Better diff highlighting
 
       -- FILE PANEL (left sidebar)
       file_panel = {
-        listing_style = "tree",  -- "list" or "tree"
+        listing_style = "tree", -- "list" or "tree"
         tree_options = {
-          flatten_dirs = true,   -- Flatten single-child directories
-          folder_statuses = "only_folded",  -- Show status on folders
+          flatten_dirs = true, -- Flatten single-child directories
+          folder_statuses = "only_folded", -- Show status on folders
         },
         win_config = {
           position = "left",

@@ -12,16 +12,16 @@ local cmp = require "cmp"
 -- Define our completion options
 local options = {
   -- COMPLETION BEHAVIOR
-  
-  completion = { 
+
+  completion = {
     -- completeopt controls how the completion menu behaves
     -- "menu" = show completion menu
     -- "menuone" = show menu even if there's only one match (useful to see docs)
-    completeopt = "menu,menuone" 
+    completeopt = "menu,menuone",
   },
 
   -- SNIPPET EXPANSION
-  
+
   snippet = {
     -- This function tells cmp how to expand snippets when you select them
     -- We use LuaSnip as our snippet engine, so we call its expand function
@@ -41,6 +41,7 @@ local options = {
         buffer = "[Buffer]",
         nvim_lua = "[Nvim]",
         async_path = "[Path]",
+        ["vim-dadbod-completion"] = "[DB]",
       })[entry.source.name]
       return item
     end,
@@ -48,7 +49,7 @@ local options = {
 
   -- KEYBINDINGS
   -- These control how you interact with the completion menu
-  
+
   mapping = {
     -- Ctrl+p / Alt+k: Select previous item in the completion menu
     ["<C-p>"] = cmp.mapping.select_prev_item(),
@@ -57,18 +58,18 @@ local options = {
     -- Ctrl+n / Alt+j: Select next item in the completion menu
     ["<C-n>"] = cmp.mapping.select_next_item(),
     ["<M-j>"] = cmp.mapping.select_next_item(),
-    
+
     -- Ctrl+d: Scroll documentation window DOWN by 4 lines
     -- When hovering a completion item, this scrolls its documentation
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-    
+
     -- Ctrl+f: Scroll documentation window UP by 4 lines (f = forward)
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    
+
     -- Ctrl+Space: Manually trigger completion menu
     -- Useful when completion doesn't auto-appear or you dismissed it
     ["<C-Space>"] = cmp.mapping.complete(),
-    
+
     -- Ctrl+e: Close the completion menu without selecting anything (e = exit)
     ["<C-e>"] = cmp.mapping.close(),
 
@@ -117,7 +118,7 @@ local options = {
   -- COMPLETION SOURCES
   -- Sources provide the actual completion candidates
   -- Order matters: first sources have higher priority in the menu
-  
+
   sources = cmp.config.sources({
     -- Prefer semantic completions that may include edits such as auto-imports.
     { name = "nvim_lsp", priority = 1000 },

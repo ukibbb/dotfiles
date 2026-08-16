@@ -88,7 +88,7 @@ Wbudowane diagnostyki: `[d`, `]d`, `[D`, `]D`, `Ctrl-w d`, `Ctrl-w Ctrl-d`. Loka
 
 **Co robi i po co:** silnik popupu completion. Ładuje się przy `InsertEnter`, łączy semantyczne propozycje LSP, snippety, API Neovim, słowa bufora i ścieżki.
 
-**Konfiguracja lokalna:** `completeopt=menu,menuone`; potwierdzenie ma zachowanie Insert i `select=true`. Menu pokazuje dostawcę. Pierwsza grupa ma `nvim_lsp` z priorytetem 1000 i `luasnip` 750. Dopiero gdy grupa podstawowa nie daje kandydatów, używana jest grupa `nvim_lua` 500, `buffer` 250, `async_path` 200. Integracja nvim-autopairs działa po `confirm_done`.
+**Konfiguracja lokalna:** `completeopt=menu,menuone`; potwierdzenie ma zachowanie Insert i `select=true`. Menu pokazuje dostawcę. Zwykła pierwsza grupa ma `nvim_lsp` z priorytetem 1000 i `luasnip` 750. Dla `sql`, `mysql` i `plsql` między nimi działa `vim-dadbod-completion` 900. Dopiero gdy grupa podstawowa nie daje kandydatów, używana jest grupa `nvim_lua` 500, `buffer` 250, `async_path` 200. Integracja nvim-autopairs działa po `confirm_done`.
 
 - **`Ctrl-p` / `Alt-k`, `Ctrl-n` / `Alt-j`**: Poprzedni / następny kandydat. **Tryb:** `i`.
 - **`Ctrl-d` / `Ctrl-f`**: Dokumentacja w górę / w dół. **Tryb:** `i`.
@@ -99,11 +99,11 @@ Wtyczka nie instaluje użytecznych domyślnych mapowań bez konfiguracji; upstre
 
 ### Jak współpracują dostawcy
 
-Każdy provider zasila wspólny popup nvim-cmp. Nie ma własnego polecenia Ex ani mapowania; etykiety `[LSP]`, `[Snippet]`, `[Nvim]`, `[Buffer]` i `[Path]` są jego widocznym interfejsem.
+Każdy provider zasila wspólny popup nvim-cmp. Nie ma własnego mapowania; etykiety `[LSP]`, `[DB]`, `[Snippet]`, `[Nvim]`, `[Buffer]` i `[Path]` są jego widocznym interfejsem. `[DB]` wymaga kontekstu Dadbod i cache'uje schemat; po zmianie tabel użyj `:DBCompletionClearCache`.
 
 ### Kolejność i fallback klawiszy
 
-- Grupa pierwsza (`nvim_lsp`, `luasnip`) ma pierwszeństwo jako całość. `nvim_lua`, `buffer` i `async_path` pojawiają się dopiero, gdy pierwsza grupa nie ma pasujących kandydatów.
+- Grupa pierwsza (`nvim_lsp`, w SQL `vim-dadbod-completion`, `luasnip`) ma pierwszeństwo jako całość. `nvim_lua`, `buffer` i `async_path` pojawiają się dopiero, gdy pierwsza grupa nie ma pasujących kandydatów.
 - `Enter` ma `select=true`, więc może zatwierdzić pierwszy element bez jawnego ruchu. Przeczytaj etykietę źródła przed zatwierdzeniem, szczególnie przy auto-importach.
 - `Ctrl-e` używa `close()`, nie `abort()`. Po przejściu po kandydatach podgląd wstawionego tekstu może pozostać; nie ma lokalnego skrótu „anuluj i przywróć oryginał”. Bez widocznego menu `Ctrl-e` wpada w lokalny ruch na koniec wiersza.
 - Bez dokumentacji `Ctrl-d`/`Ctrl-f` wracają do zachowania Insert. Bez menu `Ctrl-n`/`Ctrl-p` mogą uruchomić natywne keyword completion.
@@ -124,6 +124,8 @@ Każdy provider zasila wspólny popup nvim-cmp. Nie ma własnego polecenia Ex an
 4. `:CmpStatus` pokazuje status providerów po pierwszym `InsertEnter`. Stan `unknown` nie zawsze jest błędem, bo część źródeł jest kontekstowa.
 
 Command-line completion i ghost text są w kodzie dostępne konfiguracyjnie, lecz tutaj **Warunkowe/wyłączone**. Menu nie otwiera się automatycznie w promptach i podczas wykonywania makr.
+
+Query pad Dadbod Grip używa osobnego wbudowanego completion i buforowo wyłącza nvim-cmp. `[DB]` opisuje provider `vim-dadbod-completion` dla buforów Dadbod/DBUI, nie provider Grip.
 
 **Źródła przypiętej rewizji:** [README](https://github.com/hrsh7th/nvim-cmp/blob/2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3/README.md), [help](https://github.com/hrsh7th/nvim-cmp/blob/2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3/doc/cmp.txt), [domyślna konfiguracja](https://github.com/hrsh7th/nvim-cmp/blob/2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3/lua/cmp/config/default.lua).
 
