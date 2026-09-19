@@ -1045,11 +1045,4 @@ return {
     event = "VeryLazy",
     opts = {},
   },
-
-  -- CLAUDE.NVIM
-  {
-    dir = dotfiles_dir .. "/claude.nvim",
-    event = "VeryLazy",
-    opts = {},
-  },
 }
