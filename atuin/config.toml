@@ -1,0 +1,16 @@
+# Atuin — searchable shell history (ctrl+r). https://docs.atuin.sh/configuration/config/
+# Local only: no sync server.
+auto_sync = false
+update_check = false
+
+search_mode = "fuzzy"
+# global = all history; ctrl+r inside atuin cycles: global -> host -> session -> directory
+filter_mode = "global"
+style = "compact"
+inline_height = 20
+show_preview = true
+# enter runs the command; tab puts it on the line for editing
+enter_accept = true
+
+# Don't record secrets typed inline
+history_filter = ["^export .*(KEY|TOKEN|SECRET|PASSWORD)="]

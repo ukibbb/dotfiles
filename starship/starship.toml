@@ -1,0 +1,48 @@
+# Starship prompt — https://starship.rs/config/
+# Two lines: context on top, clean input line below.
+add_newline = true
+command_timeout = 800
+
+format = """
+$directory$git_branch$git_status$nodejs$python$golang$lua$bun$cmd_duration
+$character"""
+
+[directory]
+truncation_length = 4
+truncate_to_repo = true
+style = "bold cyan"
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "bold purple"
+
+[git_status]
+format = "([$all_status$ahead_behind]($style) )"
+style = "yellow"
+
+[nodejs]
+format = "[ $version]($style) "
+detect_files = ["package.json", ".nvmrc", ".node-version"]
+
+[python]
+format = "[ $version( \\($virtualenv\\))]($style) "
+
+[golang]
+format = "[ $version]($style) "
+
+[lua]
+format = "[ $version]($style) "
+
+[bun]
+format = "[ $version]($style) "
+
+[cmd_duration]
+min_time = 2000
+format = "[⏱ $duration]($style) "
+style = "dimmed white"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"

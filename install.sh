@@ -20,10 +20,18 @@ SYMLINKS=(
     "nvim:$HOME/.config/nvim"
     "wezterm.lua:$HOME/.config/wezterm/wezterm.lua"
     "tmux.conf:$HOME/.tmux.conf"
-claude/settings.json:$HOME/.claude/settings.json
+    "claude/settings.json:$HOME/.claude/settings.json"
     "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
-    "claude/commands:$HOME/.claude/commands"
+    "git/gitconfig:$HOME/.gitconfig"
+    "starship/starship.toml:$HOME/.config/starship.toml"
+    "atuin/config.toml:$HOME/.config/atuin/config.toml"
+    "mise/config.toml:$HOME/.config/mise/config.toml"
+    "bat/config:$HOME/.config/bat/config"
+    "btop/btop.conf:$HOME/.config/btop/btop.conf"
+    "herdr/config.toml:$HOME/.config/herdr/config.toml"
+    "herdr/agents-status.sh:$HOME/.config/herdr/agents-status.sh"
+    "herdr/tmux-goto-herdr.sh:$HOME/.config/herdr/tmux-goto-herdr.sh"
 )
 
 # Define copies (for apps that don't work with symlinks): "source:target"

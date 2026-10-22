@@ -1,5 +1,3 @@
-export ZSH="$HOME/.oh-my-zsh"
-
 # Avoid macOS's low default descriptor limit in tmux and Bun applications.
 ulimit -S -n 65536 2>/dev/null || true
 
@@ -9,6 +7,8 @@ if [[ -z "${DOTFILES_DIR:-}" ]]; then
   export DOTFILES_DIR="${DOTFILES_ZSHRC:A:h}"
 fi
 
+# --- PATH -------------------------------------------------------------------
+
 if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x /usr/local/bin/brew ]]; then
@@ -16,101 +16,99 @@ elif [[ -x /usr/local/bin/brew ]]; then
 fi
 
 if (( $+commands[brew] )); then
-  BREW_PREFIX="$(brew --prefix)"
-  export PATH="$BREW_PREFIX/opt/libpq/bin:$BREW_PREFIX/opt/mysql-client/bin:$BREW_PREFIX/opt/sqlite/bin:$PATH"
-  unset BREW_PREFIX
+  export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$HOMEBREW_PREFIX/opt/mysql-client/bin:$HOMEBREW_PREFIX/opt/sqlite/bin:$PATH"
 fi
-
-ZSH_THEME="robbyrussell"
-
-
-zstyle ':omz:update' mode auto      # update automatically without asking
-zstyle ':omz:update' frequency 14
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
 
 # Mason (Neovim LSP/tools) bin directory
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 
-# DISABLED: No longer needed — fs_event watcher in autocmds.lua replaced hook-based approach
-# Start Neovim with server socket for Claude Code integration
-# Socket named by directory; multiple instances get numbered suffix
-# Claude hook broadcasts to all instances that have the file loaded
-# unalias nvim 2>/dev/null
-# nvim() {
-#     local dir_slug=$(pwd | tr '/' '_')
-#     local base="/tmp/nvim${dir_slug}"
-#     local sock="${base}.sock"
-#     local i=1
-#
-#     # Find available socket (remove stale ones, skip active ones)
-#     while [[ -S "$sock" ]]; do
-#         if command nvim --server "$sock" --remote-expr "1" &>/dev/null; then
-#             sock="${base}_${i}.sock"
-#             ((i++))
-#         else
-#             rm -f "$sock"
-#             break
-#         fi
-#     done
-#
-#     command nvim --listen "$sock" "$@"
-#     # Clean up socket on exit
-#     rm -f "$sock"
-# }
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
 [ -s "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# --- Shell options ----------------------------------------------------------
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt extended_history hist_ignore_dups hist_ignore_space share_history
+setopt auto_cd interactive_comments no_beep
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+# Ctrl-s is the WezTerm leader; keep terminal flow control from treating it as XOFF.
+stty -ixon 2>/dev/null || true
+
+# Emacs-style line editing (ctrl+a/e, alt+b/f) like the oh-my-zsh default.
+bindkey -e
+
+# --- Completion -------------------------------------------------------------
+
+autoload -Uz compinit
+compinit -C
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# --- Tools ------------------------------------------------------------------
+
+# mise: per-project versions of node/go/python (replaces nvm)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+# direnv: loads .envrc when entering a directory
+(( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+
+# atuin: searchable history on ctrl+r (up arrow stays the default)
+(( $+commands[atuin] )) && eval "$(atuin init zsh --disable-up-arrow)"
+
+# starship prompt
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+
+# fzf: ctrl+t files, alt+c directories; previews with bat/eza
+if (( $+commands[fzf] )); then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
+  export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
+  source <(fzf --zsh)
+  # atuin owns ctrl+r
+  (( $+commands[atuin] )) && bindkey '^r' atuin-search
+fi
+
+# --- Aliases ----------------------------------------------------------------
+
+if (( $+commands[eza] )); then
+  alias ls='eza --icons --group-directories-first'
+  alias ll='eza -l --icons --git --group-directories-first'
+  alias la='eza -la --icons --git --group-directories-first'
+  alias lt='eza --tree --level=2 --icons'
+fi
+
+if (( $+commands[bat] )); then
+  alias cat='bat --paging=never --style=plain'
+fi
+
+alias vim='nvim'
+
+# --- Functions --------------------------------------------------------------
 
 # Fast system navigation with fuzzy folder selection
 n() {
@@ -121,41 +119,25 @@ n() {
     fi
 }
 
-# Navigate and create/attach to tmux session
+# Navigate and switch to/create a WezTerm workspace
 nt() {
     local selected
     selected=$("$DOTFILES_DIR/fuzzy/select-folder.sh" "$@")
     if [[ -n "$selected" ]]; then
-        "$DOTFILES_DIR/fuzzy/tmux-session.sh" "$selected"
+        "$DOTFILES_DIR/fuzzy/wezterm-workspace.sh" "$selected"
     fi
 }
 
-# Ctrl-s is the tmux prefix; keep terminal flow control from treating it as XOFF.
-stty -ixon 2>/dev/null || true
+# --- Terminal integration ---------------------------------------------------
 
-# opencode
-export PATH="$HOME/.opencode/bin:$PATH"
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="/Users/lukasz/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
-export PATH="$HOME/.local/bin:$PATH"
-
-# WezTerm shell integration for semantic prompts and working-directory tracking.
-# User vars require tmux DCS passthrough, which is intentionally disabled.
+# WezTerm shell integration: semantic prompts, working-directory tracking
+# (new splits open in the current folder) and user vars.
 if [[ "${TERM_PROGRAM:-}" == "WezTerm" ]] && [[ -r /Applications/WezTerm.app/Contents/Resources/wezterm.sh ]]; then
-  WEZTERM_SHELL_SKIP_USER_VARS=1
   source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
-  unset WEZTERM_SHELL_SKIP_USER_VARS
 fi
+
+# Plugins last: syntax highlighting must be sourced at the very end.
+[ -r "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[ -r "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
