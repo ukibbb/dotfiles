@@ -112,7 +112,7 @@ autocmd("FileType", { -- Event: filetype was detected for a buffer
 })
 
 -- SECTION 5: EXTERNAL FILE CHANGE DETECTION
--- Moved to watchdiff.nvim plugin (~/Desktop/dotfiles/watchdiff.nvim)
+-- Moved to watchdiff.nvim plugin (~/Desktop/Projekty/dotfiles/watchdiff.nvim)
 
 -- SECTION 6: AUTO-CREATE DIRECTORIES
 -- When saving a file in a directory that doesn't exist, create it automatically
@@ -214,32 +214,6 @@ autocmd("FileType", {
     vim.opt_local.tabstop = 4
     vim.opt_local.shiftwidth = 4
     vim.opt_local.softtabstop = 4
-  end,
-})
-
--- SECTION 9: CLAUDE.NVIM DEVELOPMENT MODE
--- Auto-load development helpers when editing the claude.nvim plugin
--- This sets up hot-reload keymaps automatically when you open plugin files
---
--- HOW IT WORKS:
--- "once = true" means this only fires ONCE per Neovim session
--- First time you open any file in claude.nvim/lua/, dev helpers load
--- Then the autocmd deletes itself (no need to check again)
-
-augroup("ClaudeNvimDev", { clear = true })
-
-autocmd("BufEnter", {
-  desc = "Auto-load claude.nvim dev helpers",
-  group = "ClaudeNvimDev",
-  pattern = "*/claude.nvim/lua/*.lua", -- Only files in the plugin
-  once = true, -- Fire only once, then remove
-  callback = function()
-    -- pcall catches errors if the module doesn't exist yet
-    local ok, dev = pcall(require, "claude.dev")
-    if ok then
-      dev.setup()
-      vim.notify("claude.nvim dev mode activated!", vim.log.levels.INFO)
-    end
   end,
 })
 

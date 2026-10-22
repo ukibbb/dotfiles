@@ -783,12 +783,20 @@ return {
     end,
   },
 
-  -- TMUX INTEGRATION
-  -- vim-tmux-navigator: Seamless navigation between tmux panes and Neovim splits
-  -- Allows Ctrl+h/j/k/l to move between Neovim splits AND tmux panes
+  -- WEZTERM INTEGRATION
+  -- smart-splits.nvim: Seamless navigation between WezTerm panes and Neovim splits
+  -- Allows Ctrl+h/j/k/l to move between Neovim splits AND WezTerm panes
+  -- (sets the IS_NVIM user var that wezterm.lua checks)
   {
-    "christoomey/vim-tmux-navigator",
+    "mrjones2014/smart-splits.nvim",
     lazy = false,
+    opts = { move = { at_edge = "stop" } },
+    keys = {
+      { "<C-h>", function() require("smart-splits").move_cursor_left() end, desc = "Window left" },
+      { "<C-j>", function() require("smart-splits").move_cursor_down() end, desc = "Window down" },
+      { "<C-k>", function() require("smart-splits").move_cursor_up() end, desc = "Window up" },
+      { "<C-l>", function() require("smart-splits").move_cursor_right() end, desc = "Window right" },
+    },
   },
 
   -- NVIM-TREE

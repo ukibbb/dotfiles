@@ -25,8 +25,8 @@ map("i", "<C-j>", "<Down>", { desc = "move down" })
 map("i", "<C-k>", "<Up>", { desc = "move up" })
 
 -- WINDOW NAVIGATION (NORMAL MODE)
--- Commented out: vim-tmux-navigator handles Ctrl+h/j/k/l for both
--- Neovim splits AND tmux panes seamlessly
+-- Commented out: smart-splits.nvim handles Ctrl+h/j/k/l for both
+-- Neovim splits AND WezTerm panes seamlessly
 --
 -- map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
 -- map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
