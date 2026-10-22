@@ -1,0 +1,74 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+auto_switch = true                # jasny/ciemny wg terminala
+dark_name = "tokyo-night"
+light_name = "tokyo-night-day"
+
+# Podrasowany Tokyo Night: głębsze tło, neonowe akcenty
+[theme.custom]
+accent = "#bb9af7"                # fiolet: ramki, wyróżnienia
+green = "#9ece6a"                 # agent skończył
+yellow = "#e0af68"                # agent czeka na Ciebie
+red = "#f7768e"                   # błędy / blocked
+blue = "#7aa2f7"                  # agent pracuje
+
+[theme.custom.dark]
+panel_bg = "#16161e"              # tło paneli (ciemniejsze niż standard)
+sidebar_bg = "#1a1b26"            # pasek boczny odcięty od paneli
+active_row_bg = "#292e42"         # aktywny workspace / agent
+selection_bg = "#33467c"          # kursor w trybie nawigacji
+text = "#c0caf5"
+
+[theme.custom.light]
+panel_bg = "#e1e2e7"
+sidebar_bg = "#d5d6db"
+active_row_bg = "#c4c8da"
+selection_bg = "#b7c1e3"
+text = "#3760bf"
+
+[terminal]
+new_cwd = "~/Desktop/Projekty"
+
+[keys]
+prefix = "ctrl+a"
+last_pane = "prefix+a"        # ctrl+a a = skok do poprzedniego panelu
+next_agent = "prefix+]"       # przeskakiwanie między agentami
+previous_agent = "prefix+["
+
+[ui]
+status_indicators = "symbols"           # różne ikonki zamiast kropek
+agent_panel_sort = "priority"           # czekający na Ciebie agenci na górze
+show_agent_labels_on_pane_borders = true
+pane_borders = "always"                 # ramka także wokół pojedynczego panelu
+pane_gaps = true
+hide_tab_bar_when_single_tab = false
+window_title = "herdr · {workspace} · {tab}"
+tab_bar_right_separator = "  ·  "
+tab_bar_right = [
+  { type = "zoom" },
+  { type = "command", command = "~/.config/herdr/agents-status.sh", interval_seconds = 3, timeout_seconds = 2 },
+  { type = "command", command = "git -C \"$PWD\" branch --show-current 2>/dev/null | sed 's/^/ /'", interval_seconds = 5, timeout_seconds = 2 },
+  { type = "command", command = "pmset -g batt | grep -o '[0-9]*%' | sed 's/^/🔋 /'", interval_seconds = 60, timeout_seconds = 2 },
+  { type = "datetime", format = "%a %H:%M" },
+]
+
+# Agenci: stan + workspace, a pod spodem co agent właśnie robi (tytuł terminala)
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", { token = "workspace", bold = true }, "tab"],
+  [{ token = "terminal_title_stripped", dim = true }],
+]
+
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", { token = "workspace", bold = true }],
+  [{ token = "branch", fg = "#bb9af7" }, "git_status"],
+]
+
+[ui.toast]
+delivery = "system"
+
+[ui.sound]
+enabled = true
