@@ -29,12 +29,7 @@ These instructions apply to all projects.
 ## Git
 
 - Never add a `Co-Authored-By: Claude ...` trailer or any other Claude/AI attribution to commit messages or PR descriptions (no "Generated with Claude Code" line either).
-- Follow the git flow branching model (plain git; the `git flow` CLI is not installed):
-  - `main` holds released code; `develop` is the integration branch.
-  - New work: branch `feature/<short-name>` from `develop`, merge back into `develop` with `--no-ff`.
-  - Releases: `release/<version>` from `develop`, merge into `main` and `develop`, tag `main` with the version.
-  - Urgent production fixes: `hotfix/<version>` from `main`, merge into `main` and `develop`, tag `main`.
-  - Never commit directly to `main` or `develop`. If the repo has no `develop` branch, ask before creating it.
+- Branch names: `feature/<short-name>` for new work, `release/<version>` for releases, `hotfix/<version>` for urgent fixes.
 - Write commit messages in Conventional Commits format: `<type>(<optional scope>): <description>`.
   - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
   - Description in imperative mood, lowercase, no trailing period, ~72 chars max.
