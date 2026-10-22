@@ -1,7 +1,7 @@
 <a id="wtyczki"></a>
 # Przewodnik po wtyczkach
 
-Każdy dokument opisuje najpierw to, co działa bez zmiany konfiguracji. Funkcje dostępne jedynie przez ręczne polecenie lub API mają osobną etykietę, a przykłady z README, których konfiguracja nie instaluje, nie są przedstawiane jako aktywne skróty.
+Krótki opis każdej wtyczki: do czego służy, skróty ustawione w tej konfiguracji i ostrzeżenia, które mogą zaboleć. Wersje wtyczek są przypięte w `nvim/lazy-lock.json`.
 
 <a id="indeks-wtyczek"></a>
 ## Indeks wszystkich wtyczek
@@ -73,7 +73,6 @@ Każdy dokument opisuje najpierw to, co działa bez zmiany konfiguracji. Funkcje
 
 ### Zdalna praca i wtyczki lokalne
 
-- [`distant.nvim`](09-distant-tmux-navigator.md#plugin-distant)
-- [`vim-tmux-navigator`](09-distant-tmux-navigator.md#plugin-vim-tmux-navigator)
+- [`distant.nvim`](09-distant-smart-splits.md#plugin-distant)
+- [`smart-splits.nvim`](09-distant-smart-splits.md#plugin-smart-splits)
 - [`watchdiff.nvim`](10-watchdiff-claude.md#plugin-watchdiff)
-- [`claude.nvim`](10-watchdiff-claude.md#plugin-claude)

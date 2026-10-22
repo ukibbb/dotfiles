@@ -5,17 +5,17 @@
 
 - **macOS + WezTerm**: **Wersja/stan:** konfiguracja repo dla WezTerm. **Dlaczego ma znaczenie:** True color, synchronized output i extended keys CSI-u.
 - **Neovim**: **Wersja/stan:** `v0.12.4`, LuaJIT. **Dlaczego ma znaczenie:** nowe API LSP i gałąź `main` nvim-treesitter.
-- **tmux**: **Wersja/stan:** `3.7b`. **Dlaczego ma znaczenie:** [lista domyślnych mapowań tmux](../03-tmux.md#tmux) odpowiada tej wersji.
-- **zsh + Oh My Zsh**: **Wersja/stan:** shell użytkownika. **Dlaczego ma znaczenie:** ładuje `PATH`, NVM i wyłącza XON/XOFF.
+- **WezTerm jako multiplekser**: **Wersja/stan:** `20240203-110809-5046fc22`. **Dlaczego ma znaczenie:** workspace'y, karty i panele zastępują tmux; [skróty](../03-wezterm.md#wezterm).
+- **zsh bez frameworka**: **Wersja/stan:** shell użytkownika ze starship, atuin i mise. **Dlaczego ma znaczenie:** ładuje `PATH`, wersje Node przez mise i wyłącza XON/XOFF.
 - **WezTerm keybindings**: **Wersja/stan:** mapowania `Cmd` w `wezterm.lua`. **Dlaczego ma znaczenie:** fizyczne `Cmd-h/j/k/l/q`, `Cmd-\`, `Cmd--` i `Cmd-n` do kodów terminalowych.
 - **Nerd Font Symbols**: **Wersja/stan:** dołączone do WezTerm jako fallback. **Dlaczego ma znaczenie:** poprawne ikony NvChad, drzewa, Git, DAP i Markdown.
 
 ## Instalacja warstw
 
-1. W katalogu repo uruchom `brew bundle --file Brewfile`. Deklarowane są: Neovim, Go, `govulncheck`, GitHub CLI, tree-sitter-cli, tmux, fzf, fd, ripgrep, jq, stylua, ruff, `libpq`, `mysql-client`, SQLite, DuckDB, `sqlcmd` i WezTerm.
-2. Zainstaluj NVM oraz domyślne Node LTS zgodnie z [głównym README repozytorium](../../README.md#fresh-mac-setup); Node uruchamia część serwerów Mason i adapter JS/TS.
+1. W katalogu repo uruchom `brew bundle --file Brewfile`. Lista pakietów z opisami jest w samym `Brewfile`.
+2. Zainstaluj Node przez `mise install` (wersja w `mise/config.toml`); Node uruchamia część serwerów Mason i adapter JS/TS.
 3. Utwórz dowiązania przez `bash install.sh install` i sprawdź je przez `bash install.sh status`. Instalator wykonuje timestampowane backupy zastępowanych celów.
-4. Sklonuj TPM do `~/.tmux/plugins/tpm`, wczytaj konfigurację przez `tmux source-file "$HOME/.tmux.conf"`, a wewnątrz tmux naciśnij `Ctrl-s I`.
+4. Uruchom ponownie WezTerm, aby wczytał `~/.config/wezterm/wezterm.lua` (kolejne zmiany wczytuje sam).
 5. Odtwórz wtyczki Neovim dokładnie z lockfile przez `nvim --headless "+Lazy! restore" +qa`. Restore może od razu uruchomić hooki DBee i Dbout, więc Go 1.26.6, `cc`, `govulncheck`, `node` oraz `npm` muszą już być na `PATH` tego procesu.
 6. Zainstaluj narzędzia Mason: `lua-language-server pyright ruff typescript-language-server html-lsp css-lsp dockerfile-language-server docker-compose-language-service stylua mypy debugpy delve js-debug-adapter`.
 7. Dla Claude opcjonalnie zainstaluj `@anthropic-ai/claude-code` i wykonaj pierwsze logowanie poleceniem `claude`.
@@ -25,8 +25,7 @@
 
 - **bootstrap i Git UI**: `git`.
 - **ekosystem JavaScript**: `node` uruchamia Pyright, HTML/CSS, Docker/Compose LSP, `js-debug-adapter` oraz backend Dbout; `npm` instaluje ich pakiety i wykonuje build Dbout.
-- **Telescope**: `rg`, `fd`; `fzf` jest potrzebne przez tmux-fzf.
-- **tmux-fzf**: GNU `bash`, `sed`, `fzf`; opcjonalnie `pstree` i CopyQ.
+- **Telescope**: `rg`, `fd`; `fzf` jest potrzebne przez funkcje `n` i `nt` w shellu.
 - **format Lua/Python**: `stylua`, `ruff`.
 - **lint Python**: `mypy`.
 - **LSP**: executable wymienione w [sekcji nvim-lspconfig](../plugins/03-lsp-completion-snippets-autopairs.md#plugin-nvim-lspconfig); Node dla serwerów JS oraz projektowy `typescript` dla TS.
@@ -41,10 +40,9 @@
 - **wayfinder.nvim**: `rg` dla tekstowych referencji, `git` dla historii i najlepszej ścieżki wykrywania testów oraz opcjonalny klient LSP dołączony do bieżącego bufora dla definicji, semantycznych referencji i incoming callers.
 - **CodeDiff**: `curl` albo `wget` do pierwszego pobrania biblioteki natywnej.
 - **Distant**: `ssh`, lokalny `distant`; zdalny `distant` dla skonfigurowanego Launch.
-- **vim-tmux-navigator**: Bash, `ps`, `grep`, tmux i Neovim/Vim.
-- **claude.nvim**: uwierzytelnione `claude` CLI i sieć do backendu.
+- **smart-splits.nvim**: WezTerm z obsługą user vars i `wezterm cli`.
 
-`.zshrc` wykrywa Homebrew pod `/opt/homebrew` albo `/usr/local`, ładuje `brew shellenv` i wylicza aktywny prefix dla keg-only `libpq/bin`, `mysql-client/bin` i `sqlite/bin`. Dodaje też `~/.local/share/nvim/mason/bin`, środowisko NVM, Bun i OpenCode. Po zmianie uruchom nową powłokę albo `source ~/.zshrc`. `stty -ixon` uwalnia `Ctrl-s` od terminalowego XOFF; tmux nadal używa tego klawisza jako prefixu.
+`.zshrc` wykrywa Homebrew pod `/opt/homebrew` albo `/usr/local`, ładuje `brew shellenv` i wylicza aktywny prefix dla keg-only `libpq/bin`, `mysql-client/bin` i `sqlite/bin`. Dodaje też `~/.local/share/nvim/mason/bin`, mise, Bun i OpenCode. Po zmianie uruchom nową powłokę albo `source ~/.zshrc`. `stty -ixon` uwalnia `Ctrl-s` od terminalowego XOFF; WezTerm nadal używa tego klawisza jako leadera.
 
 ## Stan lokalny i sekrety
 
@@ -59,6 +57,5 @@
 ## Co jest, a czego nie ma w lockfile
 
 - `nvim/lazy-lock.json` przypina 49 zewnętrznych wtyczek Neovim do pełnych hashy Git.
-- `watchdiff.nvim` i `claude.nvim` są ładowane z katalogów tego repo i nie mają osobnych wpisów lockfile.
-- `tmux.conf` zapisuje tylko trzy identyfikatory repozytoriów TPM, bez commitów. Aktualny commit instalacji tmux jest więc stanem lokalnym, nie gwarancją odtworzenia.
+- `watchdiff.nvim` jest ładowany z katalogu tego repo i nie ma osobnego wpisu w lockfile.
 - Homebrew i Mason nie są tu przypięte do wersji. `brew bundle` oraz ręczna lista Mason odtwarzają zestaw, ale nie historyczne wydania narzędzi.

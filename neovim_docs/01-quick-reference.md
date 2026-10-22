@@ -1,21 +1,21 @@
 <a id="szybka-sciaga"></a>
 # Szybka ściąga
 
-`prefix` tmux to `Ctrl-s`. `<leader>` Neovim to `Spacja`.
+Leader WezTerm to `Ctrl-s`. `<leader>` Neovim to `Spacja`.
 
-## Tmux na co dzień
+## WezTerm na co dzień
 
-- **`Ctrl-s c`**: Nowe okno w bieżącym katalogu.
+- **`nt`**: Folder przez fzf, potem workspace projektu (dawna sesja tmux).
+- **`Ctrl-s c`**: Nowa karta.
 - **`Ctrl-s |`**: Panel obok, lewo/prawo.
 - **`Ctrl-s -`**: Panel poniżej, góra/dół.
-- **`Ctrl-h/j/k/l`**: Przejście między panelami tmux i splitami Neovim bez prefixu.
-- **`Ctrl-\`**: Poprzedni panel lub split, bez prefixu.
-- **`Ctrl-s h/j/k/l`**: Zmiana rozmiaru panelu o 5 komórek.
+- **`Ctrl-h/j/k/l`**: Przejście między panelami WezTerm i splitami Neovim bez leadera.
+- **`Ctrl-s h/j/k/l`**: Zmiana rozmiaru panelu o 5 komórek, potem same `h/j/k/l` przez 1 s.
 - **`Ctrl-s m`**: Maksymalizacja/przywrócenie panelu.
-- **`Ctrl-s Ctrl-j`**: Wyszukiwarka sesji `tmux-fzf`.
-- **`Ctrl-s s`**: Lista sesji tmux.
-- **`Ctrl-s d`**: Odłączenie od sesji.
-- **`Ctrl-s r`**: Ponowne wczytanie `~/.tmux.conf`.
+- **`Ctrl-s s`** / **`Ctrl-s Ctrl-j`**: Lista workspace'ów.
+- **`Ctrl-s a`**: Workspace `agents` z herdr.
+- **`Ctrl-s [`**: Copy mode z klawiszami vi.
+- **`Ctrl-s Ctrl-l`**: Wyczyszczenie ekranu (samo `Ctrl-l` przechodzi do panelu).
 
 ## Neovim na co dzień
 
@@ -36,7 +36,6 @@
 - **Markdown**: `<leader>mr` przełącza renderowanie tylko w buforze Markdown.
 - **Zdalnie**: `<leader>rl` połączenie, `<leader>ro` plik/katalog, `<leader>rs` powłoka.
 - **Zmiany zewnętrzne**: `<leader>ch` zatwierdza obejrzenie podświetleń watchdiff.
-- **Claude**: `<leader>ac` pytanie, `<leader>aC` pytanie i próba natychmiastowego komentarza.
 
 <a id="bezpieczenstwo"></a>
 ## Najważniejsze ostrzeżenia
@@ -61,7 +60,7 @@
 
 > **UWAGA: historia Git.** `Enter` w pickerze `<leader>cm` wykonuje checkout wybranego commita i zwykle przechodzi do detached `HEAD`. `Ctrl-r m`, `Ctrl-r s` i `Ctrl-r h` przesuwają bieżącą gałąź. Szczególnie `Ctrl-r h` usuwa śledzone zmiany z indeksu i drzewa roboczego.
 
-> **UWAGA: `Ctrl-s`.** Tmux przechwytuje `Ctrl-s` jako prefix. Aby wysłać dosłowne `Ctrl-s` do Neovim lub programu w panelu, naciśnij `Ctrl-s Ctrl-s`. Dotyczy to między innymi wbudowanej pomocy sygnatur LSP, akcji `StageAll` w Neogit i zapisu koloru w Minty. `.zshrc` wykonuje `stty -ixon`, więc terminal nie używa `Ctrl-s` jako XOFF, ale konflikt z prefixem tmux pozostaje.
+> **UWAGA: `Ctrl-s`.** WezTerm przechwytuje `Ctrl-s` jako leader. Aby wysłać dosłowne `Ctrl-s` do Neovim lub programu w panelu, naciśnij `Ctrl-s Ctrl-s`. Dotyczy to między innymi wbudowanej pomocy sygnatur LSP, akcji `StageAll` w Neogit i zapisu koloru w Minty. `.zshrc` wykonuje `stty -ixon`, więc terminal nie używa `Ctrl-s` jako XOFF, ale konflikt z leaderem WezTerm pozostaje.
 
 > **UWAGA: pliki zdalne i zewnętrzne.** `D`, `R`, `K` w interfejsach Distant mogą usuwać, zmieniać nazwę lub zrywać połączenie. `:e!` po konflikcie watchdiff odrzuca lokalne, niezapisane zmiany bufora.
 

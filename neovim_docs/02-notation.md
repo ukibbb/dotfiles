@@ -1,5 +1,5 @@
 <a id="notacja"></a>
-# Notacja i etykiety
+# Notacja
 
 ## Tryby Neovim
 
@@ -13,18 +13,6 @@
 - **`t`**: Terminal.
 
 `n,x` oznacza dwa mapowania: Normal i tylko Visual. `i,s` oznacza Insert i Select. W nazwach klawiszy `C`, `M` i `S` oznaczają odpowiednio `Ctrl`, `Alt/Meta` i `Shift`.
-
-## Etykiety stanu
-
-- **Aktywne lokalne**: Mapowanie lub zachowanie rzeczywiście włączone przez to repozytorium.
-- **Domyślne wtyczki**: Mapowanie instalowane przez przypiętą wtyczkę, bez lokalnej definicji.
-- **Domyślne Neovim**: Mapowanie lub zachowanie dostarczane przez używaną wersję Neovim, niezależne od wtyczki.
-- **Kontekstowe**: Działa tylko w określonym buforze, panelu, trybie, filetype albo po podłączeniu LSP.
-- **Polecenie**: Publiczne polecenie Ex, które można wpisać po `:`; wewnętrzne funkcje Lua nie są tu nazywane poleceniami.
-- **Przykład nieaktywny**: Skrót pokazany przez README jako przykład, ale nieutworzony przez tę konfigurację.
-- **Warunkowe/wyłączone**: Istnieje tylko po spełnieniu warunku albo jest jawnie wyłączone.
-- **Opcjonalne upstream**: Funkcja obecna w przypiętym kodzie, ale wymagająca dodatkowego mapowania, konfiguracji albo ręcznego API Lua.
-- **Biblioteka bez samodzielnego UI**: Zależność używana przez inne wtyczki; użytkownik diagnozuje ją pośrednio, zamiast otwierać osobny panel.
 
 ## Klawisze fizyczne na macOS
 

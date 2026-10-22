@@ -2,15 +2,18 @@
 
 Personal macOS dotfiles for the terminal/editor stack:
 
-- zsh and Oh My Zsh
+- zsh (no framework) with starship, atuin, autosuggestions and syntax highlighting
+- mise for Node/Go/Python versions, direnv, eza, bat, git-delta, btop
 - Neovim with lazy.nvim, NvChad UI pieces, LSP, formatting, Telescope, and local plugins
-- tmux with TPM plugins
-- WezTerm terminal config with macOS `Cmd` key mappings
+- WezTerm as terminal and multiplexer (workspaces, tabs, splits; tmux-like `Ctrl+s` leader) with macOS `Cmd` key mappings
 - Claude Code global settings and status line
+- herdr (agent hub in the `agents` WezTerm workspace) and git config
 
 ## Documentation
 
-- [Polish tmux and Neovim guide](neovim_docs/README.md), split by topic and formatted for printing
+- [Polish WezTerm and Neovim guide](neovim_docs/README.md), split by topic and formatted for printing
+- [Terminal tools: how to use them](neovim_docs/06-terminal-tools.md)
+- [Herdr and Claude Code](neovim_docs/07-herdr-claude-code.md)
 
 ## Fresh Mac Setup
 
@@ -23,8 +26,8 @@ Personal macOS dotfiles for the terminal/editor stack:
 2. Clone this repo.
 
 ```sh
-git clone <repo-url> "$HOME/Desktop/dotfiles"
-cd "$HOME/Desktop/dotfiles"
+git clone <repo-url> "$HOME/Desktop/Projekty/dotfiles"
+cd "$HOME/Desktop/Projekty/dotfiles"
 ```
 
 3. Install Homebrew dependencies.
@@ -33,17 +36,10 @@ cd "$HOME/Desktop/dotfiles"
 brew bundle --file Brewfile
 ```
 
-4. Install nvm if `~/.nvm/nvm.sh` does not exist.
+4. Install Node (and other runtimes) with mise.
 
 ```sh
-if [ ! -s "$HOME/.nvm/nvm.sh" ]; then
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-nvm install --lts
-nvm alias default 'lts/*'
+mise install
 ```
 
 5. Link the dotfiles.
@@ -55,16 +51,7 @@ bash install.sh status
 
 The installer backs up existing targets as `*.backup.YYYYMMDDHHMMSS` before replacing them.
 
-6. Install tmux plugins.
-
-```sh
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-fi
-tmux source-file "$HOME/.tmux.conf"
-```
-
-Inside tmux, press `Ctrl+s` then `I` to install configured plugins.
+6. Restart WezTerm so it reads `~/.config/wezterm/wezterm.lua`. Keys: [WezTerm guide](neovim_docs/03-wezterm.md).
 
 7. Bootstrap Neovim.
 
@@ -83,11 +70,13 @@ Neovim debugging uses `nvim-dap` with `debugpy` for Python, `delve` for Go, and 
 8. Optional tools.
 
 ```sh
-npm install -g @anthropic-ai/claude-code
-npm install -g opencode-ai
+curl -fsSL https://claude.ai/install.sh | bash
+curl -fsSL https://herdr.dev/install.sh | sh
+npm install -g opencode-ai @openai/codex
+atuin import zsh
 ```
 
-Run `claude` once to authenticate if you use Claude Code.
+Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are declared in `claude/settings.json`; if they are missing, install them with `claude plugin install superpowers@superpowers-marketplace` (and `typescript-lsp`, `pyright-lsp`, `gopls-lsp`, `lua-lsp` from `claude-plugins-official`).
 
 9. Restart apps.
 
@@ -116,9 +105,10 @@ When dependencies change:
 For exact recreation on a new Mac:
 
 ```sh
-cd "$HOME/Desktop/dotfiles"
+cd "$HOME/Desktop/Projekty/dotfiles"
 brew bundle --file Brewfile
 bash install.sh install
+mise install
 nvim --headless "+Lazy! restore" +qa
 ```
 
@@ -127,7 +117,7 @@ Then install the Mason package list above and verify with:
 ```sh
 bash install.sh status
 nvim --headless "+checkhealth" +qa
-tmux source-file "$HOME/.tmux.conf"
+wezterm show-keys > /dev/null
 ```
 
 ## Uninstall
@@ -136,4 +126,4 @@ tmux source-file "$HOME/.tmux.conf"
 bash install.sh uninstall
 ```
 
-This removes symlinks managed by the installer. It does not remove backups, Homebrew packages, Neovim data, or tmux plugins.
+This removes symlinks managed by the installer. It does not remove backups, Homebrew packages, or Neovim data.

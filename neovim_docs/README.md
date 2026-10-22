@@ -1,20 +1,19 @@
-# Tmux i Neovim: mapowania, wtyczki i przepływy pracy
+# WezTerm, Neovim i narzędzia terminala
 
-> Stan opisany w tym zestawie dokumentów odpowiada konfiguracji repozytorium zweryfikowanej 16 sierpnia 2026. Zachowanie wtyczek pochodzi z lokalnie zainstalowanych rewizji przypiętych w `nvim/lazy-lock.json`, a nie z dokumentacji najnowszej wersji w sieci. Dla każdej wtyczki źródłem nadrzędnym jest kod przypiętego commita; internetowe README i strony dokumentacji służą tylko wtedy, gdy odpowiadają tej samej rewizji.
-
-Dokumenty używają jednokolumnowych list zamiast tabel, aby zachować czytelność w druku i jednoznacznie odróżniać separatory od skrótów klawiszowych.
+> Dokumentacja opisuje konfigurację z tego repozytorium (stan na 22 października 2026). Wersje wtyczek Neovim są przypięte w `nvim/lazy-lock.json`.
 
 <a id="spis-tresci"></a>
 ## Spis treści
 
 - [Szybka ściąga](01-quick-reference.md#szybka-sciaga)
 - [Najważniejsze ostrzeżenia](01-quick-reference.md#bezpieczenstwo)
-- [Notacja i etykiety](02-notation.md#notacja)
-- [Tmux](03-tmux.md#tmux)
+- [Notacja](02-notation.md#notacja)
+- [WezTerm](03-wezterm.md#wezterm)
 - [Aktywne mapowania Neovim](04-neovim-keymaps.md#aktywne-mapowania-neovim)
 - [Praktyczne przepływy pracy](05-workflows.md#przeplywy-pracy)
+- [Narzędzia terminala: shell, atuin, mise, eza, bat, delta, btop](06-terminal-tools.md#narzedzia-terminala)
+- [Herdr i Claude Code](07-herdr-claude-code.md#herdr-claude-code)
 - [Przewodnik po wtyczkach](plugins/README.md#wtyczki)
 - [Indeks wszystkich wtyczek](plugins/README.md#indeks-wtyczek)
 - [Wymagania i środowisko](reference/01-requirements.md#wymagania)
-- [Manifest źródeł i wersji](reference/02-manifest.md#manifest)
 - [Diagnostyka](reference/03-diagnostics.md#diagnostyka)
