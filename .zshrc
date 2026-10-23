@@ -1,7 +1,7 @@
 # Avoid macOS's low default descriptor limit in tmux and Bun applications.
 ulimit -S -n 65536 2>/dev/null || true
 
-if [[ -z "${DOTFILES_DIR:-}" ]]; then
+if [[ ! -d "${DOTFILES_DIR:-}" ]]; then
   DOTFILES_ZSHRC="${(%):-%x}"
   [[ "$DOTFILES_ZSHRC" != /* ]] && DOTFILES_ZSHRC="$PWD/$DOTFILES_ZSHRC"
   export DOTFILES_DIR="${DOTFILES_ZSHRC:A:h}"

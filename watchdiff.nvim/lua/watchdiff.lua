@@ -259,7 +259,7 @@ end
 -- Used as a baseline when an external tool modifies a file that ISN'T open in Neovim.
 -- Returns nil if the file isn't tracked by git (brand new file).
 local function git_head_contents(filepath)
-  -- Step 1: Find the git repo root (e.g., "/Users/lukasz/Desktop/dotfiles")
+  -- Step 1: Find the git repo root (e.g., "/Users/lukasz/Desktop/Projekty/dotfiles")
   -- vim.fn.systemlist() runs a shell command and returns output as a list of lines
   local result = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })
 

@@ -29,7 +29,7 @@ Then open Neovim with only `watchdiff.nvim` on `runtimepath`:
 
 ```bash
 nvim -u NONE \
-  "+set rtp+=/Users/lukasz/Desktop/dotfiles/watchdiff.nvim" \
+  "+set rtp+=/Users/lukasz/Desktop/Projekty/dotfiles/watchdiff.nvim" \
   "+lua require('watchdiff').setup({})" \
   test.lua
 ```
