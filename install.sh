@@ -19,7 +19,6 @@ SYMLINKS=(
     ".zshrc:$HOME/.zshrc"
     "nvim:$HOME/.config/nvim"
     "wezterm.lua:$HOME/.config/wezterm/wezterm.lua"
-    "tmux.conf:$HOME/.tmux.conf"
     "claude/settings.json:$HOME/.claude/settings.json"
     "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
@@ -31,7 +30,9 @@ SYMLINKS=(
     "btop/btop.conf:$HOME/.config/btop/btop.conf"
     "herdr/config.toml:$HOME/.config/herdr/config.toml"
     "herdr/agents-status.sh:$HOME/.config/herdr/agents-status.sh"
-    "herdr/tmux-goto-herdr.sh:$HOME/.config/herdr/tmux-goto-herdr.sh"
+    "uv/uv.toml:$HOME/.config/uv/uv.toml"
+    "pnpm/rc:$HOME/Library/Preferences/pnpm/rc"
+    "bun/bunfig.toml:$HOME/.bunfig.toml"
 )
 
 # Define copies (for apps that don't work with symlinks): "source:target"
@@ -113,6 +114,27 @@ install_symlinks() {
     echo -e "\n${GREEN}Done!${NC}"
 }
 
+bootstrap() {
+    if ! command -v brew >/dev/null; then
+        print_info "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
+
+    print_info "Installing Homebrew packages..."
+    brew bundle --file "$DOTFILES_DIR/Brewfile"
+
+    install_symlinks
+
+    print_info "Installing mise runtimes..."
+    (cd "$HOME" && mise install)
+
+    print_info "Restoring Neovim plugins..."
+    nvim --headless "+Lazy! restore" +qa
+
+    print_info "Next: optional tools and Mason packages from README.md"
+}
+
 uninstall_symlinks() {
     echo -e "\n${BLUE}Removing symlinks...${NC}\n"
     for entry in "${SYMLINKS[@]}"; do
@@ -148,11 +170,12 @@ show_status() {
 }
 
 case "${1:-}" in
+    bootstrap) bootstrap ;;
     install)   install_symlinks ;;
     uninstall) uninstall_symlinks ;;
     status)    show_status ;;
     *)
-        echo "Usage: $0 {install|uninstall|status}"
+        echo "Usage: $0 {bootstrap|install|uninstall|status}"
         echo ""
         echo "Symlinks:"
         for entry in "${SYMLINKS[@]}"; do

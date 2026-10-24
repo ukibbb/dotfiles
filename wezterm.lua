@@ -62,7 +62,7 @@ config.window_frame = {
 	inactive_titlebar_bg = "#000000",
 }
 
--- Tab bar in the old tmux status colors: cyan accent on black.
+-- Tab bar: cyan accent on black.
 config.colors.tab_bar = {
 	background = "#000000",
 	active_tab = { bg_color = "#00d9ff", fg_color = "#000000", intensity = "Bold" },
@@ -71,8 +71,7 @@ config.colors.tab_bar = {
 }
 
 -- ---------------------------------------------------------------------------
--- Multiplexing (replaces tmux)
--- Leader is Ctrl+s, same as the old tmux prefix; bindings mirror tmux.conf.
+-- Multiplexing
 -- ---------------------------------------------------------------------------
 
 config.leader = { key = "s", mods = "CTRL", timeout_milliseconds = 1000 }
@@ -102,7 +101,7 @@ local function split_nav(key)
 	}
 end
 
--- Leader+h/j/k/l resizes, then h/j/k/l keep resizing for 1s (tmux bind -r).
+-- Leader+h/j/k/l resizes, then h/j/k/l keep resizing for 1s.
 local function resize(key)
 	return {
 		key = key,
@@ -135,7 +134,7 @@ config.keys = {
 			"printf '\033[?1000l\033[?1002l\033[?1003l\033[?1005l\033[?1006l\033[?1015l\033[?1049l'; stty sane -ixon\r"
 		),
 	},
-	-- Ctrl+l navigates panes, so clear-screen moves under the leader (as with vim-tmux-navigator).
+	-- Ctrl+l navigates panes, so clear-screen moves under the leader.
 	{ key = "l", mods = "LEADER|CTRL", action = act.SendKey({ key = "l", mods = "CTRL" }) },
 
 	-- Splits and panes
@@ -152,7 +151,7 @@ config.keys = {
 	resize("k"),
 	resize("l"),
 
-	-- Tabs (tmux windows)
+	-- Tabs
 	{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
 	{ key = "p", mods = "LEADER", action = act.ActivateTabRelative(-1) },
@@ -169,7 +168,7 @@ config.keys = {
 		}),
 	},
 
-	-- Workspaces (tmux sessions)
+	-- Workspaces
 	{ key = "s", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
 	{ key = "j", mods = "LEADER|CTRL", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
 	{ key = "(", mods = "LEADER|SHIFT", action = act.SwitchWorkspaceRelative(-1) },
@@ -182,7 +181,7 @@ config.keys = {
 		action = act.SwitchToWorkspace({ name = "agents", spawn = { args = { herdr }, cwd = home } }),
 	},
 
-	-- Copy mode with vi keys (tmux prefix+[), config reload
+	-- Copy mode with vi keys, config reload
 	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 }
@@ -222,7 +221,7 @@ wezterm.on("update-status", function(win, _)
 		table.insert(cells, { Text = " " })
 	end
 
-	local ok, out = wezterm.run_child_process({ home .. "/.config/herdr/agents-status.sh", "--tmux" })
+	local ok, out = wezterm.run_child_process({ home .. "/.config/herdr/agents-status.sh", "--bar" })
 	if ok and out ~= "" then
 		table.insert(cells, { Foreground = { Color = "#bd93f9" } })
 		table.insert(cells, { Text = out })

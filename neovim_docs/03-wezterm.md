@@ -1,15 +1,15 @@
 <a id="wezterm"></a>
 # WezTerm
 
-> Stan na 22 października 2026. WezTerm zastępuje tmux: sesje, okna i panele są wbudowane. Skróty celowo powtarzają dawny `tmux.conf`, więc pamięć mięśniowa zostaje. Konfiguracja: `wezterm.lua` → `~/.config/wezterm/wezterm.lua`; WezTerm przeładowuje ją sam po zapisie.
+> Stan na 22 października 2026. WezTerm jest terminalem i multiplekserem: workspace'y, karty i panele są wbudowane. Konfiguracja: `wezterm.lua` → `~/.config/wezterm/wezterm.lua`; WezTerm przeładowuje ją sam po zapisie.
 
 <a id="wezterm-pojecia"></a>
-## Pojęcia: tmux → WezTerm
+## Pojęcia
 
-- **Sesja tmux** → **workspace**. Osobny zestaw kart, zwykle jeden na projekt. Nazwa widoczna po prawej stronie paska.
-- **Okno tmux** → **karta** (tab) na pasku u góry.
-- **Panel tmux** → **panel** (split).
-- **Prefix `Ctrl-s`** → **leader `Ctrl-s`**. Naciśnij, puść, potem klawisz; masz na to 1 s. Gdy leader jest aktywny, po prawej świeci fioletowe `^S`.
+- **Workspace**. Osobny zestaw kart, zwykle jeden na projekt. Nazwa widoczna po prawej stronie paska.
+- **Karta** (tab) na pasku u góry.
+- **Panel** (split).
+- **Leader `Ctrl-s`**. Naciśnij, puść, potem klawisz; masz na to 1 s. Gdy leader jest aktywny, po prawej świeci fioletowe `^S`.
 
 **Czego nie ma:** trwałości. Zamknięcie okna WezTerm zamyka shelle, Neovim i serwery w środku. Agenci w herdr działają dalej, bo herdr ma własny serwer.
 
@@ -21,7 +21,7 @@
 - **`Ctrl-s |`**: Panel obok, lewo/prawo, w bieżącym katalogu.
 - **`Ctrl-s -`**: Panel poniżej, góra/dół, w bieżącym katalogu.
 - **`Ctrl-h/j/k/l`**: Przejście między panelami WezTerm i splitami Neovim bez leadera (smart-splits.nvim).
-- **`Ctrl-s h/j/k/l`**: Zmiana rozmiaru o 5 komórek. Przez kolejną sekundę same `h/j/k/l` dalej zmieniają rozmiar, jak `bind -r` w tmux. `Esc` kończy.
+- **`Ctrl-s h/j/k/l`**: Zmiana rozmiaru o 5 komórek. Przez kolejną sekundę same `h/j/k/l` dalej zmieniają rozmiar. `Esc` kończy.
 - **`Ctrl-s m`**: Maksymalizacja/przywrócenie panelu.
 - **`Ctrl-s x`**: Zamknięcie panelu po potwierdzeniu.
 
@@ -45,13 +45,13 @@
 - **`Ctrl-s r`**: Ręczne przeładowanie konfiguracji.
 - **`Ctrl-s Ctrl-s`**: Wysłanie dosłownego `Ctrl-s` do programu.
 - **`Ctrl-s Ctrl-l`**: Wyczyszczenie ekranu; samo `Ctrl-l` przechodzi do panelu po prawej.
-- **`Ctrl-s Ctrl-g`**: Naprawa panelu po TUI, które zostawiło włączoną mysz lub alternate screen (jak w dawnym `tmux.conf`).
+- **`Ctrl-s Ctrl-g`**: Naprawa panelu po TUI, które zostawiło włączoną mysz lub alternate screen.
 - **`Cmd-h` / `Cmd-l` / `Cmd-q`**, **`Cmd-\`** / **`Cmd--`**, **`Cmd-j` / `Cmd-k`**, **`Cmd-n`**: Bez zmian, trafiają do Neovim jako sekwencje CSI-u.
 
 <a id="wezterm-pasek"></a>
 ## Pasek u góry
 
-- **Lewo**: Przyciski okna macOS, potem karty. Aktywna karta ma cyjanowe tło, jak dawny pasek tmux.
+- **Lewo**: Przyciski okna macOS, potem karty. Aktywna karta ma cyjanowe tło.
 - **Prawo**: `^S`, gdy leader jest aktywny; stan agentów herdr (`herdr ⚙ 2  ⏸ 1  ✓ 1  ○ 3`: pracuje, czeka na Ciebie, skończył, bezczynny); nazwa workspace; godzina. Odświeżanie co 5 s.
 
 <a id="wezterm-nawigacja-nvim"></a>

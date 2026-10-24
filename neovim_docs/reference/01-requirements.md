@@ -5,7 +5,7 @@
 
 - **macOS + WezTerm**: **Wersja/stan:** konfiguracja repo dla WezTerm. **Dlaczego ma znaczenie:** True color, synchronized output i extended keys CSI-u.
 - **Neovim**: **Wersja/stan:** `v0.12.4`, LuaJIT. **Dlaczego ma znaczenie:** nowe API LSP i gałąź `main` nvim-treesitter.
-- **WezTerm jako multiplekser**: **Wersja/stan:** `20240203-110809-5046fc22`. **Dlaczego ma znaczenie:** workspace'y, karty i panele zastępują tmux; [skróty](../03-wezterm.md#wezterm).
+- **WezTerm jako multiplekser**: **Wersja/stan:** `20240203-110809-5046fc22`. **Dlaczego ma znaczenie:** workspace'y, karty i panele; [skróty](../03-wezterm.md#wezterm).
 - **zsh bez frameworka**: **Wersja/stan:** shell użytkownika ze starship, atuin i mise. **Dlaczego ma znaczenie:** ładuje `PATH`, wersje Node przez mise i wyłącza XON/XOFF.
 - **WezTerm keybindings**: **Wersja/stan:** mapowania `Cmd` w `wezterm.lua`. **Dlaczego ma znaczenie:** fizyczne `Cmd-h/j/k/l/q`, `Cmd-\`, `Cmd--` i `Cmd-n` do kodów terminalowych.
 - **Nerd Font Symbols**: **Wersja/stan:** dołączone do WezTerm jako fallback. **Dlaczego ma znaczenie:** poprawne ikony NvChad, drzewa, Git, DAP i Markdown.

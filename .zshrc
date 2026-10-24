@@ -1,4 +1,4 @@
-# Avoid macOS's low default descriptor limit in tmux and Bun applications.
+# Avoid macOS's low default descriptor limit for Bun applications.
 ulimit -S -n 65536 2>/dev/null || true
 
 if [[ ! -d "${DOTFILES_DIR:-}" ]]; then
@@ -51,6 +51,11 @@ setopt auto_cd interactive_comments no_beep
 export EDITOR=nvim
 export VISUAL=nvim
 
+# Supply-chain guard: npm and pip only accept absolute dates, so roll a
+# 30-day cutoff at shell start (uv, pnpm, bun and mise use their config files).
+export npm_config_before="$(date -u -v-30d +%Y-%m-%d)"
+export PIP_UPLOADED_PRIOR_TO="$npm_config_before"
+
 # Ctrl-s is the WezTerm leader; keep terminal flow control from treating it as XOFF.
 stty -ixon 2>/dev/null || true
 
@@ -64,6 +69,9 @@ compinit -C
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+setopt menu_complete   # first TAB inserts the first match and enters the menu
+zmodload zsh/complist
+bindkey -M menuselect '^[[Z' reverse-menu-complete   # shift+tab goes back
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -78,6 +86,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # atuin: searchable history on ctrl+r (up arrow stays the default)
 (( $+commands[atuin] )) && eval "$(atuin init zsh --disable-up-arrow)"
+
+# zoxide: remembers visited folders; n/nt list the frequent ones first
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
 # starship prompt
 (( $+commands[starship] )) && eval "$(starship init zsh)"
@@ -124,6 +135,7 @@ nt() {
     local selected
     selected=$("$DOTFILES_DIR/fuzzy/select-folder.sh" "$@")
     if [[ -n "$selected" ]]; then
+        (( $+commands[zoxide] )) && zoxide add "$selected"
         "$DOTFILES_DIR/fuzzy/wezterm-workspace.sh" "$selected"
     fi
 }

@@ -110,20 +110,43 @@ list_directories() {
         --exclude Pods \
         --exclude Movies \
         --exclude "Photos Library.photoslibrary" \
-        . "$dir" 2>/dev/null
+        . "$dir" 2>/dev/null |
+        awk '{print gsub(/\//, "/"), $0}' | sort -n | sed 's/^[0-9]* //; s:/$::'
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LIST FRECENT DIRECTORIES WITH ZOXIDE
+# ─────────────────────────────────────────────────────────────────────────────
+# zoxide query -l → every folder zoxide remembers, most used first
+# Only folders inside $dir are kept, so `n ~/projects` stays scoped.
+# Prints nothing when zoxide is not installed.
+# ─────────────────────────────────────────────────────────────────────────────
+list_frecent() {
+    local dir="${1%/}"
+
+    command -v zoxide &>/dev/null || return 0
+    zoxide query -l 2>/dev/null | awk -v dir="$dir/" 'index($0, dir) == 1'
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN: List directories and pipe to FZF
 # ─────────────────────────────────────────────────────────────────────────────
+# Order: frecent folders first, then the rest shallow-first.
+# awk '!seen[$0]++' drops duplicates, keeping the first (frecent) entry.
+#
+# --scheme=path      → score matches in the last path segment higher
+# --tiebreak=index   → on equal score keep our order (frecent, then shallow)
+#
 # || true
 #   └─ If FZF exits with error (user pressed Escape), ignore it
 #   └─ Without this, pipefail would cause our script to exit
 # ─────────────────────────────────────────────────────────────────────────────
-selected=$(list_directories "$START_DIR" | \
-    awk '{print gsub(/\//, "/"), $0}' | sort -rn | sed 's/^[0-9]* //' | \
+selected=$( { list_frecent "$START_DIR"; list_directories "$START_DIR"; } | \
+    awk '!seen[$0]++' | \
     fzf \
     $FZF_COLORS \
+    --scheme=path \
+    --tiebreak=index \
     --height=40% \
     --layout=reverse \
     --border=rounded \

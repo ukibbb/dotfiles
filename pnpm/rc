@@ -1,0 +1,2 @@
+# Supply-chain guard: only install versions published at least 30 days ago (minutes).
+minimum-release-age=43200

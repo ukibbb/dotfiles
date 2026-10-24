@@ -5,9 +5,10 @@ Personal macOS dotfiles for the terminal/editor stack:
 - zsh (no framework) with starship, atuin, autosuggestions and syntax highlighting
 - mise for Node/Go/Python versions, direnv, eza, bat, git-delta, btop
 - Neovim with lazy.nvim, NvChad UI pieces, LSP, formatting, Telescope, and local plugins
-- WezTerm as terminal and multiplexer (workspaces, tabs, splits; tmux-like `Ctrl+s` leader) with macOS `Cmd` key mappings
+- WezTerm as terminal and multiplexer (workspaces, tabs, splits; `Ctrl+s` leader) with macOS `Cmd` key mappings
 - Claude Code global settings and status line
 - herdr (agent hub in the `agents` WezTerm workspace) and git config
+- Supply-chain guard: uv, pnpm, bun, mise, npm and pip skip package versions published in the last 30 days
 
 ## Documentation
 
@@ -16,6 +17,10 @@ Personal macOS dotfiles for the terminal/editor stack:
 - [Herdr and Claude Code](neovim_docs/07-herdr-claude-code.md)
 
 ## Fresh Mac Setup
+
+Quick path: clone the repo and run `bash install.sh bootstrap`. It installs Homebrew if missing, runs `brew bundle`, links the dotfiles, runs `mise install` and restores Neovim plugins. Then continue from step 7 (Mason) and step 8 (optional tools).
+
+Manual steps:
 
 1. Install Homebrew if it is not already installed.
 
@@ -75,6 +80,8 @@ curl -fsSL https://herdr.dev/install.sh | sh
 npm install -g opencode-ai @openai/codex
 atuin import zsh
 ```
+
+Run `herdr integration install claude` so the Claude hook in `claude/settings.json` (`~/.claude/hooks/herdr-agent-state.sh`) exists.
 
 Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are declared in `claude/settings.json`; if they are missing, install them with `claude plugin install superpowers@superpowers-marketplace` (and `typescript-lsp`, `pyright-lsp`, `gopls-lsp`, `lua-lsp` from `claude-plugins-official`).
 

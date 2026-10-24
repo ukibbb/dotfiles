@@ -9,6 +9,8 @@
 - **`Ctrl-r`**: Wyszukiwanie w historii komend (atuin).
 - **`Ctrl-t`**: Wybór pliku przez fzf z podglądem bat; wkleja ścieżkę do linii.
 - **`Alt-c`**: Wybór katalogu przez fzf z podglądem drzewa; od razu `cd`.
+- **`n` / `nt`**: Wybór folderu przez fzf; najpierw najczęściej odwiedzane (zoxide), potem reszta od najpłytszych. `n` robi `cd`, `nt` otwiera workspace.
+- **`z <fragment>`**: Skok do najczęściej odwiedzanego pasującego folderu (zoxide).
 - **`→` lub `End`**: Przyjęcie szarej podpowiedzi z historii (autosuggestions).
 - **`ll`**: Lista plików ze szczegółami i statusem git.
 - **`lt`**: Drzewo katalogu na 2 poziomy.
@@ -90,6 +92,16 @@ Bez pliku konfiguracyjnego; hook w `.zshrc`.
 - **`direnv deny`**: Cofa zgodę.
 
 `.envrc` z sekretami dopisz do `.gitignore` projektu.
+
+<a id="zoxide"></a>
+## zoxide: często odwiedzane foldery
+
+Bez pliku konfiguracyjnego; hook w `.zshrc`. Zapisuje każdy folder, do którego wchodzisz przez `cd`, oraz folder wybrany w `nt`.
+
+- **`z <fragment>`**: Skok do najlepiej pasującego folderu, na przykład `z dot`.
+- **`zi`**: To samo, ale z wyborem przez fzf.
+- **`n` / `nt`**: Te foldery są na górze listy.
+- **`zoxide remove <ścieżka>`**: Usuwa folder z pamięci.
 
 <a id="eza-bat"></a>
 ## eza i bat: ls i cat

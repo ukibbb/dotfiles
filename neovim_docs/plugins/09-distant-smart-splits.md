@@ -30,7 +30,7 @@ Launch wymaga binarki `distant` na serwerze w `/home/ukibbb/.local/bin/distant`.
 <a id="plugin-smart-splits"></a>
 ## `smart-splits.nvim`
 
-**Co robi i po co:** tworzy jedną siatkę nawigacji ze splitów Neovim i paneli WezTerm. Zastąpił `vim-tmux-navigator` po przejściu z tmux na sam WezTerm. Ładuje się natychmiast.
+**Co robi i po co:** tworzy jedną siatkę nawigacji ze splitów Neovim i paneli WezTerm. Ładuje się natychmiast.
 
 **Mapowania:** `Ctrl-h/j/k/l` w Normal Neovim. Lokalne mapowania Insert `Ctrl-h/j/k/l` mają pierwszeństwo i poruszają kursorem.
 
@@ -47,7 +47,7 @@ Launch wymaga binarki `distant` na serwerze w `/home/ukibbb/.local/bin/distant`.
 
 - `Ctrl-l` w shellu nie czyści ekranu; użyj `Ctrl-s Ctrl-l`.
 - `Ctrl-h` nie jest terminalowym backspace.
-- Nie ma odpowiednika `Ctrl-\` (poprzedni panel) z vim-tmux-navigator.
+- Nie ma skrótu `Ctrl-\` (poprzedni panel).
 
 ### Diagnostyka
 

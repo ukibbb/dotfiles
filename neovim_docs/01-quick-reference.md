@@ -5,7 +5,7 @@ Leader WezTerm to `Ctrl-s`. `<leader>` Neovim to `Spacja`.
 
 ## WezTerm na co dzień
 
-- **`nt`**: Folder przez fzf, potem workspace projektu (dawna sesja tmux).
+- **`nt`**: Folder przez fzf (częste na górze), potem workspace projektu.
 - **`Ctrl-s c`**: Nowa karta.
 - **`Ctrl-s |`**: Panel obok, lewo/prawo.
 - **`Ctrl-s -`**: Panel poniżej, góra/dół.

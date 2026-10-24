@@ -4,3 +4,5 @@ node = "24.13.0"
 [settings]
 # honor .nvmrc / .node-version in existing projects
 idiomatic_version_file_enable_tools = ["node"]
+# supply-chain guard: skip tool versions released in the last 30 days
+minimum_release_age = "30d"

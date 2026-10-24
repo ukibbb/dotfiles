@@ -1,11 +1,10 @@
 # Starship prompt — https://starship.rs/config/
-# Two lines: context on top, clean input line below.
-add_newline = true
+# Single line: context followed by the input prompt.
+add_newline = false
 command_timeout = 800
 
 format = """
-$directory$git_branch$git_status$nodejs$python$golang$lua$bun$cmd_duration
-$character"""
+$directory$git_branch$git_status$nodejs$python$golang$lua$bun$cmd_duration$character"""
 
 [directory]
 truncation_length = 4

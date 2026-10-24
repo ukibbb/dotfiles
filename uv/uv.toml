@@ -1,0 +1,2 @@
+# Supply-chain guard: ignore package files uploaded in the last 30 days.
+exclude-newer = "30 days"

@@ -1,8 +1,7 @@
-# Install everything: brew bundle --file ~/Desktop/Projekty/dotfiles/Brewfile
+# Install everything: brew bundle --file Brewfile
 
 # Editor & terminal
 brew "neovim"
-brew "tmux"
 cask "wezterm"
 cask "font-symbols-only-nerd-font"
 
@@ -13,6 +12,7 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "mise"                     # node/go/python versions per project
 brew "direnv"                   # auto-load .envrc
+brew "zoxide"                   # frecent folders for n/nt
 
 # Modern CLI
 brew "fzf"
@@ -33,6 +33,10 @@ brew "lua-language-server"
 brew "stylua"
 brew "ruff"
 brew "tree-sitter-cli"
+brew "uv"                       # python packages
+brew "pnpm"
+tap "oven-sh/bun"
+brew "oven-sh/bun/bun"
 brew "cocoapods"
 
 # Databases
