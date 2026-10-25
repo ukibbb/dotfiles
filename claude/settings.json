@@ -495,7 +495,7 @@
     "typescript-lsp@claude-plugins-official": true,
     "superpowers@superpowers-marketplace": false,
     "gopls-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "superpowers-marketplace": {
