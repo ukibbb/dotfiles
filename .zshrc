@@ -153,3 +153,6 @@ fi
   source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [ -r "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# buliOS launcher
+alias bulios='bun ~/.claude/BULIOS/TOOLS/bulios.ts -s ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md'
