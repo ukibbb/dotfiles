@@ -103,6 +103,53 @@ copy_file() {
     print_success "$target <- $source (copied)"
 }
 
+# buliOS (fork LifeOS) lives in the buliOs repo; here we only link it into ~/.claude.
+# Personal data (profile, memory) stays in ~/.config/bulios/USER, outside any git repo.
+BULIOS_PAYLOAD="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}/claude/buliOS/install"
+BULIOS_DATA="$HOME/.config/bulios/USER"
+
+# An existing file or dir at the target is an old copy: report it instead of backing it up
+# next to the original, because Claude Code would load the backup as a duplicate skill or hook.
+link_bulios_item() {
+    local source="$1"
+    local target="$2"
+
+    if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$source" ]]; then
+        return 0
+    fi
+    if [[ -e "$target" || -L "$target" ]]; then
+        print_error "$target istnieje — usuń starą kopię i uruchom ponownie"
+        return 0
+    fi
+
+    mkdir -p "$(dirname "$target")"
+    ln -s "$source" "$target"
+    print_success "$target -> $source"
+}
+
+link_bulios() {
+    if [[ ! -d "$BULIOS_PAYLOAD" ]]; then
+        print_warning "buliOS: $BULIOS_PAYLOAD not found, skipping"
+        return 0
+    fi
+    echo -e "\n${BLUE}Linking buliOS...${NC}\n"
+
+    mkdir -p "$BULIOS_DATA/MEMORY"
+    link_bulios_item "$BULIOS_DATA" "$BULIOS_PAYLOAD/BULIOS/USER"
+    link_bulios_item "$BULIOS_DATA/MEMORY" "$BULIOS_PAYLOAD/BULIOS/MEMORY"
+    link_bulios_item "$BULIOS_PAYLOAD/BULIOS" "$HOME/.claude/BULIOS"
+    link_bulios_item "$BULIOS_PAYLOAD/package.json" "$HOME/.claude/package.json"
+
+    local entry
+    for entry in "$BULIOS_PAYLOAD"/skills/*; do
+        link_bulios_item "$entry" "$HOME/.claude/skills/$(basename "$entry")"
+    done
+    for entry in "$BULIOS_PAYLOAD"/hooks/*; do
+        [[ "$(basename "$entry")" == "hooks.json" ]] && continue
+        link_bulios_item "$entry" "$HOME/.claude/hooks/$(basename "$entry")"
+    done
+}
+
 install_symlinks() {
     echo -e "\n${BLUE}Installing dotfiles...${NC}\n"
     for entry in "${SYMLINKS[@]}"; do
@@ -111,6 +158,7 @@ install_symlinks() {
     for entry in "${COPIES[@]}"; do
         copy_file "${entry%%:*}" "${entry##*:}"
     done
+    link_bulios
     echo -e "\n${GREEN}Done!${NC}"
 }
 
@@ -167,6 +215,11 @@ show_status() {
             print_error "$target (missing)"
         fi
     done
+    if [[ -L "$HOME/.claude/BULIOS" ]] && [[ "$(readlink "$HOME/.claude/BULIOS")" == "$BULIOS_PAYLOAD/BULIOS" ]]; then
+        print_success "$HOME/.claude/BULIOS (buliOS)"
+    else
+        print_warning "$HOME/.claude/BULIOS (buliOS not linked)"
+    fi
 }
 
 case "${1:-}" in
