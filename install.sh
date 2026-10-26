@@ -280,12 +280,18 @@ update() {
     install_symlinks
     (cd "$HOME/.claude" && bun install)
     install_claude_bridge
+    install_usage_aggregator
 }
 
 # Usługa launchd odbierająca zatwierdzone zlecenia Jarvisa dla Claude Code. Projekty tego Maca są w
 # zsynchronizowanym USER/CONFIG/claude-projects.json (klucz: nazwa urządzenia), więc konfiguracja jest jedna dla wszystkich.
 install_claude_bridge() {
     bun "$HOME/.claude/BULIOS/TOOLS/ClaudeBridge.ts" install || print_warning "ClaudeBridge się nie zainstalował — szczegóły wyżej"
+}
+
+# Nocne podsumowanie zużycia Claude Code (usage-daily.jsonl w logach urządzenia) — z niego panel liczy Koszty AI.
+install_usage_aggregator() {
+    bun "$HOME/.claude/BULIOS/TOOLS/InstallUsageAggregator.ts" || print_warning "UsageAggregator się nie zainstalował — szczegóły wyżej"
 }
 
 # Syncthing serwera (konrad126); ID urządzenia nie jest sekretem — połączenie wymaga akceptacji po obu stronach.
@@ -346,6 +352,7 @@ bootstrap() {
     print_info "Installing buliOS hook dependencies..."
     (cd "$HOME/.claude" && bun install)
     install_claude_bridge
+    install_usage_aggregator
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
     # Na macOS Tahoe launchd potrafi zarejestrować agenta bez uruchomienia go; kickstart startuje go od razu.
