@@ -24,9 +24,6 @@ export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 
 [ -s "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
-# opencode
-export PATH="$HOME/.opencode/bin:$PATH"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"

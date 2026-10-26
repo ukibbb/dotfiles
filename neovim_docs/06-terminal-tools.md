@@ -77,7 +77,7 @@ Plik: `mise/config.toml` → `~/.config/mise/config.toml`. Zastępuje nvm.
 - **`mise current`**: Co jest aktywne tutaj.
 - **`.nvmrc` / `.node-version`**: Respektowane w istniejących projektach.
 
-Globalne pakiety npm (`codex`, `pi`, `gemini`, `crush`, `opencode`, `buli`, `agent-browser`) są zainstalowane w Node z mise. Po zmianie globalnej wersji Node trzeba je doinstalować: `npm i -g <pakiet>`.
+Globalny pakiet npm `buli` jest zainstalowany w Node z mise. Po zmianie globalnej wersji Node trzeba go doinstalować: `npm i -g buli`.
 
 Stary katalog `~/.nvm` nie jest już ładowany; można go usunąć, gdy wszystko działa.
 

@@ -42,7 +42,7 @@
 - **Distant**: `ssh`, lokalny `distant`; zdalny `distant` dla skonfigurowanego Launch.
 - **smart-splits.nvim**: WezTerm z obsługą user vars i `wezterm cli`.
 
-`.zshrc` wykrywa Homebrew pod `/opt/homebrew` albo `/usr/local`, ładuje `brew shellenv` i wylicza aktywny prefix dla keg-only `libpq/bin`, `mysql-client/bin` i `sqlite/bin`. Dodaje też `~/.local/share/nvim/mason/bin`, mise, Bun i OpenCode. Po zmianie uruchom nową powłokę albo `source ~/.zshrc`. `stty -ixon` uwalnia `Ctrl-s` od terminalowego XOFF; WezTerm nadal używa tego klawisza jako leadera.
+`.zshrc` wykrywa Homebrew pod `/opt/homebrew` albo `/usr/local`, ładuje `brew shellenv` i wylicza aktywny prefix dla keg-only `libpq/bin`, `mysql-client/bin` i `sqlite/bin`. Dodaje też `~/.local/share/nvim/mason/bin`, mise i Bun. Po zmianie uruchom nową powłokę albo `source ~/.zshrc`. `stty -ixon` uwalnia `Ctrl-s` od terminalowego XOFF; WezTerm nadal używa tego klawisza jako leadera.
 
 ## Stan lokalny i sekrety
 

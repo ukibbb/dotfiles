@@ -76,7 +76,6 @@ Neovim debugging uses `nvim-dap` with `debugpy` for Python, `delve` for Go, and 
 
 ```sh
 curl -fsSL https://claude.ai/install.sh | bash
-npm install -g opencode-ai @openai/codex
 atuin import zsh
 ```
 

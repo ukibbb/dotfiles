@@ -71,7 +71,7 @@ Inne:
 ### Przydatne komendy
 
 - **`herdr agent list`**: Agenci i ich stany.
-- **`herdr integration status`**: Zainstalowane integracje (claude, codex, opencode, pi).
+- **`herdr integration status`**: Zainstalowane integracje (claude).
 - **`herdr config check`**: Sprawdzenie konfiguracji.
 - **`herdr server stop`**: Zatrzymanie wszystkiego.
 
