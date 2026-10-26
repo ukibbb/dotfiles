@@ -35,8 +35,7 @@ brew "ruff"
 brew "tree-sitter-cli"
 brew "uv"                       # python packages
 brew "pnpm"
-tap "oven-sh/bun"
-brew "oven-sh/bun/bun"
+brew "bun"                      # z homebrew/core: Homebrew 7 nie ładuje formuł z niezaufanych tapów
 brew "cocoapods"
 
 # Databases

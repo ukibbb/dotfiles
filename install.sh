@@ -210,7 +210,9 @@ bootstrap() {
     eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
 
     print_info "Installing Homebrew packages..."
-    brew bundle --file "$DOTFILES_DIR/Brewfile"
+    # Pojedyncza aplikacja może się nie zainstalować (np. brak uprawnień administratora na Macu służbowym);
+    # reszta bootstrapu i tak ma się wykonać.
+    brew bundle --file "$DOTFILES_DIR/Brewfile" || print_warning "Część pakietów Homebrew się nie zainstalowała — szczegóły wyżej"
 
     command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
 
