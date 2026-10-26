@@ -241,8 +241,12 @@ bulios_sync() {
     if ! syncthing cli config folders list | grep -qx bulios-user; then
         syncthing cli config folders add --id bulios-user --label buliOS --path "$BULIOS_DATA" --type receiveonly
         syncthing cli config folders bulios-user devices add --device-id "$BULIOS_SERVER_ID"
+        print_success "Syncthing: folder bulios-user podpięty do serwera (tylko odbiór, uruchom ponownie po pobraniu drzewa)"
+    elif [[ -f "$BULIOS_DATA/PRINCIPAL/PRINCIPAL_MEMORY.md" ]]; then
+        # Drzewo już przyszło z serwera, więc ten Mac może też wysyłać swoje sesje i pamięć (także z pracy).
+        syncthing cli config folders bulios-user type set sendreceive
+        print_success "Syncthing: folder bulios-user wysyła i odbiera"
     fi
-    print_success "Syncthing: folder bulios-user podpięty do serwera (tylko odbiór)"
     syncthing cli show system | grep myID
 }
 

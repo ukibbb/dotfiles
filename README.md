@@ -94,7 +94,7 @@ Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are decla
 
 1. Access to the buliOS repo. On a Mac without your personal GitHub account (work laptop): `bash install.sh bulios-key` prints a public key; add it in `ukibbb/buliOs` → Settings → Deploy keys (tick "Allow write access" to push from that Mac). It reaches only this repo and uses its own SSH host `github-bulios`. Otherwise `bootstrap` signs in with `gh`.
 2. Run `bash install.sh bootstrap`, then sign in to `claude` (the Claude account brings claude.ai skills; plugins come from `claude/settings.json`). 1Password is optional: it is only needed to run the Docker stack locally, which lives on the server.
-3. Pair Syncthing with the server: get this Mac's ID (`syncthing generate 2>&1 | grep -i "device id"`), add it on the server (`st config devices add --device-id <ID> --name <mac>` and `st config folders bulios-user devices add --device-id <ID>`), then run `bash install.sh bulios-sync` here. It starts Syncthing (without `brew services`, which MDM often blocks), copies `.stignore` and links the folder receive-only; switch it to send & receive once the tree has arrived (`syncthing cli config folders bulios-user type set sendreceive`). Later updates: `bash install.sh update` pulls dotfiles and buliOS and relinks.
+3. Pair Syncthing with the server: get this Mac's ID (`syncthing generate 2>&1 | grep -i "device id"`), add it on the server (`st config devices add --device-id <ID> --name <mac>` and `st config folders bulios-user devices add --device-id <ID>`), then run `bash install.sh bulios-sync` here. It starts Syncthing (without `brew services`, which MDM often blocks), copies `.stignore` and links the folder receive-only; run `bash install.sh bulios-sync` again once the tree has arrived and it switches the folder to send & receive. Later updates: `bash install.sh update` pulls dotfiles and buliOS and relinks.
 4. When the tree has arrived, run `bash install.sh install` again so project memories link into `~/.claude/projects/*/memory`.
 5. Per-machine state that does not travel: an SSH key for the server (`ssh-keygen`, add the public key on the server), the `novibe` MCP server (`claude mcp add`, then sign in via `/mcp`), and uncommitted local edits in `claude/settings.json`.
 
@@ -106,7 +106,7 @@ Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are decla
 | `~/Desktop/Projekty/ai/buliOs` | buliOS code: hooks, skills, tools, Jarvis | code only | git (private) |
 | `~/.claude/{hooks,skills,BULIOS,settings.json}` | links into the two repos above | no | `install.sh` |
 | `~/.config/bulios/USER` | buliOS tree: profile, TELOS, finances, health, knowledge, ISA | **yes** | Syncthing ↔ server |
-| `~/.config/bulios/USER/CLAUDE_MEMORY` | Claude Code project memories (work projects in `~/Desktop/Praca` are excluded) | **yes** | Syncthing ↔ server |
+| `~/.config/bulios/USER/CLAUDE_MEMORY` | Claude Code project memories (work projects included) | **yes** | Syncthing ↔ server |
 | `~/.claude/projects/*/*.jsonl`, `~/.claude/history.jsonl` | Claude Code conversation transcripts | **yes** | this Mac only |
 | `~/Library/Application Support/Syncthing` | pairing with the server | keys | this Mac only |
 | gh / 1Password sessions | GitHub account, secrets access | **yes** | sign-in on this Mac |
