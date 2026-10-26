@@ -281,6 +281,7 @@ update() {
     (cd "$HOME/.claude" && bun install)
     install_claude_bridge
     install_usage_aggregator
+    install_interview_due
     clear_wezterm_quarantine
 }
 
@@ -300,6 +301,12 @@ install_claude_bridge() {
 # Nocne podsumowanie zużycia Claude Code (usage-daily.jsonl w logach urządzenia) — z niego panel liczy Koszty AI.
 install_usage_aggregator() {
     bun "$HOME/.claude/BULIOS/TOOLS/InstallUsageAggregator.ts" || print_warning "UsageAggregator się nie zainstalował — szczegóły wyżej"
+}
+
+# Codzienne (07:10) przeliczenie chipa 🎤 w statusline: puste pola w szablonach USER i zaległe przeglądy TELOS.
+# Statusline czyta tylko wynik z USER/CACHE/interview-due.json, a CACHE nie synchronizuje się między Macami.
+install_interview_due() {
+    bun "$HOME/.claude/BULIOS/TOOLS/InstallInterviewDue.ts" || print_warning "InterviewDue się nie zainstalował — szczegóły wyżej"
 }
 
 # Syncthing serwera (konrad126); ID urządzenia nie jest sekretem — połączenie wymaga akceptacji po obu stronach.
@@ -362,6 +369,7 @@ bootstrap() {
     (cd "$HOME/.claude" && bun install)
     install_claude_bridge
     install_usage_aggregator
+    install_interview_due
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
     # Na macOS Tahoe launchd potrafi zarejestrować agenta bez uruchomienia go; kickstart startuje go od razu.
