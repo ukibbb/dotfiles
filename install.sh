@@ -281,6 +281,14 @@ update() {
     (cd "$HOME/.claude" && bun install)
     install_claude_bridge
     install_usage_aggregator
+    clear_wezterm_quarantine
+}
+
+# WezTerm z flagą kwarantanny macOS startuje z losowej kopii (App Translocation), więc system widzi go jako nową
+# aplikację i odbiera mu zgodę na Biurko, gdzie leżą repo i hooki buliOS. Bez flagi zgoda zostaje na stałe.
+clear_wezterm_quarantine() {
+    [[ -d /Applications/WezTerm.app ]] && xattr -dr com.apple.quarantine /Applications/WezTerm.app 2>/dev/null
+    return 0
 }
 
 # Usługa launchd odbierająca zatwierdzone zlecenia Jarvisa dla Claude Code. Projekty tego Maca są w
@@ -332,6 +340,7 @@ bootstrap() {
     # Pojedyncza aplikacja może się nie zainstalować (np. brak uprawnień administratora na Macu służbowym);
     # reszta bootstrapu i tak ma się wykonać.
     brew bundle --file "$DOTFILES_DIR/Brewfile" || print_warning "Część pakietów Homebrew się nie zainstalowała — szczegóły wyżej"
+    clear_wezterm_quarantine
 
     command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
 
