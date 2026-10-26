@@ -191,15 +191,15 @@ install_symlinks() {
 
 BULIOS_KEY="$HOME/.ssh/bulios_deploy"
 
-# Klucz SSH tylko do odczytu repo buliOS (deploy key) dla Maca bez prywatnego konta GitHub, np. służbowego.
+# Klucz SSH do repo buliOS (deploy key) dla Maca bez prywatnego konta GitHub, np. służbowego.
 # Osobny host github-bulios, żeby nie mieszał się z kluczem do firmowego konta GitHub.
 bulios_key() {
     mkdir -p -m 700 "$HOME/.ssh"
-    [[ -f "$BULIOS_KEY" ]] || ssh-keygen -q -t ed25519 -N '' -C "bulios-readonly-$(scutil --get ComputerName 2>/dev/null || hostname)" -f "$BULIOS_KEY"
+    [[ -f "$BULIOS_KEY" ]] || ssh-keygen -q -t ed25519 -N '' -C "bulios-$(scutil --get ComputerName 2>/dev/null || hostname)" -f "$BULIOS_KEY"
     if ! grep -q '^Host github-bulios$' "$HOME/.ssh/config" 2>/dev/null; then
         printf '\nHost github-bulios\n  HostName github.com\n  User git\n  IdentityFile %s\n  IdentitiesOnly yes\n  StrictHostKeyChecking accept-new\n' "$BULIOS_KEY" >> "$HOME/.ssh/config"
     fi
-    print_info "Dodaj ten klucz jako deploy key (tylko odczyt) w ukibbb/buliOs, potem uruchom: bash install.sh bootstrap"
+    print_info "Dodaj ten klucz jako deploy key w ukibbb/buliOs (z zapisem, jeśli z tego Maca wypychasz zmiany), potem uruchom: bash install.sh bootstrap"
     cat "$BULIOS_KEY.pub"
 }
 
@@ -249,7 +249,7 @@ bootstrap() {
     command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
 
     # Repo buliOS (prywatne) dostarcza hooki, skille i narzędzia linkowane do ~/.claude.
-    # Z kluczem tylko do odczytu (install.sh bulios-key) bez logowania do GitHuba, inaczej przez gh.
+    # Z kluczem deploy (install.sh bulios-key) bez logowania do GitHuba, inaczej przez gh.
     if [[ ! -d "$BULIOS_REPO_DIR" ]]; then
         if [[ -f "$BULIOS_KEY" ]]; then
             git clone git@github-bulios:ukibbb/buliOs.git "$BULIOS_REPO_DIR"
