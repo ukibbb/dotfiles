@@ -1,4 +1,7 @@
 {
+  "env": {
+    "BULIOS_MEMORY_ROLE": "client"
+  },
   "model": "opus",
   "hooks": {
     "SessionStart": [
