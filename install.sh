@@ -203,6 +203,18 @@ bulios_key() {
     cat "$BULIOS_KEY.pub"
 }
 
+# Skrypt hooka herdra, który wywołuje claude/settings.json. `herdr integration install` dopisałby też
+# do settings.json drugi taki sam hook z absolutną ścieżką, więc instaluje się do katalogu tymczasowego.
+install_herdr_hook() {
+    local tmp
+    tmp="$(mktemp -d)"
+    CLAUDE_CONFIG_DIR="$tmp" herdr integration install claude >/dev/null
+    mkdir -p "$HOME/.claude/hooks"
+    cp "$tmp/hooks/herdr-agent-state.sh" "$HOME/.claude/hooks/"
+    rm -rf "$tmp"
+    print_success "herdr: hook Claude Code w ~/.claude/hooks/herdr-agent-state.sh"
+}
+
 # Najnowsze dotfiles i kod buliOS (tylko fast-forward, lokalne zmiany zostają), potem ponowne linkowanie.
 update() {
     git -C "$DOTFILES_DIR" pull --ff-only
@@ -260,6 +272,7 @@ bootstrap() {
     fi
 
     install_symlinks
+    install_herdr_hook
 
     print_info "Installing buliOS hook dependencies..."
     (cd "$HOME/.claude" && bun install)

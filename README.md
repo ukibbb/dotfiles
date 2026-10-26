@@ -76,12 +76,11 @@ Neovim debugging uses `nvim-dap` with `debugpy` for Python, `delve` for Go, and 
 
 ```sh
 curl -fsSL https://claude.ai/install.sh | bash
-curl -fsSL https://herdr.dev/install.sh | sh
 npm install -g opencode-ai @openai/codex
 atuin import zsh
 ```
 
-Run `herdr integration install claude` so the Claude hook in `claude/settings.json` (`~/.claude/hooks/herdr-agent-state.sh`) exists.
+herdr comes from the Brewfile; `bootstrap` installs its Claude hook script (`~/.claude/hooks/herdr-agent-state.sh`) that `claude/settings.json` calls.
 
 Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are declared in `claude/settings.json`; if they are missing, install them with `claude plugin install superpowers@superpowers-marketplace` (and `typescript-lsp`, `pyright-lsp`, `gopls-lsp`, `lua-lsp` from `claude-plugins-official`).
 

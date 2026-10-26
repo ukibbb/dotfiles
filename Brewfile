@@ -4,6 +4,7 @@
 brew "neovim"
 cask "wezterm"
 cask "font-symbols-only-nerd-font"
+brew "herdr"                    # agent hub w workspace agents
 
 # Shell
 brew "starship"                 # prompt
