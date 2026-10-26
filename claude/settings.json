@@ -510,5 +510,9 @@
   },
   "effortLevel": "xhigh",
   "tui": "fullscreen",
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }
