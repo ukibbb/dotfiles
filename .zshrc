@@ -159,3 +159,8 @@ alias bulios='bun ~/.claude/BULIOS/TOOLS/bulios.ts -s ~/.claude/BULIOS/BULIOS_SY
 if command -v syncthing >/dev/null && [[ -f "$HOME/.config/bulios/USER/.stignore" ]] && ! pgrep -qx syncthing; then
   (nohup syncthing serve --no-browser >"$HOME/Library/Logs/syncthing.log" 2>&1 &)
 fi
+
+# Buli (>= 1.8) z tym samym promptem, hookami i stopką buliOS co Claude Code.
+if [[ -f ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md && -f ~/.claude/settings.json ]]; then
+  alias buli='buli --append-system-prompt-file ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md --settings ~/.claude/settings.json'
+fi
