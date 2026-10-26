@@ -188,6 +188,20 @@ install_symlinks() {
     echo -e "\n${GREEN}Done!${NC}"
 }
 
+BULIOS_KEY="$HOME/.ssh/bulios_deploy"
+
+# Klucz SSH tylko do odczytu repo buliOS (deploy key) dla Maca bez prywatnego konta GitHub, np. służbowego.
+# Osobny host github-bulios, żeby nie mieszał się z kluczem do firmowego konta GitHub.
+bulios_key() {
+    mkdir -p -m 700 "$HOME/.ssh"
+    [[ -f "$BULIOS_KEY" ]] || ssh-keygen -q -t ed25519 -N '' -C "bulios-readonly-$(scutil --get ComputerName 2>/dev/null || hostname)" -f "$BULIOS_KEY"
+    if ! grep -q '^Host github-bulios$' "$HOME/.ssh/config" 2>/dev/null; then
+        printf '\nHost github-bulios\n  HostName github.com\n  User git\n  IdentityFile %s\n  IdentitiesOnly yes\n  StrictHostKeyChecking accept-new\n' "$BULIOS_KEY" >> "$HOME/.ssh/config"
+    fi
+    print_info "Dodaj ten klucz jako deploy key (tylko odczyt) w ukibbb/buliOs, potem uruchom: bash install.sh bootstrap"
+    cat "$BULIOS_KEY.pub"
+}
+
 bootstrap() {
     if ! command -v brew >/dev/null; then
         print_info "Installing Homebrew..."
@@ -201,10 +215,15 @@ bootstrap() {
     command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
 
     # Repo buliOS (prywatne) dostarcza hooki, skille i narzędzia linkowane do ~/.claude.
+    # Z kluczem tylko do odczytu (install.sh bulios-key) bez logowania do GitHuba, inaczej przez gh.
     local bulios_repo="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}"
     if [[ ! -d "$bulios_repo" ]]; then
-        gh auth status >/dev/null 2>&1 || gh auth login
-        gh repo clone ukibbb/buliOs "$bulios_repo"
+        if [[ -f "$BULIOS_KEY" ]]; then
+            git clone git@github-bulios:ukibbb/buliOs.git "$bulios_repo"
+        else
+            gh auth status >/dev/null 2>&1 || gh auth login
+            gh repo clone ukibbb/buliOs "$bulios_repo"
+        fi
     fi
 
     install_symlinks
@@ -298,8 +317,9 @@ case "${1:-}" in
     uninstall) uninstall_symlinks ;;
     status)    show_status ;;
     forget-personal) forget_personal ;;
+    bulios-key) bulios_key ;;
     *)
-        echo "Usage: $0 {bootstrap|install|uninstall|status|forget-personal}"
+        echo "Usage: $0 {bootstrap|install|uninstall|status|forget-personal|bulios-key}"
         echo ""
         echo "Symlinks:"
         for entry in "${SYMLINKS[@]}"; do
