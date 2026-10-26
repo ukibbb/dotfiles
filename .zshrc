@@ -162,7 +162,7 @@ fi
 
 # Buli (>= 1.8) z tym samym promptem, hookami i stopką buliOS co Claude Code.
 if [[ -f ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md && -f ~/.claude/settings.json ]]; then
-  alias buli='buli --append-system-prompt-file ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md --settings ~/.claude/settings.json'
+  alias buli='buli --append-system-prompt-file ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md --settings ~/.claude/settings.json --mcp-config ~/.claude/BULIOS/mcp.json'
 fi
 
 # Własne paczki (@ukibbb) są zaufane: aktualizacja Buli bez 30-dniowego bezpiecznika.
