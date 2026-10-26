@@ -105,7 +105,8 @@ copy_file() {
 
 # buliOS (fork LifeOS) lives in the buliOs repo; here we only link it into ~/.claude.
 # Personal data (profile, memory) stays in ~/.config/bulios/USER, outside any git repo.
-BULIOS_PAYLOAD="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}/claude/buliOS/install"
+BULIOS_REPO_DIR="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}"
+BULIOS_PAYLOAD="$BULIOS_REPO_DIR/claude/buliOS/install"
 BULIOS_DATA="$HOME/.config/bulios/USER"
 # Pamięci projektów Claude Code w drzewie buliOS: Syncthing przenosi je na drugiego Maca i serwer.
 CLAUDE_MEMORY="$BULIOS_DATA/CLAUDE_MEMORY"
@@ -202,6 +203,37 @@ bulios_key() {
     cat "$BULIOS_KEY.pub"
 }
 
+# Najnowsze dotfiles i kod buliOS (tylko fast-forward, lokalne zmiany zostają), potem ponowne linkowanie.
+update() {
+    git -C "$DOTFILES_DIR" pull --ff-only
+    [[ -d "$BULIOS_REPO_DIR" ]] && git -C "$BULIOS_REPO_DIR" pull --ff-only
+    install_symlinks
+    (cd "$HOME/.claude" && bun install)
+}
+
+# Syncthing serwera (konrad126); ID urządzenia nie jest sekretem — połączenie wymaga akceptacji po obu stronach.
+BULIOS_SERVER_ID="BMKI3PC-MZO7U67-3NTHMYW-JUBTV7S-5R3FP5Z-PLLRMDN-7QM456A-S3SLHAD"
+
+# Paruje ten Mac z serwerem: folder bulios-user (drzewo buliOS). Na start tylko odbiera, żeby pusty Mac
+# niczego nie nadpisał. Serwer musi już znać ID tego Maca (st config devices add …).
+bulios_sync() {
+    if ! pgrep -qx syncthing; then
+        # brew services bywa zablokowane na Macu służbowym (MDM), więc start jako zwykły proces.
+        nohup syncthing serve --no-browser >"$HOME/Library/Logs/syncthing.log" 2>&1 &
+        sleep 5
+    fi
+    mkdir -p "$BULIOS_DATA"
+    cp "$BULIOS_REPO_DIR/deploy/stignore" "$BULIOS_DATA/.stignore"
+    syncthing cli config devices list | grep -q "$BULIOS_SERVER_ID" ||
+        syncthing cli config devices add --device-id "$BULIOS_SERVER_ID" --name konrad126
+    if ! syncthing cli config folders list | grep -qx bulios-user; then
+        syncthing cli config folders add --id bulios-user --label buliOS --path "$BULIOS_DATA" --type receiveonly
+        syncthing cli config folders bulios-user devices add --device-id "$BULIOS_SERVER_ID"
+    fi
+    print_success "Syncthing: folder bulios-user podpięty do serwera (tylko odbiór)"
+    syncthing cli show system | grep myID
+}
+
 bootstrap() {
     if ! command -v brew >/dev/null; then
         print_info "Installing Homebrew..."
@@ -218,13 +250,12 @@ bootstrap() {
 
     # Repo buliOS (prywatne) dostarcza hooki, skille i narzędzia linkowane do ~/.claude.
     # Z kluczem tylko do odczytu (install.sh bulios-key) bez logowania do GitHuba, inaczej przez gh.
-    local bulios_repo="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}"
-    if [[ ! -d "$bulios_repo" ]]; then
+    if [[ ! -d "$BULIOS_REPO_DIR" ]]; then
         if [[ -f "$BULIOS_KEY" ]]; then
-            git clone git@github-bulios:ukibbb/buliOs.git "$bulios_repo"
+            git clone git@github-bulios:ukibbb/buliOs.git "$BULIOS_REPO_DIR"
         else
             gh auth status >/dev/null 2>&1 || gh auth login
-            gh repo clone ukibbb/buliOs "$bulios_repo"
+            gh repo clone ukibbb/buliOs "$BULIOS_REPO_DIR"
         fi
     fi
 
@@ -320,8 +351,10 @@ case "${1:-}" in
     status)    show_status ;;
     forget-personal) forget_personal ;;
     bulios-key) bulios_key ;;
+    bulios-sync) bulios_sync ;;
+    update)    update ;;
     *)
-        echo "Usage: $0 {bootstrap|install|uninstall|status|forget-personal|bulios-key}"
+        echo "Usage: $0 {bootstrap|install|uninstall|status|forget-personal|bulios-key|bulios-sync|update}"
         echo ""
         echo "Symlinks:"
         for entry in "${SYMLINKS[@]}"; do
