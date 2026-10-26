@@ -265,7 +265,9 @@ bootstrap() {
     (cd "$HOME/.claude" && bun install)
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
+    # Na macOS Tahoe launchd potrafi zarejestrować agenta bez uruchomienia go; kickstart startuje go od razu.
     brew services start syncthing
+    launchctl kickstart "gui/$(id -u)/sh.brew.syncthing"
 
     print_info "Installing mise runtimes..."
     (cd "$HOME" && mise install)
