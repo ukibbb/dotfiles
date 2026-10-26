@@ -107,6 +107,8 @@ copy_file() {
 # Personal data (profile, memory) stays in ~/.config/bulios/USER, outside any git repo.
 BULIOS_PAYLOAD="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}/claude/buliOS/install"
 BULIOS_DATA="$HOME/.config/bulios/USER"
+# Pamięci projektów Claude Code w drzewie buliOS: Syncthing przenosi je na drugiego Maca i serwer.
+CLAUDE_MEMORY="$BULIOS_DATA/CLAUDE_MEMORY"
 
 # An existing file or dir at the target is an old copy: report it instead of backing it up
 # next to the original, because Claude Code would load the backup as a duplicate skill or hook.
@@ -148,6 +150,30 @@ link_bulios() {
         [[ "$(basename "$entry")" == "hooks.json" ]] && continue
         link_bulios_item "$entry" "$HOME/.claude/hooks/$(basename "$entry")"
     done
+    link_claude_memories
+}
+
+# ~/.claude/projects/<projekt>/memory -> drzewo buliOS. Lokalna pamięć, której jeszcze nie ma w drzewie,
+# najpierw do niego dołącza (pliki już obecne w drzewie wygrywają; lokalny katalog zostaje jako .backup.*).
+link_claude_memories() {
+    mkdir -p "$CLAUDE_MEMORY"
+    local dir
+    for dir in "$HOME"/.claude/projects/*/memory; do
+        [[ -d "$dir" && ! -L "$dir" ]] || continue
+        if [[ -z "$(ls -A "$dir")" ]]; then
+            rmdir "$dir"
+            continue
+        fi
+        local name
+        name="$(basename "$(dirname "$dir")")"
+        mkdir -p "$CLAUDE_MEMORY/$name"
+        rsync -a --ignore-existing "$dir/" "$CLAUDE_MEMORY/$name/"
+        backup_existing "$dir"
+    done
+    for dir in "$CLAUDE_MEMORY"/*/; do
+        [[ -d "$dir" ]] || continue
+        link_bulios_item "${dir%/}" "$HOME/.claude/projects/$(basename "$dir")/memory"
+    done
 }
 
 install_symlinks() {
@@ -172,7 +198,22 @@ bootstrap() {
     print_info "Installing Homebrew packages..."
     brew bundle --file "$DOTFILES_DIR/Brewfile"
 
+    command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
+
+    # Repo buliOS (prywatne) dostarcza hooki, skille i narzędzia linkowane do ~/.claude.
+    local bulios_repo="${BULIOS_REPO:-$HOME/Desktop/Projekty/ai/buliOs}"
+    if [[ ! -d "$bulios_repo" ]]; then
+        gh auth status >/dev/null 2>&1 || gh auth login
+        gh repo clone ukibbb/buliOs "$bulios_repo"
+    fi
+
     install_symlinks
+
+    print_info "Installing buliOS hook dependencies..."
+    (cd "$HOME/.claude" && bun install)
+
+    # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
+    brew services start syncthing
 
     print_info "Installing mise runtimes..."
     (cd "$HOME" && mise install)

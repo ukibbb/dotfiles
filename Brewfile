@@ -52,3 +52,9 @@ brew "poppler"
 brew "resvg"
 brew "sevenzip"
 brew "nmap"
+
+# buliOS: sekrety (op), stos w Dockerze, synchronizacja drzewa buliOS z serwerem
+cask "1password"
+cask "1password-cli"
+cask "docker-desktop"
+brew "syncthing"

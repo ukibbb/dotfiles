@@ -90,6 +90,16 @@ Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are decla
 - Restart WezTerm so it reads `~/.config/wezterm/wezterm.lua`.
 - Restart the shell or run `source ~/.zshrc`.
 
+## Second Mac (same buliOS, same memory)
+
+`bash install.sh bootstrap` also clones the private buliOS repo (via `gh`), links its hooks, skills and tools into `~/.claude`, runs `bun install` there and starts Syncthing. Your data is not in this repo: the buliOS tree (`~/.config/bulios/USER`: profile, TELOS, knowledge, ISA, and Claude Code project memories in `CLAUDE_MEMORY/`) comes from the server over Syncthing.
+
+1. Sign in: 1Password app (enable CLI integration), `gh auth login`, `claude` (the Claude account brings claude.ai skills; plugins come from `claude/settings.json`).
+2. Run `bash install.sh bootstrap`.
+3. Pair Syncthing with the server. `syncthing cli show system` prints this Mac's `myID`; on the server run `st config devices add --device-id <ID> --name <mac>` and `st config folders bulios-user devices add --device-id <ID>`. On this Mac add the server (`syncthing cli config devices add --device-id <server ID>`, shown by `st show system` on the server), accept the `bulios-user` folder at `~/.config/bulios/USER`, and copy `deploy/stignore` from the buliOS repo to `~/.config/bulios/USER/.stignore`.
+4. When the tree has arrived, run `bash install.sh install` again so project memories link into `~/.claude/projects/*/memory`.
+5. Per-machine state that does not travel: an SSH key for the server (`ssh-keygen`, add the public key on the server), the `novibe` MCP server (`claude mcp add`, then sign in via `/mcp`), and uncommitted local edits in `claude/settings.json`.
+
 ## Reproducible Setup
 
 Keep setup reproducible by treating every machine dependency as declared state:
