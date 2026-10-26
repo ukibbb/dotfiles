@@ -17,3 +17,7 @@
 
 [diff]
 	colorMoved = default
+
+# Work repos (pysense) commit as the work account; the identity lives outside this public repo.
+[includeIf "gitdir:~/Desktop/pysense/"]
+	path = ~/.config/git/pysense.gitconfig
