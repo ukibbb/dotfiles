@@ -154,26 +154,46 @@ link_bulios() {
     link_claude_memories
 }
 
-# ~/.claude/projects/<projekt>/memory -> drzewo buliOS. Lokalna pamięć, której jeszcze nie ma w drzewie,
-# najpierw do niego dołącza (pliki już obecne w drzewie wygrywają; lokalny katalog zostaje jako .backup.*).
+# ~/.claude/projects/<projekt>/memory -> drzewo buliOS. Claude Code nazywa projekt pełną ścieżką
+# (-Users-<użytkownik>-Desktop-X), a Maki mają różne nazwy użytkownika, więc w drzewie klucz jest
+# względny do katalogu domowego (Desktop-X): ten sam projekt ma jedną pamięć na każdym Macu.
+# Lokalna pamięć najpierw dołącza do drzewa (pliki z drzewa wygrywają; lokalny katalog zostaje jako .backup.*).
 link_claude_memories() {
+    local home_key dir name rel target
+    home_key="$(tr '/' '-' <<<"$HOME")"
     mkdir -p "$CLAUDE_MEMORY"
-    local dir
-    for dir in "$HOME"/.claude/projects/*/memory; do
+
+    # Dawny układ z pełnym kluczem (z dowolnego Maca) -> klucz względny; kolizje zostają jako *.conflict-<klucz>.
+    for dir in "$CLAUDE_MEMORY"/-Users-*/; do
+        [[ -d "$dir" ]] || continue
+        name="$(basename "$dir")"
+        rel="${name#-Users-*-}"
+        mkdir -p "$CLAUDE_MEMORY/$rel"
+        rsync -a -b --suffix=".conflict-$name" "$dir" "$CLAUDE_MEMORY/$rel/"
+        rm -rf "$dir"
+    done
+
+    for dir in "$HOME"/.claude/projects/"$home_key"-*/memory; do
         [[ -d "$dir" && ! -L "$dir" ]] || continue
         if [[ -z "$(ls -A "$dir")" ]]; then
             rmdir "$dir"
             continue
         fi
-        local name
         name="$(basename "$(dirname "$dir")")"
-        mkdir -p "$CLAUDE_MEMORY/$name"
-        rsync -a --ignore-existing "$dir/" "$CLAUDE_MEMORY/$name/"
+        rel="${name#"$home_key"-}"
+        mkdir -p "$CLAUDE_MEMORY/$rel"
+        rsync -a --ignore-existing "$dir/" "$CLAUDE_MEMORY/$rel/"
         backup_existing "$dir"
     done
+
     for dir in "$CLAUDE_MEMORY"/*/; do
         [[ -d "$dir" ]] || continue
-        link_bulios_item "${dir%/}" "$HOME/.claude/projects/$(basename "$dir")/memory"
+        target="$HOME/.claude/projects/$home_key-$(basename "$dir")/memory"
+        # Link z dawnego układu wskazuje na nieistniejący już katalog w drzewie — zastępujemy go.
+        if [[ -L "$target" && "$(readlink "$target")" == "$CLAUDE_MEMORY"/* && "$(readlink "$target")" != "${dir%/}" ]]; then
+            rm "$target"
+        fi
+        link_bulios_item "${dir%/}" "$target"
     done
 }
 
