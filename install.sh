@@ -152,6 +152,43 @@ link_bulios() {
         link_bulios_item "$entry" "$HOME/.claude/hooks/$(basename "$entry")"
     done
     link_claude_memories
+    link_device_logs
+}
+
+# Nazwa tego urządzenia w buliOS (~/.config/bulios/device, poza drzewem). Hostname nie wystarcza:
+# dwa Maki potrafią mieć ten sam („Lukaszs-MacBook-Pro”), więc dochodzi skrót sprzętowego UUID.
+device_name() {
+    local file="$HOME/.config/bulios/device"
+    if [[ ! -s "$file" ]]; then
+        local host uuid
+        host="$(scutil --get LocalHostName 2>/dev/null || hostname -s)"
+        uuid="$(ioreg -rd1 -c IOPlatformExpertDevice 2>/dev/null | awk -F'"' '/IOPlatformUUID/ {print $4}')"
+        mkdir -p "$(dirname "$file")"
+        printf '%s-%s\n' "$host" "${uuid:0:4}" >"$file"
+    fi
+    tr -d '[:space:]' <"$file"
+}
+
+# Logi zdarzeń buliOS (MEMORY/OBSERVABILITY) są per urządzenie: OBSERVABILITY to dowiązanie do
+# MEMORY/DEVICES/<urządzenie>/OBSERVABILITY. Każde urządzenie pisze tylko do swojego katalogu,
+# więc synchronizacja nie robi konfliktów, a panel czyta katalogi wszystkich urządzeń.
+link_device_logs() {
+    local memory="$BULIOS_DATA/MEMORY" device
+    device="$(device_name)"
+    local own="$memory/DEVICES/$device/OBSERVABILITY" obs="$memory/OBSERVABILITY"
+    mkdir -p "$own" "$memory/PROPOSALS"
+    if [[ -d "$obs" && ! -L "$obs" ]]; then
+        # Wspólna kolejka propozycji przenosi się do MEMORY/PROPOSALS; stary katalog (z kopiami konfliktów
+        # synchronizacji — duplikatami logów innych urządzeń) idzie do kopii poza drzewem, żeby się nie synchronizował.
+        [[ -f "$obs/pending-proposals.jsonl" && ! -e "$memory/PROPOSALS/pending-proposals.jsonl" ]] &&
+            mv "$obs/pending-proposals.jsonl" "$memory/PROPOSALS/"
+        rsync -a --exclude='*.sync-conflict-*' --exclude='pending-proposals.jsonl*' "$obs/" "$own/"
+        mv "$obs" "$HOME/.config/bulios/OBSERVABILITY.backup.$(date +%Y%m%d%H%M%S)"
+    fi
+    if [[ ! -L "$obs" ]]; then
+        ln -s "DEVICES/$device/OBSERVABILITY" "$obs"
+        print_success "$obs -> DEVICES/$device/OBSERVABILITY"
+    fi
 }
 
 # ~/.claude/projects/<projekt>/memory -> drzewo buliOS. Claude Code nazywa projekt pełną ścieżką
