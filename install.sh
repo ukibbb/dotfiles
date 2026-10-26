@@ -232,6 +232,35 @@ uninstall_symlinks() {
     echo -e "\n${GREEN}Done!${NC}"
 }
 
+# Zabiera z tego Maca prywatne dane buliOS (np. przed oddaniem komputera służbowego); narzędzia i dotfiles zostają.
+# Syncthing jest zatrzymywany i rozparowywany PRZED kasowaniem drzewa — inaczej usunięcie poszłoby na serwer.
+forget_personal() {
+    echo "Usunie: drzewo buliOS ($BULIOS_DATA) z pamięciami projektów, konfigurację Syncthinga,"
+    echo "prywatne konto gh (ukibbb) i sesje 1Password. Dane na serwerze zostają nietknięte."
+    local answer
+    read -r -p "Wpisz USUN, aby kontynuować: " answer
+    if [[ "$answer" != "USUN" ]]; then
+        print_warning "Przerwano"
+        return 1
+    fi
+
+    brew services stop syncthing >/dev/null 2>&1 || true
+    rm -rf "$HOME/Library/Application Support/Syncthing"
+
+    local link
+    for link in "$HOME"/.claude/projects/*/memory; do
+        if [[ -L "$link" && "$(readlink "$link")" == "$CLAUDE_MEMORY"/* ]]; then
+            rm "$link"
+        fi
+    done
+    rm -rf "$BULIOS_DATA"
+
+    gh auth logout --hostname github.com --user ukibbb 2>/dev/null || true
+    op signout --all 2>/dev/null || true
+    print_success "Prywatne dane usunięte z tego Maca."
+    print_info "Na serwerze usuń to urządzenie: st config devices remove --device-id <ID tego Maca>"
+}
+
 show_status() {
     echo -e "\n${BLUE}Status:${NC}\n"
     for entry in "${SYMLINKS[@]}"; do
@@ -268,8 +297,9 @@ case "${1:-}" in
     install)   install_symlinks ;;
     uninstall) uninstall_symlinks ;;
     status)    show_status ;;
+    forget-personal) forget_personal ;;
     *)
-        echo "Usage: $0 {bootstrap|install|uninstall|status}"
+        echo "Usage: $0 {bootstrap|install|uninstall|status|forget-personal}"
         echo ""
         echo "Symlinks:"
         for entry in "${SYMLINKS[@]}"; do

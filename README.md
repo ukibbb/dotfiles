@@ -100,6 +100,21 @@ Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are decla
 4. When the tree has arrived, run `bash install.sh install` again so project memories link into `~/.claude/projects/*/memory`.
 5. Per-machine state that does not travel: an SSH key for the server (`ssh-keygen`, add the public key on the server), the `novibe` MCP server (`claude mcp add`, then sign in via `/mcp`), and uncommitted local edits in `claude/settings.json`.
 
+### What lives where on a Mac
+
+| Location | What | Private? | Comes from |
+| --- | --- | --- | --- |
+| `~/Desktop/Projekty/dotfiles` | shell, editor, Claude Code settings | no (public repo) | git |
+| `~/Desktop/Projekty/ai/buliOs` | buliOS code: hooks, skills, tools, Jarvis | code only | git (private) |
+| `~/.claude/{hooks,skills,BULIOS,settings.json}` | links into the two repos above | no | `install.sh` |
+| `~/.config/bulios/USER` | buliOS tree: profile, TELOS, finances, health, knowledge, ISA | **yes** | Syncthing ↔ server |
+| `~/.config/bulios/USER/CLAUDE_MEMORY` | Claude Code project memories (work projects in `~/Desktop/Praca` are excluded) | **yes** | Syncthing ↔ server |
+| `~/.claude/projects/*/*.jsonl`, `~/.claude/history.jsonl` | Claude Code conversation transcripts | **yes** | this Mac only |
+| `~/Library/Application Support/Syncthing` | pairing with the server | keys | this Mac only |
+| gh / 1Password sessions | GitHub account, secrets access | **yes** | sign-in on this Mac |
+
+To take personal data off a Mac (for example a work laptop you hand back): `bash install.sh forget-personal`. It stops and unpairs Syncthing first (so the deletion never reaches the server), deletes the buliOS tree and memory links, and signs out of the personal gh account and 1Password. Then remove the device on the server (`st config devices remove --device-id <ID>`) and, if wanted, delete `~/Desktop/Projekty/ai/buliOs` and the transcripts in `~/.claude/projects`.
+
 ## Reproducible Setup
 
 Keep setup reproducible by treating every machine dependency as declared state:
