@@ -153,3 +153,9 @@ fi
 
 # buliOS launcher
 alias bulios='bun ~/.claude/BULIOS/TOOLS/bulios.ts -s ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md'
+
+# Syncthing drzewa buliOS: po restarcie startuje z pierwszym terminalem, gdy nie działa jako usługa
+# (na Macu służbowym brew services bywa zablokowane). Bez sparowanego folderu nic nie robi.
+if command -v syncthing >/dev/null && [[ -f "$HOME/.config/bulios/USER/.stignore" ]] && ! pgrep -qx syncthing; then
+  (nohup syncthing serve --no-browser >"$HOME/Library/Logs/syncthing.log" 2>&1 &)
+fi
