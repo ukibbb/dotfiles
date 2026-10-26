@@ -164,3 +164,6 @@ fi
 if [[ -f ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md && -f ~/.claude/settings.json ]]; then
   alias buli='buli --append-system-prompt-file ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md --settings ~/.claude/settings.json'
 fi
+
+# Własne paczki (@ukibbb) są zaufane: aktualizacja Buli bez 30-dniowego bezpiecznika.
+buli-update() { env -u npm_config_before npm install -g @ukibbb/buli@latest; }
