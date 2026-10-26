@@ -70,6 +70,7 @@ While writing:
 - Don't remove validation, transactions, locks or error handling to shorten code. Explain which concrete problem they prevent.
 
 Before handing off:
+- After writing or changing code, run the `simplicity-reviewer` subagent on the diff (give it the diff range, not your reasoning). Apply the `must` findings that keep behavior; for rejected ones give a one-line reason in the handoff.
 - Evaluate the simplicity of the change together with its direct dependencies: duplication, split of responsibilities, data flow, state ownership. Justify the verdict briefly with a concrete from the code — passing tests or no new layers don't prove good structure. Report problems outside the agreed scope; don't fix them without consent.
 - Distinguish removing complexity from moving it to another file.
 - Verify with tests that a simplification keeps required behavior, including on errors and concurrent operations.

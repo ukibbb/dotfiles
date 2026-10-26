@@ -22,6 +22,7 @@ SYMLINKS=(
     "claude/settings.json:$HOME/.claude/settings.json"
     "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
+    "claude/agents:$HOME/.claude/agents"
     "git/gitconfig:$HOME/.gitconfig"
     "starship/starship.toml:$HOME/.config/starship.toml"
     "atuin/config.toml:$HOME/.config/atuin/config.toml"
