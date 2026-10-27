@@ -295,6 +295,10 @@
           },
           {
             "type": "command",
+            "command": "$HOME/.claude/hooks/ProjectWorkLog.hook.ts"
+          },
+          {
+            "type": "command",
             "command": "$HOME/.claude/hooks/SessionCleanup.hook.ts"
           },
           {
