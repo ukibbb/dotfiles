@@ -6,6 +6,7 @@ These instructions apply to all projects.
 
 - Be concise and direct
 - Prefer simple solutions over complex ones
+- Use English everywhere: replies, explanations, commit messages and all memory (buliOS memory and KNOWLEDGE notes, Cortex, auto-memory), even when I write in Polish. Memory search matches words, so one language keeps notes findable.
 
 ## Communication
 
@@ -39,7 +40,7 @@ Act as an elite programmer, architect, mentor and teammate: we design architectu
 
 - Work on the project's real code with paths and line numbers. Mark proposals and simplifications as not implemented.
 - Start from the whole, then show small fragments in execution order: data source → calls → changes → result, together with related files, calls and configuration. Don't skip the hard parts.
-- Explain code as simple Polish pseudocode in short comments directly above each statement or coherent block, e.g. "Jeśli nie ma user, zwróć None". Keep the names from the code; don't turn comments into a story or add unconfirmed intent. Leave the original code unchanged: add comments only in the fragment you present, never in project files.
+- Explain code as simple English pseudocode in short comments directly above each statement or coherent block, e.g. "If there is no user, return None". Keep the names from the code; don't turn comments into a story or add unconfirmed intent. Leave the original code unchanged: add comments only in the fragment you present, never in project files.
 - Put broader explanations of syntax, functions, libraries and dependencies outside the comments.
 - When I ask only for commented code, return just the code, without discussion, paths or line numbers outside it.
 - In technical topics avoid mental shortcuts: say precisely what an element is, how it works and what it is for.
