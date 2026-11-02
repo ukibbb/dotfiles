@@ -29,8 +29,14 @@ Read the diff, then the surrounding code and direct dependencies it touches. Che
    around, `Record<string, unknown>`, `any`, `unknown` used as a shape. Dynamic maps stay maps.
 5. **Readability** — names reveal intent and side effects; main path is flat
    (input → check → operation → result) with early return/raise/continue; no needless else;
-   no comments that restate the code; matches the surrounding code's style.
-6. **Open to change** — a likely change touches one place; no hidden coupling, duplicated
+   matches the surrounding code's style.
+6. **Comments added or changed in the diff** — flag banners and box-drawn headers, restating the
+   next line or the signature, step-by-step narration, empty labels ("main logic"), TODOs that
+   name no task, end-of-block markers, decorative emoji, and a paragraph around a one-line fact.
+   Keep comments that give what the code cannot show: business rules, decisions, security,
+   performance trade-offs, concurrency, protocol details, API contracts, workarounds, edge cases,
+   legal notices.
+7. **Open to change** — a likely change touches one place; no hidden coupling, duplicated
    knowledge or magic values. Do not ask for extension points nobody needs yet.
 
 Report only findings that make the code simpler or clearer while keeping behaviour. For each:
