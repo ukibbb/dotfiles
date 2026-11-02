@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "bulios": {
+      "command": "bun",
+      "args": ["~/Desktop/Projekty/ai/buliOs/agents/src/mcp/main.ts", "--without-skill-list"],
+      "description": "buliOS memory shared with Claude Code, Buli and Jarvis: search, read and save notes about the user, projects and past work",
+      "exposure": "direct"
+    }
+  }
+}

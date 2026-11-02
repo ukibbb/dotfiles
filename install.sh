@@ -34,6 +34,7 @@ SYMLINKS=(
     "uv/uv.toml:$HOME/.config/uv/uv.toml"
     "pnpm/rc:$HOME/Library/Preferences/pnpm/rc"
     "bun/bunfig.toml:$HOME/.bunfig.toml"
+    "pi/mcp.json:$HOME/.pi/agent/mcp.json"
 )
 
 # Define copies (for apps that don't work with symlinks): "source:target"
@@ -145,8 +146,11 @@ link_bulios() {
     link_bulios_item "$BULIOS_PAYLOAD/package.json" "$HOME/.claude/package.json"
 
     local entry
+    # One skill base for Claude Code and pi, both read it natively; Buli gets it from the buliOS MCP server.
     for entry in "$BULIOS_PAYLOAD"/skills/*; do
         link_bulios_item "$entry" "$HOME/.claude/skills/$(basename "$entry")"
+        # Only skill directories: pi could read a loose .md (skills/CLAUDE.md) as a skill.
+        [[ -d "$entry" ]] && link_bulios_item "$entry" "$HOME/.pi/agent/skills/$(basename "$entry")"
     done
     for entry in "$BULIOS_PAYLOAD"/hooks/*; do
         [[ "$(basename "$entry")" == "hooks.json" ]] && continue
