@@ -47,6 +47,7 @@ brew "duckdb"
 brew "sqlcmd"
 
 # Media & misc
+brew "ffmpeg"                   # video → frames for agents (Interceptor FrameScrub)
 brew "imagemagick"
 brew "poppler"
 brew "resvg"

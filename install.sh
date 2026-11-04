@@ -277,6 +277,20 @@ install_herdr_hook() {
     print_success "herdr: hook Claude Code w ~/.claude/hooks/herdr-agent-state.sh"
 }
 
+# Playwright MCP for Claude Code (user scope, every project): a headless browser agents use to check web work
+# and record video of it. Copies the pi/mcp.json entry. Buli has its own copy in buliOS BULIOS/mcp.json: bump both.
+install_playwright_mcp() {
+    local server
+    server="$(jq -c '.mcpServers.playwright | {command, args}' "$DOTFILES_DIR/pi/mcp.json")"
+    # Remove first so add-json can run again; "not registered yet" exits 1, which is fine here.
+    claude mcp remove --scope user playwright >/dev/null 2>&1 || true
+    if claude mcp add-json --scope user playwright "$server" >/dev/null; then
+        print_success "Playwright MCP: registered for Claude Code (user scope)"
+    else
+        print_warning "Playwright MCP did not register for Claude Code; details above"
+    fi
+}
+
 # Najnowsze dotfiles i kod buliOS (tylko fast-forward, lokalne zmiany zostają), potem ponowne linkowanie.
 update() {
     git -C "$DOTFILES_DIR" pull --ff-only
@@ -286,6 +300,7 @@ update() {
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
+    install_playwright_mcp
     clear_wezterm_quarantine
 }
 
@@ -374,6 +389,7 @@ bootstrap() {
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
+    install_playwright_mcp
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
     # Na macOS Tahoe launchd potrafi zarejestrować agenta bez uruchomienia go; kickstart startuje go od razu.

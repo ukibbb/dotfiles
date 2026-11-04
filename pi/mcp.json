@@ -5,6 +5,11 @@
       "args": ["~/Desktop/Projekty/ai/buliOs/agents/src/mcp/main.ts", "--without-skill-list"],
       "description": "buliOS memory shared with Claude Code, Buli and Jarvis: search, read and save notes about the user, projects and past work",
       "exposure": "direct"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@0.0.83", "--headless", "--isolated", "--caps", "devtools"],
+      "description": "Headless browser for checking web work: open pages, click, screenshot, and record video (browser_start_video / browser_stop_video) to verify animations"
     }
   }
 }
