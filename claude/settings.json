@@ -3,6 +3,17 @@
     "BULIOS_MEMORY_ROLE": "client"
   },
   "model": "opus",
+  "permissions": {
+    "deny": [
+      "Read(~/**/.env)",
+      "Read(~/**/.env.local)",
+      "Read(~/**/.env.dev)",
+      "Read(~/**/.env.development)",
+      "Read(~/**/.env.prod)",
+      "Read(~/**/.env.production)",
+      "Read(~/**/.env.bak)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
