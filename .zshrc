@@ -152,7 +152,7 @@ fi
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # buliOS launcher
-alias bulios='bun ~/.claude/BULIOS/TOOLS/bulios.ts -s ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md'
+alias bulios='bun ~/.claude/BULIOS/TOOLS/bulios.ts'
 
 # Syncthing drzewa buliOS: po restarcie startuje z pierwszym terminalem, gdy nie działa jako usługa
 # (na Macu służbowym brew services bywa zablokowane). Bez sparowanego folderu nic nie robi.
@@ -160,9 +160,9 @@ if command -v syncthing >/dev/null && [[ -f "$HOME/.config/bulios/USER/.stignore
   (nohup syncthing serve --no-browser >"$HOME/Library/Logs/syncthing.log" 2>&1 &)
 fi
 
-# Buli (>= 1.8) z tym samym promptem, hookami i stopką buliOS co Claude Code.
-if [[ -f ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md && -f ~/.claude/settings.json ]]; then
-  alias buli='buli --append-system-prompt-file ~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md --settings ~/.claude/settings.json --mcp-config ~/.claude/BULIOS/mcp.json'
+# Buli (>= 1.8) with the same buliOS hooks and MCP servers as Claude Code; the prompt arrives through ~/.claude/CLAUDE.md.
+if [[ -f ~/.claude/settings.json ]]; then
+  alias buli='buli --settings ~/.claude/settings.json --mcp-config ~/.claude/BULIOS/mcp.json'
 fi
 
 # Własne paczki (@ukibbb) są zaufane: aktualizacja Buli bez 30-dniowego bezpiecznika.

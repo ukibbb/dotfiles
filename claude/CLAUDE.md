@@ -74,3 +74,7 @@ Several sessions may work in the same checkout at once (shared dev server, no wo
 @~/.claude/BULIOS/USER/CODING_STANDARDS.md
 
 Before starting a new project or choosing a technology, read `~/.claude/BULIOS/USER/TECHSTACKPREFERENCES.md`.
+
+## buliOS rules
+
+@~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md
