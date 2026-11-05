@@ -291,12 +291,18 @@ install_playwright_mcp() {
     fi
 }
 
+# Packages for a buliOS skill tool with its own package.json: Design/Tools (Teardown needs playwright-core and js-beautify).
+install_skill_tool_deps() {
+    (cd "$HOME/.claude/skills/Design/Tools" && bun install) || print_warning "Design tool dependencies did not install; details above"
+}
+
 # Najnowsze dotfiles i kod buliOS (tylko fast-forward, lokalne zmiany zostają), potem ponowne linkowanie.
 update() {
     git -C "$DOTFILES_DIR" pull --ff-only
     [[ -d "$BULIOS_REPO_DIR" ]] && git -C "$BULIOS_REPO_DIR" pull --ff-only
     install_symlinks
     (cd "$HOME/.claude" && bun install)
+    install_skill_tool_deps
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
@@ -386,6 +392,7 @@ bootstrap() {
 
     print_info "Installing buliOS hook dependencies..."
     (cd "$HOME/.claude" && bun install)
+    install_skill_tool_deps
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
