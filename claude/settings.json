@@ -4,7 +4,254 @@
   },
   "model": "opus",
   "permissions": {
+    "allow": [
+      "Agent(ClaudeResearcher)",
+      "Agent(CodexResearcher)",
+      "Agent(Explore)",
+      "Agent(Opus)",
+      "Agent(GeminiResearcher)",
+      "Agent(Astra)",
+      "Agent(PerplexityResearcher)",
+      "Agent(Plan)",
+      "Agent(claude-code-guide)",
+      "Agent(general-purpose)",
+      "AskUserQuestion",
+      "Bash(awk:*)",
+      "Bash(basename:*)",
+      "Bash(bat:*)",
+      "Bash(bun ~/.claude/:*)",
+      "Bash(bun hooks/:*)",
+      "Bash(bun skills/:*)",
+      "Bash(bun BULIOS/:*)",
+      "Bash(bun test:*)",
+      "Bash(cat:*)",
+      "Bash(cd:*)",
+      "Bash(chmod:*)",
+      "Bash(cmp:*)",
+      "Bash(column:*)",
+      "Bash(comm:*)",
+      "Bash(cp:*)",
+      "Bash(cut:*)",
+      "Bash(date)",
+      "Bash(date:*)",
+      "Bash(diff:*)",
+      "Bash(dig:*)",
+      "Bash(dirname:*)",
+      "Bash(disown)",
+      "Bash(echo:*)",
+      "Bash(egrep:*)",
+      "Bash(expr:*)",
+      "Bash(eza:*)",
+      "Bash(false)",
+      "Bash(fd:*)",
+      "Bash(fgrep:*)",
+      "Bash(file:*)",
+      "Bash(find:*)",
+      "Bash(git add:*)",
+      "Bash(git blame:*)",
+      "Bash(git branch:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git commit:*)",
+      "Bash(git config --get:*)",
+      "Bash(git describe:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git mv:*)",
+      "Bash(git pull:*)",
+      "Bash(git reflog:*)",
+      "Bash(git remote:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git revert *)",
+      "Bash(git show:*)",
+      "Bash(git status:*)",
+      "Bash(git tag:*)",
+      "Bash(git worktree list:*)",
+      "Bash(grep:*)",
+      "Bash(groups:*)",
+      "Bash(head:*)",
+      "Bash(hexdump:*)",
+      "Bash(host:*)",
+      "Bash(htop:*)",
+      "Bash(id:*)",
+      "Bash(interceptor --help)",
+      "Bash(interceptor eval *)",
+      "Bash(interceptor open *)",
+      "Bash(interceptor screenshot *)",
+      "Bash(interceptor status *)",
+      "Bash(interceptor tab *)",
+      "Bash(interceptor tabs *)",
+      "Bash(interceptor wait *)",
+      "Bash(jq:*)",
+      "Bash(launchctl start:*)",
+      "Bash(launchctl stop:*)",
+      "Bash(less:*)",
+      "Bash(ln:*)",
+      "Bash(ls:*)",
+      "Bash(lsof:*)",
+      "Bash(md5:*)",
+      "Bash(md5sum:*)",
+      "Bash(mkdir:*)",
+      "Bash(more:*)",
+      "Bash(mv:*)",
+      "Bash(nslookup:*)",
+      "Bash(od:*)",
+      "Bash(paste:*)",
+      "Bash(pbcopy)",
+      "Bash(pbpaste)",
+      "Bash(ping:*)",
+      "Bash(printf:*)",
+      "Bash(ps:*)",
+      "Bash(pwd)",
+      "Bash(readlink:*)",
+      "Bash(realpath:*)",
+      "Bash(rg:*)",
+      "Bash(say:*)",
+      "Bash(sed:*)",
+      "Bash(seq:*)",
+      "Bash(sha256sum:*)",
+      "Bash(shasum:*)",
+      "Bash(sleep:*)",
+      "Bash(sort:*)",
+      "Bash(stat:*)",
+      "Bash(tail:*)",
+      "Bash(tee:*)",
+      "Bash(test:*)",
+      "Bash(top:*)",
+      "Bash(touch:*)",
+      "Bash(tr:*)",
+      "Bash(tree:*)",
+      "Bash(true)",
+      "Bash(type:*)",
+      "Bash(uname:*)",
+      "Bash(uniq:*)",
+      "Bash(uptime)",
+      "Bash(wait)",
+      "Bash(wc:*)",
+      "Bash(which:*)",
+      "Bash(whoami)",
+      "Bash(whois:*)",
+      "Bash(xxd:*)",
+      "Bash(yq:*)",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "Edit(**/tmp/**)",
+      "Edit(/private/tmp/**)",
+      "Edit(/tmp/**)",
+      "Edit(/var/folders/**)",
+      "Edit(tmp/**)",
+      "Edit(~/.claude/**)",
+      "Edit(~/Downloads/**)",
+      "Edit(~/Projects/**)",
+      "EnterPlanMode",
+      "EnterWorktree",
+      "ExitPlanMode",
+      "ExitWorktree",
+      "Glob",
+      "Grep",
+      "LS",
+      "Monitor",
+      "NotebookEdit",
+      "NotebookRead",
+      "Read",
+      "RemoteTrigger",
+      "SendMessage",
+      "Skill",
+      "Task",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskStop",
+      "TaskUpdate",
+      "TeamCreate",
+      "TeamDelete",
+      "TodoWrite",
+      "ToolSearch",
+      "WebFetch",
+      "WebSearch"
+    ],
     "deny": [
+      "Bash(* > /dev/disk*)",
+      "Bash(* > /dev/sd*)",
+      "Bash(awk * ~/.claude/.env)",
+      "Bash(cat ~/.claude/.env)",
+      "Bash(cat ~/.claude/.env.*)",
+      "Bash(chmod -R 777 $HOME)",
+      "Bash(chmod -R 777 /)",
+      "Bash(chmod -R 777 ~)",
+      "Bash(curl * | bash)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | zsh)",
+      "Bash(dd if=* of=/dev/*)",
+      "Bash(git push --force * main)",
+      "Bash(git push --force * master)",
+      "Bash(git push -f * main)",
+      "Bash(git push -f * master)",
+      "Bash(grep * ~/.claude/.env)",
+      "Bash(head ~/.claude/.env)",
+      "Bash(less ~/.claude/.env)",
+      "Bash(mkfs*)",
+      "Bash(od ~/.claude/.env)",
+      "Bash(rg * ~/.claude/.env)",
+      "Bash(rm -rf $HOME)",
+      "Bash(rm -rf .git)",
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf ~/.claude)",
+      "Bash(rm -rf ~/.claude/*)",
+      "Bash(sed * ~/.claude/.env)",
+      "Bash(tail ~/.claude/.env)",
+      "Bash(wget * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(wget * | zsh)",
+      "Bash(xxd ~/.claude/.env)",
+      "Edit(/System/**)",
+      "Edit(/bin/**)",
+      "Edit(/etc/**)",
+      "Edit(/sbin/**)",
+      "Edit(/usr/**)",
+      "Edit(~/.claude/projects/**/memory/**)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.gnupg/private*)",
+      "Read(~/.ssh/*_ed25519)",
+      "Read(~/.ssh/*_rsa)",
+      "Read(~/.ssh/id_*)",
+      "Edit(~/.claude/BULIOS/MEMORY/STATE/Proof/receipts/**)",
+      "Edit(~/.config/bulios/USER/MEMORY/STATE/Proof/receipts/**)",
+      "Bash(ruby -e *)",
+      "Bash(php -r *)",
+      "Bash(*wrangler deploy *)",
+      "Bash(*wrangler publish *)",
+      "Bash(*wrangler rollback *)",
+      "Bash(*wrangler versions upload *)",
+      "Bash(*wrangler versions deploy *)",
+      "Bash(*wrangler secret *)",
+      "Bash(*wrangler secret:bulk *)",
+      "Bash(*wrangler delete *)",
+      "Bash(*wrangler pages deploy *)",
+      "Bash(*wrangler pages publish *)",
+      "Bash(*wrangler r2 bucket delete *)",
+      "Bash(*wrangler d1 delete *)",
+      "Bash(*wrangler kv namespace delete *)",
+      "Bash(cf deploy *)",
+      "Bash(cf * deploy *)",
+      "Bash(cf * secret *)",
+      "Bash(cf * publish *)",
+      "Bash(cf * rollback *)",
+      "Bash(dd-cli order submit *)",
+      "Bash(dd-cli * order submit *)",
+      "Edit(~/.claude/.git/hooks/**)",
+      "Edit(~/.claude/.git/config)",
+      "Edit(~/.config/bulios/USER/.git/hooks/**)",
+      "Edit(~/.config/bulios/USER/.git/config)",
+      "Edit(~/.local/state/bulios/sendgate/**)",
+      "Read(~/.local/state/bulios/sendgate/**)",
+      "Edit(~/.claude/BULIOS/MEMORY/STATE/function-hooks/**)",
       "Read(~/**/.env)",
       "Read(~/**/.env.local)",
       "Read(~/**/.env.dev)",
@@ -12,61 +259,32 @@
       "Read(~/**/.env.prod)",
       "Read(~/**/.env.production)",
       "Read(~/**/.env.bak)"
-    ]
+    ],
+    "ask": [
+      "Read(~/.claude/.env)",
+      "Read(~/.claude/.env.*)",
+      "Read(~/.claude/**/.env)",
+      "Read(~/.claude/**/.env.*)",
+      "Edit(~/.claude/.env)",
+      "Edit(~/.claude/.env.*)",
+      "Edit(~/.claude/**/.env)",
+      "Edit(~/.claude/**/.env.*)",
+      "mcp__plugin_slack_slack__slack_send_message",
+      "mcp__plugin_slack_slack__slack_schedule_message",
+      "Edit(~/.claude/**/*.py)",
+      "Edit(~/.claude/settings.system.json)",
+      "Edit(~/.config/bulios/USER/CONFIG/settings.user.json)"
+    ],
+    "additionalDirectories": []
   },
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "^(startup|resume|clear|compact|fork)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun $HOME/.claude/hooks/HookHealer.hook.ts",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/KittyEnvPersist.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/LoadContext.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "bun $HOME/.claude/BULIOS/TOOLS/FreshnessCache.ts --quiet",
-            "timeout": 5,
-            "async": true
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ContextReduction.hook.sh"
-          }
-        ]
-      },
       {
         "matcher": "Agent",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AgentInvocation.hook.ts"
+            "command": "$HOME/.claude/hooks/AgentInvocation.hook.ts",
+            "type": "command"
           }
         ]
       },
@@ -74,17 +292,17 @@
         "matcher": "AskUserQuestion",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/TabState.hook.ts"
+            "command": "$HOME/.claude/hooks/TabState.hook.ts",
+            "type": "command"
           }
         ]
       },
       {
-        "matcher": "Bash|Write|Edit|MultiEdit",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/PreToolGuard.hook.ts"
+            "command": "$HOME/.claude/hooks/EnvFileGuard.hook.ts"
           }
         ]
       }
@@ -94,48 +312,8 @@
         "matcher": "Agent",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AgentInvocation.hook.ts"
-          }
-        ]
-      },
-      {
-        "matcher": "WebFetch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "WebSearch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "ToolSearch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts",
-            "timeout": 5
+            "command": "$HOME/.claude/hooks/AgentInvocation.hook.ts",
+            "type": "command"
           }
         ]
       },
@@ -143,170 +321,34 @@
         "matcher": "AskUserQuestion",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/TabState.hook.ts"
+            "command": "$HOME/.claude/hooks/TabState.hook.ts",
+            "timeout": 5,
+            "type": "command"
           }
         ]
       },
       {
-        "matcher": "Read",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISAStaleWriteGuard.hook.ts"
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISASync.hook.ts"
+            "command": "$HOME/.claude/hooks/PostToolObserver.hook.ts",
+            "timeout": 35,
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISAStaleWriteGuard.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/CheckpointPerISC.hook.ts",
-            "timeout": 30
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ConfigEvalFire.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AtlasEventCapture.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/KnowledgeWriteGuard.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ComplexityRatchet.hook.ts"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISASync.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISAStaleWriteGuard.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/CheckpointPerISC.hook.ts",
-            "timeout": 30
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ConfigEvalFire.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AtlasEventCapture.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/KnowledgeWriteGuard.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ComplexityRatchet.hook.ts"
-          }
-        ]
-      },
-      {
-        "matcher": "MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISASync.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISAStaleWriteGuard.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/CheckpointPerISC.hook.ts",
-            "timeout": 30
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ConfigEvalFire.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AtlasEventCapture.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/KnowledgeWriteGuard.hook.ts",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ComplexityRatchet.hook.ts"
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
+            "async": true,
             "command": "$HOME/.claude/hooks/EventLogger.hook.ts",
             "timeout": 5,
-            "async": true
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/PostToolObserver.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/LoopDetector.hook.ts",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AtlasEventCapture.hook.ts",
-            "timeout": 5
+            "type": "command"
           }
         ]
       }
     ],
     "SessionEnd": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/WorkCompletionLearning.hook.ts"
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ProjectWorkLog.hook.ts"
           },
           {
             "type": "command",
@@ -318,10 +360,6 @@
           },
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/MemoryHealthGate.hook.ts"
-          },
-          {
-            "type": "command",
             "command": "$HOME/.claude/hooks/DocIntegrity.hook.ts"
           },
           {
@@ -329,59 +367,115 @@
             "command": "$HOME/.claude/hooks/IntegrityCheck.hook.ts"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/ProjectWorkLog.hook.ts"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
+            "command": "$HOME/.claude/hooks/SessionTitle.hook.ts",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "async": true,
             "command": "$HOME/.claude/hooks/PromptProcessing.hook.ts",
             "timeout": 30,
-            "async": true
-          },
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
+            "async": true,
             "command": "$HOME/.claude/hooks/SatisfactionCapture.hook.ts",
             "timeout": 20,
-            "async": true
-          },
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ReminderRouter.hook.ts",
-            "timeout": 5,
-            "async": true
-          },
-          {
-            "type": "command",
             "command": "$HOME/.claude/hooks/VersionDrift.hook.ts",
             "timeout": 10,
-            "async": true
-          },
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
+            "command": "$HOME/.claude/hooks/DriftReminder.hook.ts",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
             "command": "$HOME/.claude/hooks/MemoryTurnStart.hook.ts",
-            "timeout": 8
-          },
+            "timeout": 20,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/DriftReminder.hook.ts"
-          },
+            "command": "$HOME/.claude/hooks/AlgorithmNudge.hook.ts",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/AlgorithmNudge.hook.ts"
-          },
-          {
-            "type": "command",
             "command": "$HOME/.claude/hooks/TimeContext.hook.ts",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/hooks/VoiceMode.hook.ts",
             "timeout": 5,
-            "async": true
-          },
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/hooks/ModelDriftGuard.hook.ts",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/ModelRungGuard.hook.ts",
-            "timeout": 5,
+            "command": "$HOME/.claude/hooks/TurnRecord.hook.ts",
+            "timeout": 15,
             "async": true
           }
         ]
@@ -389,39 +483,25 @@
     ],
     "PostToolUseFailure": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/EventLogger.hook.ts"
-          },
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/AlgorithmNudge.hook.ts",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/LoopDetector.hook.ts",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "TaskCreated": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/TaskGovernance.hook.ts"
           }
         ]
       }
     ],
     "ConfigChange": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
@@ -430,42 +510,109 @@
         ]
       }
     ],
-    "Stop": [
+    "SessionStart": [
       {
-        "matcher": "",
+        "hooks": [
+          {
+            "command": "bun $HOME/.claude/hooks/HookHealer.hook.ts",
+            "timeout": 10,
+            "type": "command"
+          },
+          {
+            "command": "$HOME/.claude/hooks/KittyEnvPersist.hook.ts",
+            "type": "command"
+          },
+          {
+            "command": "$HOME/.claude/hooks/LoadContext.hook.ts",
+            "type": "command"
+          },
+          {
+            "async": true,
+            "command": "bun $HOME/.claude/BULIOS/TOOLS/FreshnessCache.ts --quiet",
+            "timeout": 5,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/LastResponseCache.hook.ts"
+            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "$HOME/.claude/hooks/LastResponseCache.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/TabState.hook.ts"
+            "command": "$HOME/.claude/hooks/TabState.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/VoiceCompletion.hook.ts"
+            "async": true,
+            "command": "$HOME/.claude/hooks/VoiceCompletion.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/ISARenderOnStop.hook.ts"
+            "command": "$HOME/.claude/hooks/ISARenderOnStop.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/SpendAuditor.hook.ts"
+            "command": "$HOME/.claude/hooks/StopGates.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/StopGates.hook.ts"
+            "command": "$HOME/.claude/hooks/MemoryReviewFire.hook.ts",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/MemoryReviewFire.hook.ts"
-          },
+            "command": "$HOME/.claude/hooks/TurnOutcome.hook.ts",
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
           {
-            "type": "command",
+            "async": true,
             "command": "$HOME/.claude/hooks/MemoryHealthGate.hook.ts",
             "timeout": 15,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "async": true,
+            "command": "$HOME/.claude/hooks/VigilTaskSummary.hook.ts",
+            "timeout": 15,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/MemoryIndexRefresh.hook.ts",
+            "timeout": 60,
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/BlockerText.hook.ts",
             "async": true
           }
         ]
@@ -473,31 +620,37 @@
     ],
     "StopFailure": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/EventLogger.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/TabState.hook.ts"
           }
         ]
       }
     ],
     "PermissionRequest": [
       {
-        "matcher": "Write|Edit|MultiEdit|Bash",
+        "matcher": ".*",
         "hooks": [
           {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts"
+            "command": "$HOME/.claude/hooks/TabState.hook.ts",
+            "timeout": 5,
+            "type": "command"
           }
         ]
-      },
+      }
+    ],
+    "Notification": [
       {
-        "matcher": "mcp__.*",
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/Safety.hook.ts"
+            "command": "$HOME/.claude/hooks/BlockerText.hook.ts",
+            "async": true
           }
         ]
       }

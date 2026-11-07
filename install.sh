@@ -194,6 +194,22 @@ link_device_logs() {
         ln -s "DEVICES/$device/OBSERVABILITY" "$obs"
         print_success "$obs -> DEVICES/$device/OBSERVABILITY"
     fi
+    # STATVS (buliOS v8's record of what happened) names its segment files by writer, not by device,
+    # so two devices would write the same files: it is per device too, like OBSERVABILITY.
+    local own_statvs="$memory/DEVICES/$device/STATVS" statvs="$memory/STATVS"
+    mkdir -p "$own_statvs" "$HOME/.config/bulios"
+    if [[ -d "$statvs" && ! -L "$statvs" ]]; then
+        rsync -a --exclude='*.sync-conflict-*' "$statvs/" "$own_statvs/" &&
+            mv "$statvs" "$HOME/.config/bulios/STATVS.backup.$(date +%Y%m%d%H%M%S)" || return 1
+    fi
+    # A link to another device's folder (synced before the .stignore line existed) is replaced with this device's own.
+    if [[ -L "$statvs" && "$(readlink "$statvs")" != "DEVICES/$device/STATVS" ]]; then
+        rm "$statvs"
+    fi
+    if [[ ! -L "$statvs" ]]; then
+        ln -s "DEVICES/$device/STATVS" "$statvs"
+        print_success "$statvs -> DEVICES/$device/STATVS"
+    fi
 }
 
 # ~/.claude/projects/<projekt>/memory -> drzewo buliOS. Claude Code nazywa projekt pełną ścieżką
