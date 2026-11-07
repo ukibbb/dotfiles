@@ -22,7 +22,6 @@ SYMLINKS=(
     "claude/settings.json:$HOME/.claude/settings.json"
     "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
-    "claude/agents:$HOME/.claude/agents"
     "git/gitconfig:$HOME/.gitconfig"
     "starship/starship.toml:$HOME/.config/starship.toml"
     "atuin/config.toml:$HOME/.config/atuin/config.toml"
@@ -156,8 +155,30 @@ link_bulios() {
         [[ "$(basename "$entry")" == "hooks.json" ]] && continue
         link_bulios_item "$entry" "$HOME/.claude/hooks/$(basename "$entry")"
     done
+    link_lifeos_extras
     link_claude_memories
     link_device_logs
+}
+
+# LifeOS v8's agents, slash commands and workflows, one link per file like skills and hooks.
+# Claude Code reads them from ~/.claude/{agents,commands,workflows}. Our own agents stay in dotfiles.
+link_lifeos_extras() {
+    local agents="$HOME/.claude/agents" entry
+    # Before v8, ~/.claude/agents was one link to dotfiles/claude/agents. Per-file links would land
+    # inside the dotfiles repo through it, so the old link goes first (it is only a link).
+    if [[ -L "$agents" && "$(readlink "$agents")" == "$DOTFILES_DIR/claude/agents" ]]; then
+        rm "$agents"
+    fi
+    # A missing folder leaves its glob unexpanded: skip it instead of linking a literal "*".
+    for entry in "$DOTFILES_DIR"/claude/agents/* "$BULIOS_PAYLOAD"/agents/*; do
+        [[ -e "$entry" ]] && link_bulios_item "$entry" "$agents/$(basename "$entry")"
+    done
+    for entry in "$BULIOS_PAYLOAD"/commands/*; do
+        [[ -e "$entry" ]] && link_bulios_item "$entry" "$HOME/.claude/commands/$(basename "$entry")"
+    done
+    for entry in "$BULIOS_PAYLOAD"/workflows/*; do
+        [[ -e "$entry" ]] && link_bulios_item "$entry" "$HOME/.claude/workflows/$(basename "$entry")"
+    done
 }
 
 # Nazwa tego urządzenia w buliOS (~/.config/bulios/device, poza drzewem). Hostname nie wystarcza:
