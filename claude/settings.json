@@ -360,7 +360,8 @@
           },
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/DocIntegrity.hook.ts"
+            "command": "$HOME/.claude/hooks/DocIntegrity.hook.ts",
+            "timeout": 10
           },
           {
             "type": "command",
