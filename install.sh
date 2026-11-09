@@ -169,15 +169,18 @@ link_lifeos_extras() {
     if [[ -L "$agents" && "$(readlink "$agents")" == "$DOTFILES_DIR/claude/agents" ]]; then
         rm "$agents"
     fi
-    # A missing folder leaves its glob unexpanded: skip it instead of linking a literal "*".
+    # A missing folder leaves its glob unexpanded: skip it with `|| continue` (a trailing `&&` test would return 1 and stop set -e).
     for entry in "$DOTFILES_DIR"/claude/agents/* "$BULIOS_PAYLOAD"/agents/*; do
-        [[ -e "$entry" ]] && link_bulios_item "$entry" "$agents/$(basename "$entry")"
+        [[ -e "$entry" ]] || continue
+        link_bulios_item "$entry" "$agents/$(basename "$entry")"
     done
     for entry in "$BULIOS_PAYLOAD"/commands/*; do
-        [[ -e "$entry" ]] && link_bulios_item "$entry" "$HOME/.claude/commands/$(basename "$entry")"
+        [[ -e "$entry" ]] || continue
+        link_bulios_item "$entry" "$HOME/.claude/commands/$(basename "$entry")"
     done
     for entry in "$BULIOS_PAYLOAD"/workflows/*; do
-        [[ -e "$entry" ]] && link_bulios_item "$entry" "$HOME/.claude/workflows/$(basename "$entry")"
+        [[ -e "$entry" ]] || continue
+        link_bulios_item "$entry" "$HOME/.claude/workflows/$(basename "$entry")"
     done
 }
 
