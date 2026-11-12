@@ -346,6 +346,7 @@ update() {
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
+    install_helm
     install_playwright_mcp
     clear_wezterm_quarantine
 }
@@ -372,6 +373,12 @@ install_usage_aggregator() {
 # Statusline czyta tylko wynik z USER/CACHE/interview-due.json, a CACHE nie synchronizuje się między Macami.
 install_interview_due() {
     bun "$HOME/.claude/BULIOS/TOOLS/InstallInterviewDue.ts" || print_warning "InterviewDue się nie zainstalował — szczegóły wyżej"
+}
+
+# Helm, the local life and work center: builds it and its menu bar, starts com.bulios.helm on 127.0.0.1:31337 and
+# com.bulios.helm-menubar, and turns Pulse's server and menu bar off. Safe to run again (helm-local/install.ts).
+install_helm() {
+    bun "$BULIOS_REPO_DIR/helm-local/install.ts" || print_warning "Helm did not install; details above"
 }
 
 # Syncthing serwera (konrad126); ID urządzenia nie jest sekretem — połączenie wymaga akceptacji po obu stronach.
@@ -436,6 +443,7 @@ bootstrap() {
     install_claude_bridge
     install_usage_aggregator
     install_interview_due
+    install_helm
     install_playwright_mcp
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
