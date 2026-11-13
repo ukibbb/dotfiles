@@ -20,7 +20,6 @@ SYMLINKS=(
     "nvim:$HOME/.config/nvim"
     "wezterm.lua:$HOME/.config/wezterm/wezterm.lua"
     "claude/settings.json:$HOME/.claude/settings.json"
-    "claude/statusline-command.sh:$HOME/.claude/statusline-command.sh"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
     "git/gitconfig:$HOME/.gitconfig"
     "starship/starship.toml:$HOME/.config/starship.toml"

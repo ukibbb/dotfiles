@@ -222,7 +222,6 @@
       "Edit(//etc/**)",
       "Edit(//sbin/**)",
       "Edit(//usr/**)",
-      "Edit(~/.claude/projects/**/memory/**)",
       "Read(~/.aws/credentials)",
       "Read(~/.gnupg/private*)",
       "Read(~/.ssh/*_ed25519)",
@@ -666,7 +665,8 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/BULIOS/BULIOS_StatusLine.sh"
+    "command": "bash ~/.claude/BULIOS/BULIOS_StatusLine.sh",
+    "refreshInterval": 60
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
