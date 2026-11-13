@@ -80,7 +80,7 @@ Pełna dokumentacja: https://herdr.dev/docs/
 <a id="claude-code"></a>
 ## Claude Code
 
-Pliki: `claude/settings.json`, `claude/CLAUDE.md`, `claude/statusline-command.sh` → `~/.claude/`. Historia rozmów i pamięć projektów nie są w repozytorium.
+Pliki: `claude/settings.json`, `claude/CLAUDE.md` → `~/.claude/`. Historia rozmów i pamięć projektów nie są w repozytorium.
 
 ### Ustawienia
 
