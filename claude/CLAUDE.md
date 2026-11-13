@@ -84,3 +84,9 @@ Before starting a new project or choosing a technology, read `~/.claude/BULIOS/U
 ## buliOS rules
 
 @~/.claude/BULIOS/BULIOS_SYSTEM_PROMPT.md
+
+## Identity and operational preferences
+
+@~/.claude/BULIOS/USER/PRINCIPAL/PRINCIPAL_IDENTITY.md
+@~/.claude/BULIOS/USER/DIGITAL_ASSISTANT/DA_IDENTITY.md
+@~/.claude/BULIOS/USER/CONFIG/OPERATIONAL_PREFERENCES.md
