@@ -21,6 +21,7 @@ SYMLINKS=(
     "wezterm.lua:$HOME/.config/wezterm/wezterm.lua"
     "claude/settings.json:$HOME/.claude/settings.json"
     "claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
+    "claude/output-styles:$HOME/.claude/output-styles"
     "git/gitconfig:$HOME/.gitconfig"
     "starship/starship.toml:$HOME/.config/starship.toml"
     "atuin/config.toml:$HOME/.config/atuin/config.toml"
