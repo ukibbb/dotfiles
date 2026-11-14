@@ -62,9 +62,12 @@ return {
       },
 
       -- Insert mode mappings (default mode when telescope opens)
+      -- <D-…> is Cmd: WezTerm sends Cmd+j/k as Super (CSI 106;9u / 107;9u)
       i = {
         ["<M-j>"] = require("telescope.actions").move_selection_next,
         ["<M-k>"] = require("telescope.actions").move_selection_previous,
+        ["<D-j>"] = require("telescope.actions").move_selection_next,
+        ["<D-k>"] = require("telescope.actions").move_selection_previous,
       },
     },
   },

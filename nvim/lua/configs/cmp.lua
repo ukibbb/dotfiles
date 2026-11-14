@@ -51,13 +51,15 @@ local options = {
   -- These control how you interact with the completion menu
 
   mapping = {
-    -- Ctrl+p / Alt+k: Select previous item in the completion menu
+    -- Ctrl+p / Alt+k / Cmd+k: Select previous item in the completion menu
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<M-k>"] = cmp.mapping.select_prev_item(),
+    ["<D-k>"] = cmp.mapping.select_prev_item(),
 
-    -- Ctrl+n / Alt+j: Select next item in the completion menu
+    -- Ctrl+n / Alt+j / Cmd+j: Select next item in the completion menu
     ["<C-n>"] = cmp.mapping.select_next_item(),
     ["<M-j>"] = cmp.mapping.select_next_item(),
+    ["<D-j>"] = cmp.mapping.select_next_item(),
 
     -- Ctrl+d: Scroll documentation window DOWN by 4 lines
     -- When hovering a completion item, this scrolls its documentation
