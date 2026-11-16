@@ -321,7 +321,15 @@ return {
         function()
           require("dap").terminate()
         end,
-        desc = "DAP: terminate",
+        desc = "DAP: terminate (also ends a program you attached to)",
+      },
+      {
+        "<leader>dD",
+        function()
+          -- Unplug the debugger and leave the program running (use this after "Attach to ...").
+          require("dap").disconnect({ terminateDebuggee = false })
+        end,
+        desc = "DAP: disconnect, keep the program running",
       },
       {
         "<leader>du",
