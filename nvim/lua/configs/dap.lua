@@ -112,6 +112,16 @@ function M.setup()
       webRoot = "${workspaceFolder}",
       sourceMaps = true,
     },
+    {
+      -- Joins a Node server started with --inspect (e.g. `next dev --inspect`), which listens on port 9229.
+      type = "pwa-node",
+      request = "attach",
+      name = "Attach to Next server (port 9229)",
+      port = 9229,
+      cwd = "${workspaceFolder}",
+      sourceMaps = true,
+      skipFiles = { "<node_internals>/**", "${workspaceFolder}/node_modules/**" },
+    },
   }
 
   local vscode = require "dap.ext.vscode"
