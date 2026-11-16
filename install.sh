@@ -331,6 +331,19 @@ install_playwright_mcp() {
     fi
 }
 
+# novibe MCP for Claude Code (user scope, every project). OAuth sign-in stays per machine: run /mcp in Claude Code once.
+install_novibe_mcp() {
+    # Remove first so add can run again; "not registered yet" exits 1, which is fine here.
+    claude mcp remove --scope user novibe >/dev/null 2>&1 || true
+    # The client id and fixed callback port match the OAuth client novibe registers for Claude Code.
+    if claude mcp add --transport http --scope user --client-id claude-code --callback-port 8765 \
+        novibe https://mcp.novibe.space/mcp/ >/dev/null; then
+        print_success "novibe MCP: registered for Claude Code (user scope); sign in via /mcp"
+    else
+        print_warning "novibe MCP did not register for Claude Code; details above"
+    fi
+}
+
 # Packages for a buliOS skill tool with its own package.json: Design/Tools (Teardown needs playwright-core and js-beautify).
 install_skill_tool_deps() {
     (cd "$HOME/.claude/skills/Design/Tools" && bun install) || print_warning "Design tool dependencies did not install; details above"
@@ -348,6 +361,7 @@ update() {
     install_interview_due
     install_helm
     install_playwright_mcp
+    install_novibe_mcp
     clear_wezterm_quarantine
 }
 
@@ -445,6 +459,7 @@ bootstrap() {
     install_interview_due
     install_helm
     install_playwright_mcp
+    install_novibe_mcp
 
     # Drzewo buliOS przychodzi z serwera po sparowaniu urządzeń (README: Drugi Mac).
     # Na macOS Tahoe launchd potrafi zarejestrować agenta bez uruchomienia go; kickstart startuje go od razu.

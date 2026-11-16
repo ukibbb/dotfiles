@@ -96,7 +96,7 @@ Run `claude` once to authenticate. Claude plugins (superpowers + LSPs) are decla
 2. Run `bash install.sh bootstrap`, then sign in to `claude` (the Claude account brings claude.ai skills; plugins come from `claude/settings.json`). 1Password is optional: it is only needed to run the Docker stack locally, which lives on the server.
 3. Pair Syncthing with the server: get this Mac's ID (`syncthing generate 2>&1 | grep -i "device id"`), add it on the server (`st config devices add --device-id <ID> --name <mac>` and `st config folders bulios-user devices add --device-id <ID>`), then run `bash install.sh bulios-sync` here. It starts Syncthing (without `brew services`, which MDM often blocks), copies `.stignore` and links the folder receive-only; run `bash install.sh bulios-sync` again once the tree has arrived and it switches the folder to send & receive. Later updates: `bash install.sh update` pulls dotfiles and buliOS and relinks.
 4. When the tree has arrived, run `bash install.sh install` again so project memories link into `~/.claude/projects/*/memory`.
-5. Per-machine state that does not travel: an SSH key for the server (`ssh-keygen`, add the public key on the server), the `novibe` MCP server (`claude mcp add`, then sign in via `/mcp`), and uncommitted local edits in `claude/settings.json`.
+5. Per-machine state that does not travel: an SSH key for the server (`ssh-keygen`, add the public key on the server), the `novibe` MCP sign-in (`bootstrap` and `update` register the server, then you sign in once via `/mcp`), and uncommitted local edits in `claude/settings.json`.
 
 ### What lives where on a Mac
 
