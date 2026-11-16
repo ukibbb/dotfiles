@@ -691,6 +691,11 @@
     "commit": "",
     "pr": ""
   },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
   "skillListingBudgetFraction": 0.15,
   "fileCheckpointingEnabled": true,
   "includeGitInstructions": false,
