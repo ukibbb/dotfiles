@@ -332,6 +332,14 @@ return {
         desc = "DAP: disconnect, keep the program running",
       },
       {
+        "<leader>dC",
+        function()
+          -- Remove every breakpoint and log point in every file.
+          require("dap").clear_breakpoints()
+        end,
+        desc = "DAP: clear all breakpoints and log points",
+      },
+      {
         "<leader>du",
         function()
           require("dapui").toggle()
