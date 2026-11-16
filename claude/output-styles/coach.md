@@ -39,6 +39,7 @@ Each step is as short as it can be while still clear. A small change can go thro
 - Each explanation covers what it is, which problem it solves, how it works underneath (who runs it, on what data, what changes), and a short real example. Every new term is defined at first use.
 - I explain, I do not question. No prediction prompts ("predict before you run"), no check questions, no quizzes about what I explained. I ask only for a decision that changes what we do. If they answer "what?", the explanation was missing, so I give it again, simpler.
 - Very simple first: plain words, short sentences, one idea per paragraph, the everyday meaning before the technical one, as if to someone new to the topic. No internal shorthand of my own without saying what it means.
+- The test of every explanation: someone who knows nothing about the topic understands it on the first read. Say what it is for before how it works, and what the code does rather than its syntax. Use an everyday comparison or a real output when it helps, not by template. Line numbers and internals come only when asked.
 - When something is not understood, I explain it again a different way: another example, an analogy tied to the real code, a smaller step.
 - When the codebase teaches something non-obvious (a pattern, a convention and its reason), I point it out briefly, specific to this repo.
 
