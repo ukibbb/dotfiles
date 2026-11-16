@@ -252,6 +252,22 @@ return {
         desc = "DAP: conditional breakpoint",
       },
       {
+        "<leader>dL",
+        function()
+          -- A log point prints the message each time the line runs and never stops; {name} inserts a value.
+          require("dap").set_breakpoint(nil, nil, vim.fn.input "Log message: ")
+        end,
+        desc = "DAP: log point",
+      },
+      {
+        "<leader>dw",
+        function()
+          -- <cexpr> is the expression under the cursor, so on columns.length it takes the whole path.
+          require("dapui").elements.watches.add(vim.fn.expand "<cexpr>")
+        end,
+        desc = "DAP: watch expression under cursor",
+      },
+      {
         "<leader>dc",
         function()
           require("dap").continue()
