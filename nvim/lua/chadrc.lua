@@ -10,8 +10,8 @@ M.base46 = {
 
   -- Highlight overrides - customize specific highlight groups
   hl_override = {
-    Comment = { fg = "#5fafff", italic = true },
-    ["@comment"] = { fg = "#5fafff", italic = true },
+    Comment = { fg = "#50fa7b", italic = true },
+    ["@comment"] = { fg = "#50fa7b", italic = true },
     -- Differentiate object properties and member access
     ["@property"] = { fg = "#74c5aa" },
     ["@variable.member"] = { fg = "#74c5aa" },
