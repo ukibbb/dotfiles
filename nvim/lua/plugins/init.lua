@@ -92,9 +92,23 @@ return {
     opts = {
       -- Small box in the bottom-right corner instead of a full-width bar.
       preset = "helix",
+      -- Unnamed groups show as "+N keymaps" with no icon, and icons otherwise come from words in desc.
       spec = {
-        { "<leader>d", group = "debug" },
-        { "<leader>l", group = "lsp" },
+        { "<leader>B", group = "database", icon = { icon = "󰆼", color = "purple" } },
+        { "<leader>c", group = "code", icon = { icon = "", color = "orange" } },
+        { "<leader>d", group = "debug", icon = { icon = "󰃤", color = "red" } },
+        { "<leader>f", group = "find", icon = { icon = "", color = "green" } },
+        { "<leader>g", group = "git", icon = { cat = "filetype", name = "git" } },
+        { "<leader>l", group = "lsp", icon = { icon = "󰅴", color = "blue" } },
+        { "<leader>m", group = "marks", icon = { icon = "󰃀", color = "yellow" } },
+        { "<leader>r", group = "remote", icon = { icon = "󰒋", color = "azure" } },
+        { "<leader>t", group = "theme", icon = { icon = "󰏘", color = "purple" } },
+        { "<leader>W", group = "wayfinder", icon = { icon = "󰍍", color = "azure" } },
+        { "<leader>?", icon = { icon = "󰌌", color = "cyan" } },
+        { "<leader>K", icon = { icon = "󰌌", color = "cyan" } },
+        { "<leader>e", icon = { icon = "󰙅", color = "green" } },
+        { "<leader>E", icon = { icon = "󰙅", color = "green" } },
+        { "<leader>y", icon = { icon = "󰆏", color = "cyan" } },
       },
     },
     keys = {
