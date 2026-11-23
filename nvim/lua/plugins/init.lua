@@ -340,6 +340,29 @@ return {
         desc = "DAP: clear all breakpoints and log points",
       },
       {
+        "<leader>dg",
+        function()
+          -- Works only while stopped. Other breakpoints are skipped on the way and come back once it stops.
+          require("dap").run_to_cursor()
+        end,
+        desc = "DAP: run to cursor",
+      },
+      {
+        "<leader>dR",
+        function()
+          require("dap").restart()
+        end,
+        desc = "DAP: restart the session",
+      },
+      {
+        "<leader>dx",
+        function()
+          -- Prompts with all filter ids prefilled (Enter = all), delete the ones you don't want. Lasts for this session only.
+          require("dap").set_exception_breakpoints()
+        end,
+        desc = "DAP: choose which exceptions stop the program",
+      },
+      {
         "<leader>du",
         function()
           require("dapui").toggle()
