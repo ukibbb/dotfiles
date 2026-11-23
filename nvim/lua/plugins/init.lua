@@ -89,8 +89,30 @@ return {
     "folke/which-key.nvim",
     -- Load it after startup, so Neovim opens as fast as before.
     event = "VeryLazy",
-    -- Name the <leader>d group "debug" in the popup.
-    opts = { spec = { { "<leader>d", group = "debug" } } },
+    opts = {
+      -- Small box in the bottom-right corner instead of a full-width bar.
+      preset = "helix",
+      spec = {
+        { "<leader>d", group = "debug" },
+        { "<leader>l", group = "lsp" },
+      },
+    },
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show { global = false }
+        end,
+        desc = "Keymaps for this buffer",
+      },
+      {
+        "<leader>K",
+        function()
+          require("which-key").show { global = true }
+        end,
+        desc = "All keymaps",
+      },
+    },
   },
 
   -- CODE FORMATTING

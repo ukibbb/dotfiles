@@ -170,14 +170,14 @@ end, { desc = "general format file" })
 -- LSP DIAGNOSTICS
 -- Language Server Protocol - provides code intelligence (errors, warnings)
 
--- Leader+ds: Show all diagnostics in the location list
+-- Leader+ls: Show all diagnostics in the location list
 -- Location list is a window-local list of positions (like quickfix but per-window)
 -- Useful for seeing all errors/warnings in the current file
-map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
+map("n", "<leader>ls", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })
 
--- Leader+dd: Show diagnostic in floating window
+-- Leader+ld: Show diagnostic in floating window
 -- vim.diagnostic.open_float() shows details for diagnostic under cursor
-map("n", "<leader>dd", vim.diagnostic.open_float, { desc = "LSP show diagnostic" })
+map("n", "<leader>ld", vim.diagnostic.open_float, { desc = "LSP show diagnostic" })
 
 -- Leader+q: Open diagnostics list in location list
 -- vim.diagnostic.setloclist() populates the location list with diagnostics
