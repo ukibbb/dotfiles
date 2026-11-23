@@ -83,6 +83,16 @@ return {
     end,
   },
 
+  -- KEY MENU
+  -- which-key: after a prefix like <leader>d, a popup lists every key that can follow, read from each key's desc.
+  {
+    "folke/which-key.nvim",
+    -- Load it after startup, so Neovim opens as fast as before.
+    event = "VeryLazy",
+    -- Name the <leader>d group "debug" in the popup.
+    opts = { spec = { { "<leader>d", group = "debug" } } },
+  },
+
   -- CODE FORMATTING
   -- conform.nvim: Code formatter that runs external formatters (prettier, black, etc.)
   -- Faster and more reliable than LSP formatting for most use cases
