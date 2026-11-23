@@ -26,7 +26,15 @@ function M.setup()
   }
 
   require("nvim-dap-virtual-text").setup {
-    commented = true,
+    -- Long values (objects, arrays, SQL strings) are cut so they don't push the code off screen.
+    display_callback = function(variable)
+      local value = variable.value:gsub("%s+", " ")
+      -- Count characters, not bytes, so Polish letters are never cut in half.
+      if vim.fn.strchars(value) > 40 then
+        value = vim.fn.strcharpart(value, 0, 40) .. "…"
+      end
+      return " = " .. value
+    end,
   }
 
   dap.listeners.on_session.dapui_config = function(_, session)
@@ -123,10 +131,6 @@ function M.setup()
       skipFiles = { "<node_internals>/**", "${workspaceFolder}/node_modules/**" },
     },
   }
-
-  local vscode = require "dap.ext.vscode"
-  vscode.type_to_filetypes["pwa-node"] = js_filetypes
-  vscode.type_to_filetypes["pwa-chrome"] = js_filetypes
 
   for _, filetype in ipairs(js_filetypes) do
     dap.configurations[filetype] = vim.deepcopy(js_configurations)
