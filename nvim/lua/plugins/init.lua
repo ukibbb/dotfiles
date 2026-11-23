@@ -490,11 +490,23 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     -- Telescope uses treesitter for syntax highlighting in previews
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-telescope/telescope-ui-select.nvim" },
     -- Only load when :Telescope command is used
     cmd = "Telescope",
+    init = function()
+      -- Telescope loads lazily, so the first picker popup loads it. load_extension then replaces this stub.
+      vim.ui.select = function(...)
+        require("lazy").load { plugins = { "telescope.nvim" } }
+        return vim.ui.select(...)
+      end
+    end,
     opts = function()
       return require "configs.telescope"
+    end,
+    config = function(_, opts)
+      local telescope = require "telescope"
+      telescope.setup(opts)
+      telescope.load_extension "ui-select"
     end,
   },
 

@@ -88,12 +88,10 @@ return {
   -- EXTENSIONS
   -- Telescope extensions add extra functionality
 
-  -- List of extension names to load
-  -- "themes" = NvChad's theme picker extension
-  extensions_list = { "themes" },
-
-  -- Extension-specific configuration (empty = use defaults)
-  extensions = {},
+  -- ui-select draws every vim.ui.select list (debug configs, code actions) as a small dropdown.
+  extensions = {
+    ["ui-select"] = { require("telescope.themes").get_dropdown() },
+  },
 
   -- OTHER OPTIONS (using defaults)
 
