@@ -287,7 +287,8 @@ M.defaults = function()
 
   -- Enable language servers
   -- These provide completions and diagnostics for their respective file types
-  local servers = { "html", "cssls", "pyright", "ruff", "ts_ls", "dockerls", "docker_compose_language_service" }
+  -- biome starts only in a project with a biome.json(c), and lints JS, TS and JSON as you type.
+  local servers = { "html", "cssls", "pyright", "ruff", "ts_ls", "biome", "dockerls", "docker_compose_language_service" }
   vim.lsp.enable(servers)
 end
 
