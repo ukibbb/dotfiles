@@ -96,8 +96,17 @@ M.on_attach = function(client, bufnr)
   -- gd: Go to Definition
   -- Definition is where the entity is given its actual meaning or value
   -- (e.g., 'int x = 5;' or a function implementation).
-  -- You can't have multiple definitions, but you can have multiple declarations.
-  map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+  -- Telescope jumps straight there on one result and lists them on several (e.g. overloads).
+  map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts "Go to definition")
+
+  -- These keep Neovim's default LSP keys (:h grr) but open Telescope with a preview.
+  map("n", "grr", "<cmd>Telescope lsp_references<CR>", opts "References")
+  map("n", "gri", "<cmd>Telescope lsp_implementations<CR>", opts "Implementations")
+  map("n", "grt", "<cmd>Telescope lsp_type_definitions<CR>", opts "Type definition")
+  map("n", "gO", "<cmd>Telescope lsp_document_symbols<CR>", opts "Symbols in this file")
+  map("n", "<leader>fs", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", opts "Symbols in the project")
+  map("n", "<leader>li", "<cmd>Telescope lsp_incoming_calls<CR>", opts "Who calls this")
+  map("n", "<leader>lo", "<cmd>Telescope lsp_outgoing_calls<CR>", opts "What this calls")
 
   -- Show fixes and refactors offered by the attached language server.
   map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action")
@@ -108,11 +117,6 @@ M.on_attach = function(client, bufnr)
     map("n", "gS", "<cmd>LspTypescriptGoToSourceDefinition<CR>", opts "Go to source definition")
     map("n", "<leader>ci", "<cmd>LspTypescriptSourceAction<CR>", opts "TypeScript import actions")
   end
-
-  -- gr: Go to References / Usages
-  -- Opens Telescope with every place the symbol under your cursor is used.
-  -- Useful for finding where a class/component/function is instantiated or called.
-  map("n", "gr", "<cmd>Telescope lsp_references<CR>", opts "Go to references")
 
   -- WORKSPACE MANAGEMENT
   -- What is an "LSP workspace"?
@@ -146,10 +150,6 @@ M.on_attach = function(client, bufnr)
 
   -- CODE INTELLIGENCE
 
-  -- Go to type definition
-  -- For a variable, jumps to where its TYPE is defined
-  -- e.g., for "local x: MyClass", jumps to MyClass definition
-  map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
 
   -- Leader+ra: Rename symbol across the project
   -- Uses NvChad's custom renamer UI instead of the basic one

@@ -254,6 +254,12 @@ end, { desc = "telescope live grep word under cursor" })
 -- Leader+fb: List and search through open buffers
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
 
+-- Leader+fd: Every diagnostic (error, warning) from every open buffer
+map("n", "<leader>fd", "<cmd>Telescope diagnostics<CR>", { desc = "telescope diagnostics" })
+
+-- Leader+fr: Reopen the last picker with the same query and selection
+map("n", "<leader>fr", "<cmd>Telescope resume<CR>", { desc = "telescope resume last picker" })
+
 -- Leader+fh: Search through Neovim help documentation
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
 
