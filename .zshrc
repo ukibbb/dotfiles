@@ -49,8 +49,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 # Supply-chain guard: npm and pip only accept absolute dates, so roll a
-# 30-day cutoff at shell start (uv, pnpm, bun and mise use their config files).
-export npm_config_before="$(date -u -v-30d +%Y-%m-%d)"
+# 14-day cutoff at shell start (uv, pnpm, bun and mise use their config files).
+export npm_config_before="$(date -u -v-14d +%Y-%m-%d)"
 export PIP_UPLOADED_PRIOR_TO="$npm_config_before"
 
 # Ctrl-s is the WezTerm leader; keep terminal flow control from treating it as XOFF.

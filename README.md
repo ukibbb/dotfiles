@@ -8,7 +8,7 @@ Personal macOS dotfiles for the terminal/editor stack:
 - WezTerm as terminal and multiplexer (workspaces, tabs, splits; `Ctrl+s` leader) with macOS `Cmd` key mappings
 - Claude Code global settings and status line
 - herdr (agent hub in the `agents` WezTerm workspace) and git config
-- Supply-chain guard: uv, pnpm, bun, mise, npm and pip skip package versions published in the last 30 days
+- Supply-chain guard: uv, pnpm, bun, mise, npm and pip skip package versions published in the last 14 days
 
 ## Documentation
 
