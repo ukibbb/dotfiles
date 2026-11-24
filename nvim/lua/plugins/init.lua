@@ -367,7 +367,7 @@ return {
         function()
           require("dap").terminate()
         end,
-        desc = "DAP: terminate (also ends a program you attached to)",
+        desc = "DAP: terminate the session (ends a launched program, not an attached Node one)",
       },
       {
         "<leader>dD",
