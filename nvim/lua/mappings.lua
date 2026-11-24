@@ -290,8 +290,7 @@ map("n", "<leader>th", function()
   require("nvchad.themes").open()
 end, { desc = "nvchad theme picker" })
 
--- Leader+ff: Find files in the project (respects .gitignore)
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+-- Leader+ff lives in plugins/init.lua (telescope-frecency spec)
 
 -- Leader+fa: Find ALL files including hidden and ignored ones
 -- follow=true follows symlinks

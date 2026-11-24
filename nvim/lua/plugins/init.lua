@@ -524,6 +524,19 @@ return {
     end,
   },
 
+  -- Frecency: project file finder that puts files you open often and recently first
+  {
+    "nvim-telescope/telescope-frecency.nvim",
+    version = "*", -- newest tag (1.2.2); master carries breaking 2.0 work
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    keys = {
+      { "<leader>ff", "<cmd>Telescope frecency workspace=CWD<cr>", desc = "Find files (frecent first)" },
+    },
+    config = function()
+      require("telescope").load_extension "frecency"
+    end,
+  },
+
   -- DATABASE CLIENTS
 
   -- DBee: Full database workspace with connection drawer, SQL scratchpads,
@@ -953,7 +966,7 @@ return {
         hijack_cursor = true,
         sync_root_with_cwd = true,
         update_focused_file = {
-          enable = true,
+          enable = false,
           update_root = false,
         },
         view = {

@@ -91,6 +91,8 @@ return {
   -- ui-select draws every vim.ui.select list (debug configs, code actions) as a small dropdown.
   extensions = {
     ["ui-select"] = { require("telescope.themes").get_dropdown() },
+    -- fzy-style fuzzy matching (marked experimental in 1.2.2); default is substring-only
+    frecency = { matcher = "fuzzy" },
   },
 
   -- OTHER OPTIONS (using defaults)
