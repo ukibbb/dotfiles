@@ -1,5 +1,8 @@
 local M = {}
 
+-- dap-ui floats (<leader>de, <leader>df…) never grow past this share of the screen.
+local float_share = { width = 0.9, height = 0.8 }
+
 function M.setup()
   local dap = require "dap"
   local dapui = require "dapui"
@@ -17,13 +20,34 @@ function M.setup()
         size = 40,
       },
       {
-        elements = { "repl", "console" },
+        -- The console only shows a program that nvim-dap starts in a terminal, so the REPL gets most of the width.
+        elements = {
+          { id = "repl", size = 0.7 },
+          { id = "console", size = 0.3 },
+        },
         position = "bottom",
         size = 10,
       },
     },
-    floating = { border = "rounded" },
+    floating = { border = "rounded", max_width = float_share.width, max_height = float_share.height },
   }
+
+  -- Long REPL results fold onto the next line instead of scrolling the window sideways.
+  -- wrap belongs to the window, and dap-ui turns it off right after it shows the REPL (pane or float), so set it a tick later.
+  vim.api.nvim_create_autocmd("BufWinEnter", {
+    group = vim.api.nvim_create_augroup("DapReplWrap", { clear = true }),
+    callback = function(args)
+      if vim.bo[args.buf].filetype ~= "dap-repl" then
+        return
+      end
+      vim.schedule(function()
+        for _, win in ipairs(vim.fn.win_findbuf(args.buf)) do
+          vim.wo[win].wrap = true
+          vim.wo[win].linebreak = true
+        end
+      end)
+    end,
+  })
 
   require("nvim-dap-virtual-text").setup {
     -- Long values (objects, arrays, SQL strings) are cut so they don't push the code off screen.
@@ -135,6 +159,17 @@ function M.setup()
   for _, filetype in ipairs(js_filetypes) do
     dap.configurations[filetype] = vim.deepcopy(js_configurations)
   end
+end
+
+-- Opens one dap-ui pane as a large centered float and moves the cursor into it.
+function M.open_pane_float(element)
+  require("dapui").float_element(element, {
+    enter = true,
+    position = "center",
+    -- dap-ui keeps 2 cells of each maximum for the border.
+    width = math.floor(vim.o.columns * float_share.width) - 2,
+    height = math.floor(vim.o.lines * float_share.height) - 2,
+  })
 end
 
 return M

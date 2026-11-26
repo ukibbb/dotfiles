@@ -97,6 +97,7 @@ return {
         { "<leader>B", group = "database", icon = { icon = "󰆼", color = "purple" } },
         { "<leader>c", group = "code", icon = { icon = "", color = "orange" } },
         { "<leader>d", group = "debug", icon = { icon = "󰃤", color = "red" } },
+        { "<leader>df", group = "debug: float", icon = { icon = "󰃤", color = "red" } },
         { "<leader>f", group = "find", icon = { icon = "", color = "green" } },
         { "<leader>g", group = "git", icon = { cat = "filetype", name = "git" } },
         { "<leader>l", group = "lsp", icon = { icon = "󰅴", color = "blue" } },
@@ -414,6 +415,91 @@ return {
           require("dapui").toggle()
         end,
         desc = "DAP: toggle UI",
+      },
+      {
+        "<leader>dU",
+        function()
+          require("dapui").open { reset = true }
+        end,
+        desc = "DAP: put the UI panes back to their configured sizes",
+      },
+      -- Stepping without F-keys, which macOS keeps for media unless Fn is held.
+      {
+        "<leader>do",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "DAP: step over",
+      },
+      {
+        "<leader>di",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "DAP: step into",
+      },
+      {
+        "<leader>dO",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "DAP: step out",
+      },
+      {
+        "<leader>dk",
+        function()
+          require("dap").up()
+        end,
+        desc = "DAP: frame up to the caller, without running code",
+      },
+      {
+        "<leader>dj",
+        function()
+          require("dap").down()
+        end,
+        desc = "DAP: frame down (back toward the stop)",
+      },
+      {
+        "<leader>d.",
+        function()
+          require("dap").focus_frame()
+        end,
+        desc = "DAP: jump back to the line where the program stopped",
+      },
+      {
+        "<leader>dfs",
+        function()
+          require("configs.dap").open_pane_float "scopes"
+        end,
+        desc = "DAP: float scopes",
+      },
+      {
+        "<leader>dfw",
+        function()
+          require("configs.dap").open_pane_float "watches"
+        end,
+        desc = "DAP: float watches",
+      },
+      {
+        "<leader>dfk",
+        function()
+          require("configs.dap").open_pane_float "stacks"
+        end,
+        desc = "DAP: float call stack",
+      },
+      {
+        "<leader>dfb",
+        function()
+          require("configs.dap").open_pane_float "breakpoints"
+        end,
+        desc = "DAP: float breakpoints",
+      },
+      {
+        "<leader>dfr",
+        function()
+          require("configs.dap").open_pane_float "repl"
+        end,
+        desc = "DAP: float REPL",
       },
     },
     config = function()
