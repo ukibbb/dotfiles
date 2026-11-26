@@ -3,6 +3,14 @@ local M = {}
 -- dap-ui floats (<leader>de, <leader>df…) never grow past this share of the screen.
 local float_share = { width = 0.9, height = 0.8 }
 
+-- The text indented by jq, or nil when it is not valid JSON.
+local function indented_json(text)
+  local pretty = vim.fn.system({ "jq", "." }, text)
+  if vim.v.shell_error == 0 then
+    return vim.trim(pretty)
+  end
+end
+
 function M.setup()
   local dap = require "dap"
   local dapui = require "dapui"
@@ -66,6 +74,27 @@ function M.setup()
       dapui.open()
     else
       dapui.close()
+    end
+  end
+
+  -- A JSON string typed in the REPL prints indented, so JSON.stringify(x) reads like JSON.stringify(x, null, 2).
+  -- Runs before the REPL prints the response. Anything jq cannot parse prints unchanged.
+  dap.listeners.before.evaluate.pretty_json_in_repl = function(_, err, response, request)
+    if err or request.context ~= "repl" or response.variablesReference ~= 0 or vim.fn.executable "jq" == 0 then
+      return
+    end
+    -- Adapters wrap a string result in one quote mark (' " or `).
+    local quote, text = response.result:match "^(['\"`])([%[{].*)%1$"
+    if not quote then
+      return
+    end
+    local pretty = indented_json(text)
+      -- Some results come escaped like a source literal (doubled backslashes, \' or \`), so undo that once.
+      or indented_json((text:gsub("\\([\\'`])", "%1")))
+    if pretty then
+      response.result = pretty
+      -- debugpy marks strings rawString, and the REPL then draws them as one value with visible \n.
+      response.presentationHint = nil
     end
   end
 
